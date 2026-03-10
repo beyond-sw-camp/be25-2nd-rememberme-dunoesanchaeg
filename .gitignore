@@ -22,3 +22,7 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Secrets (DB 설정, API 키 등)
+src/main/resources/application-local.yml
+src/main/resources/application-secret.yml
