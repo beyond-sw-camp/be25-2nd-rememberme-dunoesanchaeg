@@ -53,7 +53,7 @@
 10. [API 명세서](#10-API-명세서)  
 11. [테스트 계획서](#11-테스트-계획서)
 12. [결과 보고서](#12-결과-보고서)
-13. [회고](#15-회고)
+13. [회고](#13-회고)
 
 <br>
 
@@ -137,9 +137,9 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+
+- [📂 요구사항 정의서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=1415182395#gid=1415182395)
+
 </details>
 
 <br>
@@ -148,9 +148,9 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+  
+- [📂 테이블 정의서 (링크)](https://docs.google.com/spreadsheets/d/1W4umq2TJ3RlpNsyxd6Db3YlDfhOW4DBUH2VfQkSFBGc/edit?gid=0#gid=0)
+
 </details>
 
 <br>
@@ -159,9 +159,9 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+  
+- [📌 ERD 구조도 (링크)](https://www.erdcloud.com/d/puoaE8Gz75mCg6pJt)
+  
 </details>
 
 <br>
@@ -181,9 +181,9 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+  
+- [📌 API 명세서 (링크)](https://www.notion.so/API-308dd863c93280e2808fdca71cc4adde)
+
 </details>
 
 <br>
