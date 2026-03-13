@@ -159,6 +159,7 @@
 
 <details>
 <summary>세부사항</summary>
+<img src="./images/ERD.png" width="1000" alt="ERD image" /></br>
   
 - [📌 ERD 구조도 (링크)](https://www.erdcloud.com/d/puoaE8Gz75mCg6pJt)
   
