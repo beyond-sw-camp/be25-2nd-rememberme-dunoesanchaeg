@@ -131,6 +131,13 @@
 
 ## <a id="5-시스템-아키텍처"></a> 5. 시스템 아키텍처
 
+<details>
+<summary>세부사항</summary>
+
+<img src="./images/systemArchitecture.png" width="1000" alt="ERD image" /></br>
+
+</details>
+
 <br>
 
 ## <a id="6-요구사항-정의서"></a> 6. 요구사항 정의서
