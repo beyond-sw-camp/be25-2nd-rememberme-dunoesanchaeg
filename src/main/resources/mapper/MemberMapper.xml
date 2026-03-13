@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.remember.remember_me_v1_api.mapper.MemberMapper">
+
+    <select id="findByProviderAndProviderId" resultType="com.remember.remember_me_v1_api.dto.MemberDto">
+        SELECT id, provider, provider_id, email, role, created_at
+        FROM member
+        WHERE provider = #{provider} AND provider_id = #{providerId}
+    </select>
+
+    <insert id="insertMember" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO member (provider, provider_id, email, role)
+        VALUES (#{provider}, #{providerId}, #{email}, 'ROLE_USER')
+    </insert>
+
+</mapper>

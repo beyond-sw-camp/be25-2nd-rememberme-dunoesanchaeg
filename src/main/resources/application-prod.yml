@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    # ${RDS_ENDPOINT} 자리에 'localhost'가 주입되어야 합니다.
+    url: jdbc:mariadb://${RDS_ENDPOINT}:3312/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+
+# 운영 환경에서는 로그를 간결하게 남겨 서버 부하를 줄입니다.
+logging:
+  level:
+    root: warn
+    com.remember: info
+
+# 카카오 로그인 API 설정 (보안이 중요한 값들이므로 환경변수 처리)
+kakao:
+  client-id: ${KAKAO_CLIENT_ID}

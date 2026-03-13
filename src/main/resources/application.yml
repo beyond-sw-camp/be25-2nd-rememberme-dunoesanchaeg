@@ -1,0 +1,43 @@
+server:
+  port: 8080 # 서비스 포트
+
+spring:
+  # 아무 설정 없이 실행했을 때 기본으로 켤 프로파일
+  profiles:
+    active: local
+
+  application:
+    name: remember-me-v1-api
+
+  # Spring Security OAuth2 카카오 로그인 공통 뼈대
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            # 하위 프로파일(local, prod)에서 설정한 커스텀 변수를 동적으로 주입받습니다.
+            client-id: ${kakao.client-id}
+            redirect-uri: "{baseUrl}/login/oauth2/code/kakao"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: Kakao
+            scope:
+              - account_email
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+# 마이바티스(MyBatis) 공통 설정
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.remember.remember_me_v1_api.dto
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+
+jwt:
+  secret: ${JWT_SECRET_KEY} # 실제 값은 OS 환경 변수나 인텔리제이 설정에서 주입
+  expiration: 3600000        # 1시간 (밀리초)
