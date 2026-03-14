@@ -1,17 +1,23 @@
 spring:
+  profiles:
+    active: local # 실행 시 별도 설정 없으면 local을 기본으로 사용
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false # 날짜를 [2026,3,14]가 아닌 "2026-03-14"로 출력
+    default-property-inclusion: non_null # null인 필드는 JSON 응답에서 제외
+
+  # 데이터소스 구조만 정의 (값은 각 프로필에서 채움)
   datasource:
-    url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:mydb}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
 
+
 mybatis:
+  # 패키지 경로는 프로젝트 구조에 맞춰 수정 가능
   type-aliases-package: com.rememberme.dunoesanchaeg.*.model.vo
   mapper-locations: classpath:mapper/**/*.xml
   configuration:
     jdbc-type-for-null: 'NULL'
     map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 springdoc:
   swagger-ui:

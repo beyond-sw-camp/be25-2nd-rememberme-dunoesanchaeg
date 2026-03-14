@@ -1,0 +1,25 @@
+spring:
+  datasource:
+    # 운영 환경에서는 기본값 없이 반드시 환경 변수로 받아야 안전함
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+# 운영 환경에서는 보안을 위해 Swagger와 API 문서를 비활성화
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+# 1. 전체적인 로그 레벨 제어 (Spring, Library 등)
+logging:
+  level:
+    root: warn
+    com.rememberme.dunoesanchaeg: info # 우리 서비스의 주요 흐름만 기록
+
+# 2. MyBatis SQL 로그 생성 자체를 차단 (이중 보안)
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: 'NULL'
