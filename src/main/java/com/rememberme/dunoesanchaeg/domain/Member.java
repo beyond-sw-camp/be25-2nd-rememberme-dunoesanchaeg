@@ -5,6 +5,7 @@ import com.rememberme.dunoesanchaeg.domain.enums.FontSize;
 import com.rememberme.dunoesanchaeg.domain.enums.Role;
 import com.rememberme.dunoesanchaeg.domain.enums.UserStatus;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@Builder
 public class Member {
     private Long memberId;
     private String kakaoId;
@@ -34,5 +36,6 @@ public class Member {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
+
 
 }
