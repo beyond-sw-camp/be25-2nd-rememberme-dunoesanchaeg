@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.rememberme.dunoesanchaeg.mapper.MemberTokenMapper">
+
+    <resultMap id="MemberTokenResultMap" type="com.rememberme.dunoesanchaeg.domain.MemberToken">
+        <id property="tokenId" column="token_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="refreshToken" column="refresh_token"/>
+        <result property="userAgent" column="user_agent"/>
+        <result property="issuedAt" column="issued_at"/>
+        <result property="expiresAt" column="expires_at"/>
+        <result property="lastUsedAt" column="last_used_at"/>
+        <result property="isRevoked" column="is_revoked"/>
+
+    </resultMap>
+
+    <select id="findByMemberIdAndUserAgent" resultMap="MemberTokenResultMap">
+        SELECT
+            token_id,
+            member_id,
+            refresh_token,
+            user_agent,
+            issued_at,
+            expires_at,
+            last_used_at,
+            is_revoked
+        FROM member_token
+        WHERE member_id = #{memberId} and user_agent = #{userAgent}
+    </select>
+
+    <insert id="insertMemberToken" useGeneratedKeys="true" keyProperty="tokenId" parameterType="com.rememberme.dunoesanchaeg.domain.MemberToken">
+        INSERT INTO member_token(
+            member_id,
+            refresh_token,
+            user_agent,
+            expires_at
+        )
+        VALUES (
+            #{memberId},
+            #{refreshToken},
+            #{userAgent},
+            #{expiresAt}
+
+        )
+    </insert>
+
+    <update id="updateMemberToken" parameterType="com.rememberme.dunoesanchaeg.domain.MemberToken">
+        UPDATE member_token
+        SET
+            refresh_token = #{refreshToken},
+            expires_at = #{expiresAt},
+            last_used_at = NOW(),
+            is_revoked = false
+        WHERE
+            member_id = #{memberId} AND user_agent = #{userAgent}
+    </update>
+
+    <select id="findByRefreshToken" resultMap="MemberTokenResultMap">
+        SELECT
+            token_id,
+            member_id,
+            refresh_token,
+            user_agent,
+            issued_at,
+            expires_at,
+            last_used_at,
+            is_revoked
+        FROM member_token
+        WHERE refresh_token = #{refreshToken} AND is_revoked = false AND expires_at > NOW()
+    </select>
+</mapper>
