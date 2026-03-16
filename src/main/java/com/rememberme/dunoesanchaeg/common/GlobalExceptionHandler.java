@@ -1,6 +1,5 @@
-package com.rememberme.dunoesanchaeg.common.handler;
+package com.rememberme.dunoesanchaeg.common;
 
-import com.rememberme.dunoesanchaeg.common.ApiResponse;
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
