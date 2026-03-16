@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     // 2. @Valid 검증 실패 에러 (아이디 누락 등)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ApiResponse<Void> handleValidationException(MethodArgumentNotValidException e) {
-        String errorMessage = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+        String errorMessage = e.getBindingResult().getAllErrors().getFirst().getDefaultMessage();
         return ApiResponse.error(400, errorMessage);
     }
 
