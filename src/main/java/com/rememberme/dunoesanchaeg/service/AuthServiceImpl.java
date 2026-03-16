@@ -1,16 +1,13 @@
 package com.rememberme.dunoesanchaeg.service;
 
+import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.domain.Member;
 import com.rememberme.dunoesanchaeg.domain.MemberToken;
-import com.rememberme.dunoesanchaeg.domain.enums.FontSize;
-import com.rememberme.dunoesanchaeg.domain.enums.Role;
-import com.rememberme.dunoesanchaeg.domain.enums.UserStatus;
 import com.rememberme.dunoesanchaeg.dto.response.KakaoLoginResponse;
 import com.rememberme.dunoesanchaeg.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.mapper.MemberTokenMapper;
-import lombok.Builder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
@@ -20,24 +17,19 @@ import static com.rememberme.dunoesanchaeg.domain.enums.Role.*;
 import static com.rememberme.dunoesanchaeg.domain.enums.UserStatus.*;
 
 @Transactional
-@Builder
-@Component
+@Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService{
-    private MemberMapper memberMapper;
-    private MemberTokenMapper memberTokenMapper;
+    private final MemberMapper memberMapper;
+    private final MemberTokenMapper memberTokenMapper;
 
-    @Autowired
-    public AuthServiceImpl(MemberMapper memberMapper, MemberTokenMapper memberTokenMapper){
-        this.memberMapper = memberMapper;
-        this.memberTokenMapper = memberTokenMapper;
-    }
 
     @Override
     public KakaoLoginResponse kakaoAuth(String kakaoId, String email, String userAgent) {
         Member member = memberMapper.findByKakaoId(kakaoId);
         // JWT 토큰 로직 구현하면 변경해야함-------------------
-        String accessToken ="mock-access-token-for-jaeha";
-        String refreshToken ="mock-refresh-token-for-jaeha";
+        String accessToken = java.util.UUID.randomUUID().toString();
+        String refreshToken = java.util.UUID.randomUUID().toString();
         LocalDateTime expireDay = LocalDateTime.now().plusDays(14);
         //------------------------------------------------
 
@@ -58,7 +50,7 @@ public class AuthServiceImpl implements AuthService{
             member = newMember;
         } else{
             if(member.getUserStatus() == WITHDRAWN){
-                throw new RuntimeException("탈퇴한 회원입니다. 30일 이내 복구 가능합니다.");
+                throw new BaseException(400, "탈퇴한 회원입니다. 30일 이내 복구 가능합니다.");
             }
             memberMapper.updateLastLoginAt(member.getMemberId());
 

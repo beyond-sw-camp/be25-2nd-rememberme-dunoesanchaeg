@@ -12,11 +12,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class KakaoLoginRequest {
-    @NotBlank
+    @NotBlank(message = "카카오 아이디가 누락되었습니다. 확인해주세요")
     private String kakaoId;
 
-    @NotBlank
-    @Email
+    @NotBlank(message = "이메일이 누락되었습니다. 확인해주세요")
+    @Email(message = "올바른 이메일 형식이 아닙니다.")
     private String email;
 
 }

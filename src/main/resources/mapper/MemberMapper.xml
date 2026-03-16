@@ -51,14 +51,24 @@
     </select>
 
     <!-- request부분으로 받아와서 저장-->
-    <insert id="insertMember" useGeneratedKeys="true" keyProperty="memberId" parameterType="com.rememberme.dunoesanchaeg.domain.Member">
+    <insert id="insertMember" useGeneratedKeys="true" keyProperty="memberId">
         INSERT INTO member (
-           kakao_id,
-           email
-        )VALUES (
-           #{kakaoId},
-           #{email}
-                )
+            kakao_id,
+            email,
+            is_high_contrast,
+            font_size,
+            is_profile_completed,
+            role,
+            user_status
+        ) VALUES (
+            #{kakaoId},
+            #{email},
+            #{isHighContrast},
+            #{fontSize},
+            #{isProfileCompleted},
+            #{role},
+            #{userStatus}
+        )
     </insert>
 
     <!-- updateLastLoginAt -->
