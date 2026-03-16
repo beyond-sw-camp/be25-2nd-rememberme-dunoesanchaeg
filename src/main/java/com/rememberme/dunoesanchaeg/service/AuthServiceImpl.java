@@ -15,6 +15,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+import static com.rememberme.dunoesanchaeg.domain.enums.FontSize.*;
+import static com.rememberme.dunoesanchaeg.domain.enums.Role.*;
+import static com.rememberme.dunoesanchaeg.domain.enums.UserStatus.*;
+
 @Transactional
 @Builder
 @Component
@@ -45,15 +49,15 @@ public class AuthServiceImpl implements AuthService{
                     .kakaoId(kakaoId)
                     .email(email)
                     .isHighContrast(false)
-                    .fontSize(FontSize.SMALL)
+                    .fontSize(SMALL)
                     .isProfileCompleted(false)
-                    .role(Role.USER)
-                    .userStatus(UserStatus.ACTIVE)
+                    .role(USER)
+                    .userStatus(ACTIVE)
                     .build();
             memberMapper.insertMember(newMember);
             member = newMember;
         } else{
-            if(member.getUserStatus() == UserStatus.WITHDRAWN){
+            if(member.getUserStatus() == WITHDRAWN){
                 throw new RuntimeException("탈퇴한 회원입니다. 30일 이내 복구 가능합니다.");
             }
             memberMapper.updateLastLoginAt(member.getMemberId());

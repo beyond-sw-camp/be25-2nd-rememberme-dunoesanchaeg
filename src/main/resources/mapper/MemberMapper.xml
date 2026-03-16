@@ -26,7 +26,7 @@
     </resultMap>
 
     <!--  카카오 아이디와 일치하는 멤버의 데이터를 가져옴  -->
-    <select id="findByKakaoId" resultMap="MemberResultMap" parameterType="String">
+    <select id="findByKakaoId" resultMap="MemberResultMap" parameterType="string">
         SELECT member_id,
                kakao_id,
                email,
@@ -62,7 +62,7 @@
     </insert>
 
     <!-- updateLastLoginAt -->
-    <update id="updateLastLoginAt" parameterType="Long">
+    <update id="updateLastLoginAt" parameterType="long">
         UPDATE member
         SET last_login_at = NOW()
         WHERE member_id = #{memberId}
