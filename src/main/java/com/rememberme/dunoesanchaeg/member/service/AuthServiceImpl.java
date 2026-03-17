@@ -1,6 +1,7 @@
 package com.rememberme.dunoesanchaeg.member.service;
 
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
+import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
 import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.domain.MemberToken;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
@@ -28,6 +29,9 @@ public class AuthServiceImpl implements AuthService {
     public KakaoLoginResponse kakaoAuth(String kakaoId, String email, String userAgent) {
         int result;
         Member member = memberMapper.findByKakaoId(kakaoId);
+
+        // 토큰 작업해야함
+        //private final JwtProvider jwtProvider;
 
         // JWT 토큰 로직 구현하면 변경해야함-------------------
         String accessToken = java.util.UUID.randomUUID().toString();
