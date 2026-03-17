@@ -1,3 +1,11 @@
+---
+name: "📝 작업 이름"
+about: "새로운 작업 내용을 등록할 때 사용합니다."
+title: "[feature] "
+labels: "todo"
+assignees: ""
+---
+
 ## 📝 작업 제목
 - 작업제목 입력
 
