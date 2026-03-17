@@ -20,10 +20,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // 1. CSRF 비활성화 (JWT를 사용하는 무상태성 API이므로 필수)
                 .csrf(AbstractHttpConfigurer::disable)
-                // 폼 로그인과 기본 인증을 명시적으로 끕니다.
-                .formLogin(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
 
                 // 2. CORS 설정 적용
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -47,10 +45,7 @@ public class SecurityConfig {
                                 "/api/v1/daily-records/**",  // 기록
                                 "/api/v1/statistics/**",     // 통계
                                 "/v3/api-docs/**",           // Swagger용
-                                "/swagger-ui/**",            // Swagger UI용
-                                "/swagger-resources/**",
-                                "/webjars/**" // Swagger 관련 정적 리소스도 추가하면 좋습니다.
-
+                                "/swagger-ui/**"             // Swagger UI용
                         ).permitAll()
                         .anyRequest().authenticated()    // 그 외는 토큰 필요 (나중에 잠글 예정)
                 );
