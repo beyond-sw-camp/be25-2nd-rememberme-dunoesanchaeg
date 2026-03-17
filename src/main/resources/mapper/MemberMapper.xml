@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.rememberme.dunoesanchaeg.mapper.MemberMapper">
+<mapper namespace="com.rememberme.dunoesanchaeg.member.mapper.MemberMapper">
 
-    <resultMap id="MemberResultMap" type="com.rememberme.dunoesanchaeg.domain.Member">
+    <resultMap id="MemberResultMap" type="com.rememberme.dunoesanchaeg.member.domain.Member">
         <id property="memberId" column="member_id"/>
         <result property="kakaoId" column="kakao_id"/>
         <result property="email" column="email"/>
