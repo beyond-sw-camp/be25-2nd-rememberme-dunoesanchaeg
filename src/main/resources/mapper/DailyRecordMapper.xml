@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.memory.mapper.DailyRecordMapper">
+
+    <!-- 오늘 기록 존재 여부 -->
+    <select id="findDailyRecordId" resultType="long">
+        SELECT daily_record_id
+        FROM daily_record
+        WHERE member_id = #{memberId}
+          AND record_date = #{recordDate}
+    </select>
+
+    <!-- insert -->
+    <insert id="insertDailyRecord">
+        INSERT INTO daily_record (
+            member_id,
+            record_date,
+            mood_level,
+            mood_memo,
+            sleep_level,
+            sleep_memo,
+            meal_level,
+            meal_memo,
+            exercise_level,
+            exercise_memo,
+            social_level,
+            social_memo
+        ) VALUES (
+                     #{memberId},
+                     #{recordDate},
+                     #{moodLevel},
+                     #{moodMemo},
+                     #{sleepLevel},
+                     #{sleepMemo},
+                     #{mealLevel},
+                     #{mealMemo},
+                     #{exerciseLevel},
+                     #{exerciseMemo},
+                     #{socialLevel},
+                     #{socialMemo}
+                 )
+    </insert>
+
+    <!-- update -->
+    <update id="updateDailyRecord">
+        UPDATE daily_record
+        SET
+            mood_level = #{moodLevel},
+            mood_memo = #{moodMemo},
+            sleep_level = #{sleepLevel},
+            sleep_memo = #{sleepMemo},
+            meal_level = #{mealLevel},
+            meal_memo = #{mealMemo},
+            exercise_level = #{exerciseLevel},
+            exercise_memo = #{exerciseMemo},
+            social_level = #{socialLevel},
+            social_memo = #{socialMemo}
+        WHERE member_id = #{memberId}
+          AND record_date = #{recordDate}
+    </update>
+
+    <!-- 루틴 완료 처리 -->
+    <update id="updateRecordFinished">
+        UPDATE daily_routine_status
+        SET is_record_finished = TRUE
+        WHERE member_id = #{memberId}
+          AND routine_date = #{recordDate}
+    </update>
+
+</mapper>
