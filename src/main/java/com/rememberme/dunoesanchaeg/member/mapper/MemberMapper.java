@@ -5,6 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface MemberMapper {
+    // memberId로 유저 조회
+    Member findByMemberId(Long memberId);
+
     // 카카오아이디로 유저 조회
     Member findByKakaoId(String kakaoId);
 

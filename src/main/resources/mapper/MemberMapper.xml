@@ -25,6 +25,31 @@
         <result property="deletedAt" column="deleted_at"/>
     </resultMap>
 
+    <!-- 멤버 아이디로 멤버의 데이터를 가져옴 -->
+    <select id="findByMemberId" resultMap="MemberResultMap" parameterType="long">
+        SELECT member_id,
+               kakao_id,
+               email,
+               role,
+               name,
+               birth_date,
+               phone,
+               guardian_email,
+               guardian_phone,
+               guardian_consent,
+               is_profile_completed,
+               user_status,
+               is_high_contrast,
+               font_size,
+               total_routine_count,
+               last_login_at,
+               created_at,
+               updated_at,
+               deleted_at
+        FROM member
+        WHERE member_id = #{memberId}
+    </select>
+
     <!--  카카오 아이디와 일치하는 멤버의 데이터를 가져옴  -->
     <select id="findByKakaoId" resultMap="MemberResultMap" parameterType="string">
         SELECT member_id,
