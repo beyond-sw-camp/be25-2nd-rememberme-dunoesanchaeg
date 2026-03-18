@@ -51,7 +51,7 @@
             refresh_token = #{refreshToken},
             expires_at = #{expiresAt},
             last_used_at = NOW(),
-            is_revoked = false
+            is_revoked = #{isRevoked}
         WHERE
             member_id = #{memberId} AND user_agent = #{userAgent}
     </update>
