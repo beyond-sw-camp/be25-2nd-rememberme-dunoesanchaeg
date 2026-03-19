@@ -21,4 +21,5 @@ public class DailyRecordSaveRequest {
 
     private String socialLevel;
     private String socialMemo;
+
 }
