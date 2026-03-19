@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class DailyRecordSaveResponse {
+public class DailyRecordResponse {
     private LocalDate recordDate;
 
     private String moodLevel;

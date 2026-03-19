@@ -18,4 +18,7 @@ public interface DailyRecordMapper {
 
     int updateRecordFinished(@Param("memberId") Long memberId,
                              @Param("recordDate") LocalDate recordDate);
+
+    DailyRecord selectDailyRecord(@Param("memberId") Long memberId,
+                                  @Param("recordDate") LocalDate recordDate);
 }

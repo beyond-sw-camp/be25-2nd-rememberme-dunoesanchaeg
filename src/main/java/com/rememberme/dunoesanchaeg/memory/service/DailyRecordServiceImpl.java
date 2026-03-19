@@ -1,13 +1,14 @@
 package com.rememberme.dunoesanchaeg.memory.service;
 
+import com.rememberme.dunoesanchaeg.common.exception.DailyRecordNotFoundException;
 import com.rememberme.dunoesanchaeg.memory.domain.DailyRecord;
 import com.rememberme.dunoesanchaeg.memory.dto.request.DailyRecordSaveRequest;
+import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordSaveResponse;
 import com.rememberme.dunoesanchaeg.memory.mapper.DailyRecordMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 
@@ -20,7 +21,6 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 
     @Override
     public DailyRecordSaveResponse saveDailyRecord(Long memberId, DailyRecordSaveRequest request) {
-        validateRequiredFields(request);
 
         LocalDate today = LocalDate.now();
 
@@ -47,20 +47,47 @@ public class DailyRecordServiceImpl implements DailyRecordService {
             dailyRecordMapper.updateDailyRecord(dailyRecord);
         }
 
-        dailyRecordMapper.updateRecordFinished(memberId, today);
+        // dailyRecordMapper.updateRecordFinished(memberId, today);
 
-        return new DailyRecordSaveResponse(today.toString(), true);
+        return new DailyRecordSaveResponse(
+                today,
+                request.getMoodLevel(),
+                request.getMoodMemo(),
+                request.getSleepLevel(),
+                request.getSleepMemo(),
+                request.getMealLevel(),
+                request.getMealMemo(),
+                request.getExerciseLevel(),
+                request.getExerciseMemo(),
+                request.getSocialLevel(),
+                request.getSocialMemo()
+        );
     }
 
-    private void validateRequiredFields(DailyRecordSaveRequest request) {
-        if (!StringUtils.hasText(request.getMoodLevel())) {
-            throw new IllegalArgumentException("moodLevel은 필수입니다.");
+    @Override
+    @Transactional(readOnly = true)
+    public DailyRecordResponse getTodayDailyRecord() {
+        Long memberId = 1L;
+        LocalDate today = LocalDate.now();
+
+        DailyRecord dailyRecord = dailyRecordMapper.selectDailyRecord(memberId, today);
+
+        if(dailyRecord == null){
+            throw new DailyRecordNotFoundException();
         }
-        if (!StringUtils.hasText(request.getSleepLevel())) {
-            throw new IllegalArgumentException("sleepLevel은 필수입니다.");
-        }
-        if (!StringUtils.hasText(request.getMealLevel())) {
-            throw new IllegalArgumentException("mealLevel은 필수입니다.");
-        }
+
+        return new DailyRecordResponse(
+                dailyRecord.getRecordDate(),
+                dailyRecord.getMoodLevel(),
+                dailyRecord.getMoodMemo(),
+                dailyRecord.getSleepLevel(),
+                dailyRecord.getSleepMemo(),
+                dailyRecord.getMealLevel(),
+                dailyRecord.getMealMemo(),
+                dailyRecord.getExerciseLevel(),
+                dailyRecord.getExerciseMemo(),
+                dailyRecord.getSocialLevel(),
+                dailyRecord.getSocialMemo()
+        );
     }
 }
