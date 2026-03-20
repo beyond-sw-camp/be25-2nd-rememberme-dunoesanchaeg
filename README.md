@@ -178,9 +178,9 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+  
+- [📱 화면기능 설계서 (링크)](https://www.figma.com/design/gyX3NlACpQIADuk9ZCbxI5/두뇌산책?node-id=202-78&p=f&t=aJAPNPAJ4FySe4Zt-0)
+
 </details>
 
 <br>
