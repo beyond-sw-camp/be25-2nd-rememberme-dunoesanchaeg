@@ -6,7 +6,7 @@ import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordSaveResponse;
 
 public interface DailyRecordService {
 
-    DailyRecordResponse getTodayDailyRecord();
+    DailyRecordResponse getTodayDailyRecord(Long memberId);
 
     DailyRecordSaveResponse saveDailyRecord(Long memberId, DailyRecordSaveRequest request);
 }

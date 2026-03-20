@@ -1,6 +1,7 @@
 package com.rememberme.dunoesanchaeg.memory.controller;
 
 import com.rememberme.dunoesanchaeg.common.ApiResponse;
+import com.rememberme.dunoesanchaeg.common.security.SecurityUtil;
 import com.rememberme.dunoesanchaeg.memory.dto.request.DailyRecordSaveRequest;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordSaveResponse;
@@ -24,7 +25,7 @@ public class DailyRecordController {
     public ApiResponse<DailyRecordSaveResponse> saveDailyRecord(
             @Valid @RequestBody DailyRecordSaveRequest request) {
 
-        Long memberId = 1L; // JWT 연결 전 임시 테스트용
+        Long memberId = SecurityUtil.getCurrentMemberId();
         DailyRecordSaveResponse response = dailyRecordService.saveDailyRecord(memberId, request);
 
         return ApiResponse.success(200, "하루 기록 저장 성공", response);
@@ -32,7 +33,8 @@ public class DailyRecordController {
 
     @GetMapping
     public ApiResponse<DailyRecordResponse> getTodayDailyRecord() {
-        DailyRecordResponse response = dailyRecordService.getTodayDailyRecord();
+        Long memberId = SecurityUtil.getCurrentMemberId();
+        DailyRecordResponse response = dailyRecordService.getTodayDailyRecord(memberId);
 
         return ApiResponse.success(200, "오늘 하루 기록 조회 성공", response);
     }

@@ -72,8 +72,7 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public DailyRecordResponse getTodayDailyRecord() {
-        Long memberId = 1L;
+    public DailyRecordResponse getTodayDailyRecord(Long memberId) {
         LocalDate today = LocalDate.now();
 
         DailyRecord dailyRecord = dailyRecordMapper.selectDailyRecord(memberId, today);

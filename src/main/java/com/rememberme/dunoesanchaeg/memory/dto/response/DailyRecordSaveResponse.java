@@ -9,20 +9,20 @@ import java.time.LocalDate;
 @Getter
 @AllArgsConstructor
 public class DailyRecordSaveResponse {
-    private LocalDate recordDate;
+    private final LocalDate recordDate;
 
-    private Level moodLevel;
-    private String moodMemo;
+    private final Level moodLevel;
+    private final String moodMemo;
 
-    private Level sleepLevel;
-    private String sleepMemo;
+    private final Level sleepLevel;
+    private final String sleepMemo;
 
-    private Level mealLevel;
-    private String mealMemo;
+    private final Level mealLevel;
+    private final String mealMemo;
 
-    private Level exerciseLevel;
-    private String exerciseMemo;
+    private final Level exerciseLevel;
+    private final String exerciseMemo;
 
-    private Level socialLevel;
-    private String socialMemo;
+    private final Level socialLevel;
+    private final String socialMemo;
 }
