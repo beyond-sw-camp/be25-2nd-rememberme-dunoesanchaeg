@@ -31,15 +31,15 @@
         ) VALUES (
                      #{memberId},
                      #{recordDate},
-                     #{moodLevel},
+                     #{moodLevel, jdbcType=VARCHAR},
                      #{moodMemo},
-                     #{sleepLevel},
+                     #{sleepLevel,jdbcType=VARCHAR},
                      #{sleepMemo},
-                     #{mealLevel},
+                     #{mealLevel,jdbcType=VARCHAR},
                      #{mealMemo},
-                     #{exerciseLevel},
+                     #{exerciseLevel,jdbcType=VARCHAR},
                      #{exerciseMemo},
-                     #{socialLevel},
+                     #{socialLevel,jdbcType=VARCHAR},
                      #{socialMemo}
                  )
     </insert>
@@ -48,15 +48,15 @@
     <update id="updateDailyRecord">
         UPDATE daily_record
         SET
-            mood_level = #{moodLevel},
+            mood_level = #{moodLevel,jdbcType=VARCHAR},
             mood_memo = #{moodMemo},
-            sleep_level = #{sleepLevel},
+            sleep_level = #{sleepLevel,jdbcType=VARCHAR},
             sleep_memo = #{sleepMemo},
-            meal_level = #{mealLevel},
+            meal_level = #{mealLevel,jdbcType=VARCHAR},
             meal_memo = #{mealMemo},
-            exercise_level = #{exerciseLevel},
+            exercise_level = #{exerciseLevel,jdbcType=VARCHAR},
             exercise_memo = #{exerciseMemo},
-            social_level = #{socialLevel},
+            social_level = #{socialLevel,jdbcType=VARCHAR},
             social_memo = #{socialMemo}
         WHERE member_id = #{memberId}
           AND record_date = #{recordDate}
@@ -64,10 +64,10 @@
 
     <!-- 기록 완료 상태 업데이트 -->
     <update id="updateRecordFinished">
-        UPDATE daily_mission_status
+        UPDATE daily_routine_status
         SET is_record_finished = TRUE
         WHERE member_id = #{memberId}
-          AND mission_date = #{recordDate}
+          AND routine_date = #{recordDate}
     </update>
 
     <!-- 오늘 하루 기록 조회 -->

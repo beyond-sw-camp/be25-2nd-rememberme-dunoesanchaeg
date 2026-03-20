@@ -1,5 +1,6 @@
 package com.rememberme.dunoesanchaeg.memory.domain;
 
+import com.rememberme.dunoesanchaeg.memory.domain.enums.Level;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,19 +19,19 @@ public class DailyRecord {
     private Long memberId;
     private LocalDate recordDate;
 
-    private String moodLevel;
+    private Level moodLevel;
     private String moodMemo;
 
-    private String sleepLevel;
+    private Level sleepLevel;
     private String sleepMemo;
 
-    private String mealLevel;
+    private Level mealLevel;
     private String mealMemo;
 
-    private String exerciseLevel;
+    private Level exerciseLevel;
     private String exerciseMemo;
 
-    private String socialLevel;
+    private Level socialLevel;
     private String socialMemo;
 
     private LocalDateTime createdAt;
