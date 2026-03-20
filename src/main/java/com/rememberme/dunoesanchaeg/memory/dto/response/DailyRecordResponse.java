@@ -1,31 +1,28 @@
 package com.rememberme.dunoesanchaeg.memory.dto.response;
 
+import com.rememberme.dunoesanchaeg.memory.domain.enums.Level;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
-@Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class DailyRecordResponse {
     private LocalDate recordDate;
 
-    private String moodLevel;
+    private Level moodLevel;
     private String moodMemo;
 
-    private String sleepLevel;
+    private Level sleepLevel;
     private String sleepMemo;
 
-    private String mealLevel;
+    private Level mealLevel;
     private String mealMemo;
 
-    private String exerciseLevel;
+    private Level exerciseLevel;
     private String exerciseMemo;
 
-    private String socialLevel;
+    private Level socialLevel;
     private String socialMemo;
 }
