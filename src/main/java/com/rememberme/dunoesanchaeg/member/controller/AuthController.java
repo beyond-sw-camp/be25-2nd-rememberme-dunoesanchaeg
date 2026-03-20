@@ -5,8 +5,10 @@ import com.rememberme.dunoesanchaeg.common.ApiResponse;
 import com.rememberme.dunoesanchaeg.member.dto.request.KakaoLoginRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
 import com.rememberme.dunoesanchaeg.member.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseCookie;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,12 +20,23 @@ public class AuthController {
     @PostMapping("/kakaoAuth")
     public ApiResponse<KakaoLoginResponse> loginWithKakao(
             @RequestHeader("User-Agent") String userAgent,
-            @Valid @RequestBody KakaoLoginRequest kakaoLoginRequest
+            @Valid @RequestBody KakaoLoginRequest kakaoLoginRequest,
+            HttpServletResponse response
     ){
-        KakaoLoginResponse response = authService
+        KakaoLoginResponse kakaoLoginResponse = authService
                 .kakaoAuth(kakaoLoginRequest.getKakaoId(),kakaoLoginRequest.getEmail(), userAgent);
 
-        return ApiResponse.success(200, "카카오 로그인 성공", response);
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", kakaoLoginResponse.getRefreshToken())
+                .httpOnly(true)
+                .secure(false)
+                .maxAge(14 * 24 * 60 * 60) //14일
+                .path("/")
+                .sameSite("Strict")
+                .build();
+
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ApiResponse.success(200, "카카오 로그인 성공", kakaoLoginResponse);
     }
 
 

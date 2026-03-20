@@ -3,6 +3,29 @@
 
 <mapper namespace="com.rememberme.dunoesanchaeg.member.mapper.MemberMapper">
 
+    <sql id="selectMemberSql">
+        SELECT member_id,
+               kakao_id,
+               email,
+               role,
+               name,
+               birth_date,
+               phone,
+               guardian_email,
+               guardian_phone,
+               guardian_consent,
+               is_profile_completed,
+               user_status,
+               is_high_contrast,
+               font_size,
+               total_routine_count,
+               last_login_at,
+               created_at,
+               updated_at,
+               deleted_at
+        FROM member
+    </sql>
+
     <resultMap id="MemberResultMap" type="com.rememberme.dunoesanchaeg.member.domain.Member">
         <id property="memberId" column="member_id"/>
         <result property="kakaoId" column="kakao_id"/>
@@ -27,51 +50,14 @@
 
     <!-- 멤버 아이디로 멤버의 데이터를 가져옴 -->
     <select id="findByMemberId" resultMap="MemberResultMap" parameterType="long">
-        SELECT member_id,
-               kakao_id,
-               email,
-               role,
-               name,
-               birth_date,
-               phone,
-               guardian_email,
-               guardian_phone,
-               guardian_consent,
-               is_profile_completed,
-               user_status,
-               is_high_contrast,
-               font_size,
-               total_routine_count,
-               last_login_at,
-               created_at,
-               updated_at,
-               deleted_at
-        FROM member
+        <include refid="selectMemberSql"/>
         WHERE member_id = #{memberId}
     </select>
 
+
     <!--  카카오 아이디와 일치하는 멤버의 데이터를 가져옴  -->
     <select id="findByKakaoId" resultMap="MemberResultMap" parameterType="string">
-        SELECT member_id,
-               kakao_id,
-               email,
-               role,
-               name,
-               birth_date,
-               phone,
-               guardian_email,
-               guardian_phone,
-               guardian_consent,
-               is_profile_completed,
-               user_status,
-               is_high_contrast,
-               font_size,
-               total_routine_count,
-               last_login_at,
-               created_at,
-               updated_at,
-               deleted_at
-        FROM member
+        <include refid="selectMemberSql"/>
         WHERE kakao_id = #{kakaoId}
     </select>
 
@@ -86,14 +72,14 @@
             role,
             user_status
         ) VALUES (
-            #{kakaoId},
-            #{email},
-            #{isHighContrast},
-            #{fontSize},
-            #{isProfileCompleted},
-            #{role},
-            #{userStatus}
-        )
+                     #{kakaoId},
+                     #{email},
+                     #{isHighContrast},
+                     #{fontSize},
+                     #{isProfileCompleted},
+                     #{role},
+                     #{userStatus}
+                 )
     </insert>
 
     <!-- updateLastLoginAt -->
@@ -102,5 +88,19 @@
         SET last_login_at = NOW()
         WHERE member_id = #{memberId}
     </update>
+
+    <!-- updateEmail -->
+    <update id="updateEmail">
+        UPDATE member
+        SET email = #{email},
+            updated_at = NOW()
+        WHERE member_id = #{memberId}
+    </update>
+
+    <!-- findByEmail -->
+    <select id="findByEmail" resultMap="MemberResultMap" parameterType="string">
+        <include refid="selectMemberSql"/>
+        WHERE email = #{email}
+    </select>
 
 </mapper>

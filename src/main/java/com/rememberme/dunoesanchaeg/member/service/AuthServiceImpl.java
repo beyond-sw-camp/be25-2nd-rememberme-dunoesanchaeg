@@ -1,13 +1,13 @@
 package com.rememberme.dunoesanchaeg.member.service;
 
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
-import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
 import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.domain.MemberToken;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +18,7 @@ import static com.rememberme.dunoesanchaeg.member.domain.enums.Role.USER;
 import static com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus.ACTIVE;
 import static com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus.WITHDRAWN;
 
+@Slf4j
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -29,21 +30,13 @@ public class AuthServiceImpl implements AuthService {
     public KakaoLoginResponse kakaoAuth(String kakaoId, String email, String userAgent) {
         int result;
         Member member = memberMapper.findByKakaoId(kakaoId);
-
-        // 토큰 작업해야함
-        //private final JwtProvider jwtProvider;
-
-        // JWT 토큰 로직 구현하면 변경해야함-------------------
-        String accessToken = java.util.UUID.randomUUID().toString();
-        String refreshToken = java.util.UUID.randomUUID().toString();
-        LocalDateTime expireDay = LocalDateTime.now().plusDays(14);
-        //------------------------------------------------
-
-
         // 신규유저면 insertMember 아니면 기존유저
         // 기존 유저에서 getUserStatus 가 WITHDRAWN이면 에러
         // 기존유저이면서 ACTIVE이면 updateLastLoginAt 갱신
         if (member == null) {
+            if(email != null && memberMapper.findByEmail(email) != null){
+                throw new BaseException(400, "이미 다른 계정으로 로그인 되었습니다. 해당 계정으로 로그인해주세요");
+            }
             Member newMember = Member.builder()
                     .kakaoId(kakaoId)
                     .email(email)
@@ -64,6 +57,20 @@ public class AuthServiceImpl implements AuthService {
                 throw new BaseException(400, "탈퇴한 회원입니다. 30일 이내 복구 가능합니다.");
             }
 
+            // kakaoId는 같은데 email이 다른 경우
+            if(email != null && !email.equals(member.getEmail())){
+                // 입력받은 이메일을 다른 사람이 사용하고 있는경우
+                if(memberMapper.findByEmail(email) != null){
+                    log.warn("이메일 변경 시도중 중복 발생 memberId: {} conflictEmail: {}",member.getMemberId(), email);
+                    throw new BaseException(400, "이미 다른 계정에서 사용중인 이메일입니다.");
+                }
+                result = memberMapper.updateEmail(member.getMemberId(), email);
+                if(result != 1){
+                    throw new BaseException(500, "이메일 갱신 실패");
+                }
+                member.updateEmail(email);
+            }
+
             result = memberMapper.updateLastLoginAt(member.getMemberId());
 
             if (result != 1) {
@@ -72,7 +79,13 @@ public class AuthServiceImpl implements AuthService {
         }
 
 
+        // JWT 토큰 로직 구현하면 변경해야함-------------------
         // 새 토큰 발행: 로그인이 성공했으므로 새로운 AccessToken과 RefreshToken을 생성
+        String accessToken = "jwtProvider.createAccessToken(member.getMemberId(),member.getRole())";
+        String refreshToken = "jwtProvider.createRefreshToken(member.getMemberId(),member.getRole())";
+        LocalDateTime expireDay = LocalDateTime.now().plusDays(14);
+        //------------------------------------------------
+
         // 기존 세션 확인: findByMemberIdAndUserAgent로 "이 유저가 이 기기로 들어온 적이 있는지" 확인
         // memberToken == null 이면 새 리프레시토큰과 나머지 설정
         // not null이면 update토큰
@@ -89,11 +102,11 @@ public class AuthServiceImpl implements AuthService {
                 throw new BaseException(500, "유저 토큰 저장 실패");
             }
 
-            memberToken = newMemberToken;
-
         } else {
             memberToken.setRefreshToken(refreshToken);
             memberToken.setExpiresAt(expireDay);
+            memberToken.setRevoked(false);
+
             result = memberTokenMapper.updateMemberToken(memberToken);
             if (result != 1) {
                 throw new BaseException(500, "유저 토큰 수정 실패");
@@ -107,7 +120,7 @@ public class AuthServiceImpl implements AuthService {
                 .fontSize(member.getFontSize())
                 .isHighContrast(member.isHighContrast())
                 .accessToken(accessToken)
-                .refreshToken(memberToken.getRefreshToken())
+                .refreshToken(refreshToken)
                 .build();
     }
 }

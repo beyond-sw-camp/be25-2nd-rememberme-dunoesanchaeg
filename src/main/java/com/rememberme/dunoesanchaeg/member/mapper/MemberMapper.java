@@ -2,6 +2,7 @@ package com.rememberme.dunoesanchaeg.member.mapper;
 
 import com.rememberme.dunoesanchaeg.member.domain.Member;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface MemberMapper {
@@ -18,4 +19,7 @@ public interface MemberMapper {
     // return 1이면 성공
     int updateLastLoginAt(Long memberId);
 
+    Member findByEmail(String email);
+
+    int updateEmail(@Param("memberId") Long memberId, @Param("email") String email);
 }

@@ -37,5 +37,7 @@ public class Member {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
-
+    public void updateEmail(String email) {
+        this.email = email;
+    }
 }
