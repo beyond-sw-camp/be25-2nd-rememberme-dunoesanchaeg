@@ -1,11 +1,11 @@
 package com.rememberme.dunoesanchaeg.memory.service;
 
-import com.rememberme.dunoesanchaeg.common.exception.DailyRecordNotFoundException;
 import com.rememberme.dunoesanchaeg.memory.domain.DailyRecord;
 import com.rememberme.dunoesanchaeg.memory.dto.request.DailyRecordSaveRequest;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordSaveResponse;
 import com.rememberme.dunoesanchaeg.memory.mapper.DailyRecordMapper;
+import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,13 +41,19 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 
         Long dailyRecordId = dailyRecordMapper.findDailyRecordId(memberId, today);
 
-        if (dailyRecordId == null) {
-            dailyRecordMapper.insertDailyRecord(dailyRecord);
-        } else {
-            dailyRecordMapper.updateDailyRecord(dailyRecord);
-        }
+        int result;
 
-        // dailyRecordMapper.updateRecordFinished(memberId, today);
+        if (dailyRecordId == null) {
+            result = dailyRecordMapper.insertDailyRecord(dailyRecord);
+            if (result != 1) {
+                throw new BaseException(500, "하루 기록 저장 실패");
+            }
+        } else {
+            result = dailyRecordMapper.updateDailyRecord(dailyRecord);
+            if (result != 1) {
+                throw new BaseException(500, "하루 기록 수정 실패");
+            }
+        }
 
         return new DailyRecordSaveResponse(
                 today,
@@ -72,8 +78,8 @@ public class DailyRecordServiceImpl implements DailyRecordService {
 
         DailyRecord dailyRecord = dailyRecordMapper.selectDailyRecord(memberId, today);
 
-        if(dailyRecord == null){
-            throw new DailyRecordNotFoundException();
+        if (dailyRecord == null) {
+            throw new BaseException(404, "오늘의 하루 기록이 존재하지 않습니다.");
         }
 
         return new DailyRecordResponse(
