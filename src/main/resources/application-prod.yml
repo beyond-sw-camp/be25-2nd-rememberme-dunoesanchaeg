@@ -23,3 +23,7 @@ mybatis:
   configuration:
     map-underscore-to-camel-case: true
     jdbc-type-for-null: 'NULL'
+
+jwt:
+  # 실제 운영 서버의 환경 변수(JWT_SECRET)에서 값을 가져옵니다.
+  secret: ${JWT_SECRET}

@@ -1,9 +1,11 @@
 package com.rememberme.dunoesanchaeg.member.service;
 
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
+import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
 import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.domain.MemberToken;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.TokenReissueResponse;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +20,15 @@ import static com.rememberme.dunoesanchaeg.member.domain.enums.Role.USER;
 import static com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus.ACTIVE;
 import static com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus.WITHDRAWN;
 
-@Slf4j
 @Transactional
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
     private final MemberMapper memberMapper;
     private final MemberTokenMapper memberTokenMapper;
+    private final JwtProvider jwtProvider;
+    private final TokenManager tokenManager;
 
     @Override
     public KakaoLoginResponse kakaoAuth(String kakaoId, String email, String userAgent) {
@@ -81,8 +85,8 @@ public class AuthServiceImpl implements AuthService {
 
         // JWT 토큰 로직 구현하면 변경해야함-------------------
         // 새 토큰 발행: 로그인이 성공했으므로 새로운 AccessToken과 RefreshToken을 생성
-        String accessToken = "jwtProvider.createAccessToken(member.getMemberId(),member.getRole())";
-        String refreshToken = "jwtProvider.createRefreshToken(member.getMemberId(),member.getRole())";
+        String accessToken = jwtProvider.createAccessToken(member.getMemberId(),member.getRole());
+        String refreshToken = jwtProvider.createRefreshToken(member.getMemberId(),member.getRole());
         LocalDateTime expireDay = LocalDateTime.now().plusDays(14);
         //------------------------------------------------
 
@@ -121,6 +125,79 @@ public class AuthServiceImpl implements AuthService {
                 .isHighContrast(member.isHighContrast())
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .build();
+    }
+
+    @Override
+    public TokenReissueResponse reissue(String refreshToken, String userAgent) {
+        int result;
+        MemberToken token = memberTokenMapper.findByRefreshToken(refreshToken);
+
+        // 토큰이 없는 경우
+        if(token == null){
+            throw new BaseException(401,"유효하지 않은 접근입니다. 다시 로그인해주세요.");
+        }
+
+        // 토큰이 폐기된 경우
+        if (token.isRevoked()) {
+            throw new BaseException(403,"이미 만료된 세션입니다. 다시 로그인해주세요.");
+        }
+
+        // 같은 토큰이 다른 userAgent로 로그인하는 경우 (토큰 탈취)
+        if(!(token.getUserAgent().equals(userAgent))){
+            // @Transactional로 인해 롤백되어버림
+            //token.setRevoked(true);
+            //result = memberTokenMapper.updateMemberToken(token);
+
+            //if(result != 1){
+            //    log.error("보안조치 필요 토큰 수정 실패 - memberId : {}", token.getMemberId());
+            //    throw new BaseException(500,"토큰 수정 실패");
+            //}
+            tokenManager.revokeToken(token);
+
+            log.warn("토큰이 탈취되었습니다. {}", token.getMemberId());
+            throw new BaseException(403, "토큰이 탈취되었습니다.");
+        }
+
+        // 토큰이 만료된 경우 (현재 시간보다 token이 과거인 경우)
+        if(token.getExpiresAt().isBefore(LocalDateTime.now())){
+            tokenManager.revokeToken(token);
+            log.warn("토큰이 만료되었습니다. {}", token.getMemberId());
+            throw new BaseException(401, "토큰이 만료되었습니다. 다시 로그인해주세요.");
+        }
+
+        // 사용자가 WITHDRAWN인 경우
+        // --  현재 작성하고 있는 위치 --
+        Member member = memberMapper.findByMemberId(token.getMemberId());
+        if (member == null) {
+            throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
+        }
+
+        if(member.getUserStatus() == WITHDRAWN){
+            throw new BaseException(400, "탈퇴한 회원입니다. 30일 이내 복구 가능합니다.");
+        }
+
+        // 정상발급
+        // 새로운 토큰 세트 생성
+        String newAccessToken = jwtProvider.createAccessToken(member.getMemberId(), member.getRole());
+        String newRefreshToken = jwtProvider.createRefreshToken(member.getMemberId(), member.getRole());
+
+        //토큰객체에 넣어야함
+        token.setRefreshToken(newRefreshToken);
+        token.setExpiresAt(LocalDateTime.now().plusDays(14));
+
+        result = memberTokenMapper.updateMemberToken(token);
+        if (result != 1){
+            throw new BaseException(500,"토큰 수정 실패");
+        }
+
+
+        return TokenReissueResponse
+                .builder()
+                .refreshToken(newRefreshToken)
+                .accessToken(newAccessToken)
+                .userStatus(member.getUserStatus())
+                .isProfileCompleted(member.isProfileCompleted())
                 .build();
     }
 }

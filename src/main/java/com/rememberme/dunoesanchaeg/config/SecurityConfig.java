@@ -1,5 +1,8 @@
 package com.rememberme.dunoesanchaeg.config;
 
+import com.rememberme.dunoesanchaeg.common.security.JwtFilter;
+import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -15,7 +19,9 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final JwtProvider jwtProvider;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -47,8 +53,9 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",           // Swagger용
                                 "/swagger-ui/**"             // Swagger UI용
                         ).permitAll()
-                        .anyRequest().authenticated()    // 그 외는 토큰 필요 (나중에 잠글 예정)
-                );
+                        .anyRequest().authenticated()
+                ) // JwtFilter는 스프링 시큐리티 내부에서만 사용됨.
+                .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

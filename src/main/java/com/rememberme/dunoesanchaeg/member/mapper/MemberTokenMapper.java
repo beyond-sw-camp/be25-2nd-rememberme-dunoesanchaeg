@@ -15,4 +15,7 @@ public interface MemberTokenMapper {
     //유효기간이 지난 토큰을 새로 발행한 토큰으로 교체 UPDATE를 통해 userAgent는 그대로인 상태에서 리프레시토큰 수정
     int updateMemberToken(MemberToken memberToken);
 
+    // 리프레시 토큰이 있는 경우 새 엑세스 토큰만 재발행
+    MemberToken findByRefreshToken(String refreshToken);
+
 }
