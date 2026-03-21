@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -48,7 +49,8 @@ public class AuthController {
     public ApiResponse<ReissueResponse> reissueToken(
             @CookieValue("refreshToken") String refreshToken,
             @Valid @RequestHeader("User-Agent") String userAgent,
-            HttpServletResponse response){
+            HttpServletResponse response)
+    {
         if(refreshToken == null){
             throw new BaseException(401,"세션이 만료되었거나 유효하지 않은 접근입니다.");
         }
@@ -79,5 +81,55 @@ public class AuthController {
         return ApiResponse.success(200,"토큰 재발급 성공", reissueResponse);
     }
 
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(
+            @AuthenticationPrincipal Long memberId,
+            @RequestHeader("User-Agent") String userAgent,
+            HttpServletResponse response
+
+    ){
+        int result = authService.logout(memberId, userAgent);
+        if(result != 1){
+            log.info("이미 로그아웃된 세션이거나 존재하지 않는 세션입니다. memberId: {}", memberId);
+        }
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .maxAge(0) //즉시 만료
+                .path("/")
+                .sameSite("Strict")
+                .build();
+
+        // 쿠키 재설정
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ApiResponse.success(200, "로그아웃 성공", null);
+    }
+
+    @PostMapping("/logoutAll")
+    public ApiResponse<Void> logoutAll(
+            @AuthenticationPrincipal Long memberId,
+            HttpServletResponse response
+
+    ){
+        int result = authService.logoutAll(memberId);
+        if(result >0 ){
+            log.info("[전체 로그아웃 성공] memberId: {}, 종료된 세션 수: {}", memberId, result);
+        }else{
+            log.info("[전체 로그아웃 알림] 이미 로그아웃된 세션이거나 존재하지 않는 세션입니다. memberId: {}", memberId);
+        }
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .maxAge(0) //즉시 만료
+                .path("/")
+                .sameSite("Strict")
+                .build();
+
+        // 쿠키 재설정
+        response.addHeader("Set-Cookie", cookie.toString());
+
+        return ApiResponse.success(200, "전체 로그아웃 성공", null);
+    }
 
 }

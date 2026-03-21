@@ -1,11 +1,14 @@
 package com.rememberme.dunoesanchaeg.member.service;
 
+import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.member.domain.MemberToken;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -16,10 +19,39 @@ public class TokenManager {
 
     private final MemberTokenMapper memberTokenMapper;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW) // 💡 새로운 트랜잭션을 시작!
+
+    // 토큰 폐기
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void revokeToken(MemberToken token) {
         token.setRevoked(true);
         memberTokenMapper.updateMemberToken(token);
+
+    }
+
+    //로그아웃
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public int logoutTransactional(long memberId, String userAgent) {
+        return memberTokenMapper.logoutMemberToken(memberId, userAgent);
+    }
+
+    // 전체 로그아웃
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public int logoutAllTransactional(long memberId) {
+        return memberTokenMapper.logoutAllMemberToken(memberId);
+    }
+
+    // 재로그인시 토큰만 업데이트
+    // 호출한 쪽의 트랜잭션과 lifecycle이 같음
+    @Transactional(propagation = Propagation.REQUIRED)
+    public void reactivateToken(MemberToken token, String newRefreshToken,LocalDateTime newExpireDate) {
+        token.setRefreshToken(newRefreshToken);
+        token.setExpiresAt(newExpireDate);
+        token.setRevoked(false);
+        int result = memberTokenMapper.updateMemberToken(token);
+
+        if(result != 1){
+            throw new BaseException(500, "세션 재활성화에 실패했습니다.");
+        }
 
     }
 }

@@ -16,4 +16,10 @@ public interface AuthService {
     // 토큰 재발급
     TokenReissueResponse reissue(String refreshToken, String userAgent);
 
+    // 로그아웃
+    int logout(Long memberId, String userAgent);
+
+    // 전체 로그아웃
+    int logoutAll(Long memberId);
+
 }

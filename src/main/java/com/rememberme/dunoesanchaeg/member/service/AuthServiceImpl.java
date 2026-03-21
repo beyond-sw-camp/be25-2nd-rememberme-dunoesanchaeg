@@ -107,14 +107,17 @@ public class AuthServiceImpl implements AuthService {
             }
 
         } else {
-            memberToken.setRefreshToken(refreshToken);
-            memberToken.setExpiresAt(expireDay);
-            memberToken.setRevoked(false);
+//            memberToken.setRefreshToken(refreshToken);
+//            memberToken.setExpiresAt(expireDay);
+//            memberToken.setRevoked(false);
+//
+//            result = memberTokenMapper.updateMemberToken(memberToken);
+//            if (result != 1) {
+//                throw new BaseException(500, "유저 토큰 수정 실패");
+//            }
 
-            result = memberTokenMapper.updateMemberToken(memberToken);
-            if (result != 1) {
-                throw new BaseException(500, "유저 토큰 수정 실패");
-            }
+            // 기존 유저의 경우 reactivateToken으로 확인
+            tokenManager.reactivateToken(memberToken, refreshToken, expireDay);
         }
 
         return KakaoLoginResponse.builder()
@@ -199,5 +202,21 @@ public class AuthServiceImpl implements AuthService {
                 .userStatus(member.getUserStatus())
                 .isProfileCompleted(member.isProfileCompleted())
                 .build();
+    }
+
+    @Override
+    public int logout(Long memberId, String userAgent) {
+        int result;
+        result = tokenManager.logoutTransactional(memberId, userAgent);
+
+        return result;
+    }
+
+    @Override
+    public int logoutAll(Long memberId) {
+        int result;
+        result = tokenManager.logoutAllTransactional(memberId);
+
+        return result;
     }
 }
