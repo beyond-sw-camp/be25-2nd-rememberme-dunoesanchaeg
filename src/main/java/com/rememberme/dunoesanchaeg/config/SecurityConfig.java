@@ -2,6 +2,7 @@ package com.rememberme.dunoesanchaeg.config;
 
 import com.rememberme.dunoesanchaeg.common.security.JwtFilter;
 import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,15 +37,22 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
-                // 4. 경로별 권한 제어 (개발 편의를 위한 프리패스 설정)
+                // 4. 인증/인가: 인증되지 않은 사용자가 접근했을 때 401과 함께 메시지 전달
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json;charset=UTF-8");
+                            response.getWriter().write("{\"code\": 401, \"message\": \"로그인이 필요한 서비스입니다.\"}");
+                        })
+                )
+                // 5. 경로별 권한 제어 (개발 편의를 위한 프리패스 설정)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/",
                                 "/api/v1/auth/**",           // 카카오 로그인 등 인증
                                 "/login/**", "/oauth2/**",   // OAuth2 리다이렉트 경로
                                 "/api/test/**",              // 테스트용
-                                "/api/v1/members/**",        // 회원 관련 (팀원 작업용)
+                                //"/api/v1/members/**",        // 회원 관련 (팀원 작업용)
                                 "/api/v1/routines/**",       // 루틴 관련
                                 "/api/v1/cognitive-games/**",// 미니게임
                                 "/api/v1/open-questions/**", // 질문
@@ -53,7 +61,8 @@ public class SecurityConfig {
                                 "/v3/api-docs/**",           // Swagger용
                                 "/swagger-ui/**"             // Swagger UI용
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest()
+                        .authenticated()
                 ) // JwtFilter는 스프링 시큐리티 내부에서만 사용됨.
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 

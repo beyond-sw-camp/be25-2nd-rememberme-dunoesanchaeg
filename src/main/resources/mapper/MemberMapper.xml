@@ -103,4 +103,27 @@
         WHERE email = #{email}
     </select>
 
+    <!-- findExistMemberPhone -->
+    <select id="findExistMemberPhone" resultType="boolean">
+        SELECT
+            count(*)
+        FROM member
+        WHERE phone = #{phone} AND member_id != #{memberId}
+    </select>
+
+    <!-- updateProfile -->
+    <update id="updateProfile" parameterType="com.rememberme.dunoesanchaeg.member.domain.Member">
+        UPDATE member
+        SET name = #{name},
+            birth_date = #{birthDate},
+            phone = #{phone},
+            guardian_email = #{guardianEmail},
+            guardian_phone = #{guardianPhone},
+            guardian_consent = #{guardianConsent},
+            font_size = #{fontSize},
+            is_high_contrast = #{isHighContrast},
+            is_profile_completed = true,
+            updated_at = NOW()
+        WHERE member_id = #{memberId}
+    </update>
 </mapper>

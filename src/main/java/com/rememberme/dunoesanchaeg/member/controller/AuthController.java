@@ -103,10 +103,10 @@ public class AuthController {
         // 쿠키 재설정
         response.addHeader("Set-Cookie", cookie.toString());
 
-        return ApiResponse.success(200, "로그아웃 성공", null);
+        return ApiResponse.success(200, "로그아웃 성공");
     }
 
-    @PostMapping("/logoutAll")
+    @PostMapping("/logout/all")
     public ApiResponse<Void> logoutAll(
             @AuthenticationPrincipal Long memberId,
             HttpServletResponse response
@@ -129,7 +129,7 @@ public class AuthController {
         // 쿠키 재설정
         response.addHeader("Set-Cookie", cookie.toString());
 
-        return ApiResponse.success(200, "전체 로그아웃 성공", null);
+        return ApiResponse.success(200, "전체 로그아웃 성공");
     }
 
 }
