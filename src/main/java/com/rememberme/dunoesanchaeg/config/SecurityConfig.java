@@ -52,7 +52,7 @@ public class SecurityConfig {
                                 "/api/v1/auth/**",           // 카카오 로그인 등 인증
                                 "/login/**", "/oauth2/**",   // OAuth2 리다이렉트 경로
                                 "/api/test/**",              // 테스트용
-                                //"/api/v1/members/**",        // 회원 관련 (팀원 작업용)
+                                "/api/v1/members/**",        // 회원 관련 (팀원 작업용)
                                 "/api/v1/routines/**",       // 루틴 관련
                                 "/api/v1/cognitive-games/**",// 미니게임
                                 "/api/v1/open-questions/**", // 질문
