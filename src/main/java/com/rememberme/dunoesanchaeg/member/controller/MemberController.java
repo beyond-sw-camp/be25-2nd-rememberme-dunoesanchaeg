@@ -7,6 +7,7 @@ import com.rememberme.dunoesanchaeg.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PutMapping("/profile")
-    ApiResponse<AdditionalInfoResponse> addProfile(
+    ResponseEntity<ApiResponse<AdditionalInfoResponse>> addProfile(
             @AuthenticationPrincipal Long memberId,
             @Valid @RequestBody AdditionalInfoRequest request
     ){
@@ -29,6 +30,6 @@ public class MemberController {
         AdditionalInfoResponse response = memberService.completeProfile(memberId, request);
 
 
-        return ApiResponse.success(200, "프로필 추가 성공", response);
+        return ResponseEntity.ok(ApiResponse.success(200, "프로필 추가 성공", response));
     }
 }
