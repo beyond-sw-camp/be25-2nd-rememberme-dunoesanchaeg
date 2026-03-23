@@ -2,7 +2,6 @@ package com.rememberme.dunoesanchaeg.member.controller;
 
 
 import com.rememberme.dunoesanchaeg.common.ApiResponse;
-import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.member.dto.request.KakaoLoginRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.ReissueResponse;
@@ -48,13 +47,10 @@ public class AuthController {
 
     @PostMapping("/reissue") //
     public ResponseEntity<ApiResponse<ReissueResponse>> reissueToken(
-            @CookieValue("refreshToken") String refreshToken,
+            @CookieValue(value = "refreshToken", required = false) String refreshToken,
             @Valid @RequestHeader("User-Agent") String userAgent,
             HttpServletResponse response)
     {
-        if(refreshToken == null){
-            throw new BaseException(401,"세션이 만료되었거나 유효하지 않은 접근입니다.");
-        }
 
         // 토큰 재발급 및 검증
         TokenReissueResponse reissue = authService.reissue(refreshToken, userAgent);
