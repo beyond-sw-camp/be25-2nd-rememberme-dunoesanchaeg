@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/kakaoAuth")
+    @PostMapping("/kakao-auth")
     public ResponseEntity<ApiResponse<KakaoLoginResponse>> loginWithKakao(
             @RequestHeader("User-Agent") String userAgent,
             @Valid @RequestBody KakaoLoginRequest kakaoLoginRequest,
