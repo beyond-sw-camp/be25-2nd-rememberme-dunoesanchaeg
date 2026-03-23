@@ -3,7 +3,6 @@ package com.rememberme.dunoesanchaeg.routines.service;
 import com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus;
 import com.rememberme.dunoesanchaeg.routines.dto.response.RoutineResponse;
 import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
-import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
