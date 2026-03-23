@@ -23,7 +23,7 @@ public class DailyRecordController {
     private final DailyRecordService dailyRecordService;
 
     @PutMapping
-    public ResponseEntity<ApiResponse<DailyRecordSaveResponse>> saveDailyRecord(
+    public ResponseEntity<ApiResponse<DailyRecordSaveResponse>> saveDailyRecord(    // ApiResponse 구조 통일
             @Valid @RequestBody DailyRecordSaveRequest request) {
 
         Long memberId = SecurityUtil.getCurrentMemberId();
