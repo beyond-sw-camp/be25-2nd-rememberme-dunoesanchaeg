@@ -8,6 +8,7 @@ import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordSaveResponse;
 import com.rememberme.dunoesanchaeg.memory.service.DailyRecordService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,20 +23,20 @@ public class DailyRecordController {
     private final DailyRecordService dailyRecordService;
 
     @PutMapping
-    public ApiResponse<DailyRecordSaveResponse> saveDailyRecord(
+    public ResponseEntity<ApiResponse<DailyRecordSaveResponse>> saveDailyRecord(
             @Valid @RequestBody DailyRecordSaveRequest request) {
 
         Long memberId = SecurityUtil.getCurrentMemberId();
         DailyRecordSaveResponse response = dailyRecordService.saveDailyRecord(memberId, request);
 
-        return ApiResponse.success(200, "하루 기록 저장 성공", response);
+        return ResponseEntity.ok(ApiResponse.success(200, "하루 기록 저장 성공", response));
     }
 
     @GetMapping
-    public ApiResponse<DailyRecordResponse> getTodayDailyRecord() {
+    public ResponseEntity<ApiResponse<DailyRecordResponse>> getTodayDailyRecord() {
         Long memberId = SecurityUtil.getCurrentMemberId();
         DailyRecordResponse response = dailyRecordService.getTodayDailyRecord(memberId);
 
-        return ApiResponse.success(200, "오늘 하루 기록 조회 성공", response);
+        return ResponseEntity.ok(ApiResponse.success(200, "오늘 하루 기록 조회 성공", response));
     }
 }
