@@ -2,14 +2,18 @@ package com.rememberme.dunoesanchaeg.member.service;
 
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
-
+import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
 
 
 public interface MemberService {
+    // 프로필 완료
     AdditionalInfoResponse completeProfile(
             Long memberId,
             AdditionalInfoRequest additionalInfoRequest
     );
+    
+    // 회원 정보 조회
+    RetrieveMemberResponse retrieveMember(Long memberId);
 
 
 }

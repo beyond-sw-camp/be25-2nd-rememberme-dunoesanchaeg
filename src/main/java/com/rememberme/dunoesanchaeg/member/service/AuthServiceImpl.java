@@ -134,9 +134,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public TokenReissueResponse reissue(String refreshToken, String userAgent) {
         int result;
+
+        // 리프레시 토큰 자체가 안들어온 경우
+        if(refreshToken == null){
+            throw new BaseException(401, "세션이 만료되었거나 유효하지 않은 접근입니다.");
+        }
         MemberToken token = memberTokenMapper.findByRefreshToken(refreshToken);
 
-        // 토큰이 없는 경우
+        // 토큰이 DB없는 경우
         if(token == null){
             throw new BaseException(401,"유효하지 않은 접근입니다. 다시 로그인해주세요.");
         }

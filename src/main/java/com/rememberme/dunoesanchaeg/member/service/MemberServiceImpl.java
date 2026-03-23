@@ -4,6 +4,7 @@ import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -80,10 +81,53 @@ public class MemberServiceImpl implements MemberService{
 
         return AdditionalInfoResponse.builder()
                 .memberId(memberId)
-                .isProfileComplete(member.isProfileCompleted())
+                .isProfileCompleted(member.isProfileCompleted())
                 .userStatus(member.getUserStatus())
                 .createdAt(member.getCreatedAt())
                 .updatedAt(member.getUpdatedAt())
                 .build();
+    }
+
+    @Override
+    public RetrieveMemberResponse retrieveMember(Long memberId) {
+        Member member = memberMapper.findByMemberId(memberId);
+        if(member == null) {
+            throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
+        }
+
+        if(!member.isProfileCompleted()){
+            throw new BaseException(403, "프로필 작성이 완료되지 않았습니다. 프로필 등록이 필요합니다.");
+        }
+
+
+        String email = maskEmail(member.getEmail());
+
+        return RetrieveMemberResponse.builder()
+                .name(member.getName())
+                .email(email)
+                .phone(member.getPhone())
+                .fontSize(member.getFontSize())
+                .role(member.getRole())
+                .isHighContrast(member.isHighContrast())
+                .isProfileCompleted(member.isProfileCompleted())
+                .userStatus(member.getUserStatus())
+                .deletedAt(member.getDeletedAt())
+                .build();
+
+    }
+
+    // 이메일 마스킹 로직
+    private String maskEmail(String email){
+        if (!StringUtils.hasText(email)) {
+            throw new BaseException(403, "이메일이 존재하지 않습니다.");
+        }
+        String[] split = email.split("@");
+        String id = split[0];
+        String domain = split[1];
+        if(id.length() <= 2){
+           return id.charAt(0)+"***@"+ domain;
+        }
+
+        return id.substring(0, 3) + "***@"+ domain;
     }
 }
