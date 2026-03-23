@@ -2,15 +2,13 @@ package com.rememberme.dunoesanchaeg.member.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
+
 @Getter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class KakaoLoginRequest {
     @NotBlank(message = "카카오 아이디가 누락되었습니다. 확인해주세요")
     private String kakaoId;

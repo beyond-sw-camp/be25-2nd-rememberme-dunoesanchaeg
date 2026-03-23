@@ -37,5 +37,27 @@ public class Member {
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
 
+    public void updateEmail(String email) {
+        this.email = email;
+    }
 
+    public void completeProfile(String name,
+                                 LocalDate birthDate,
+                                 String phone,
+                                 String guardianEmail,
+                                 String guardianPhone,
+                                 boolean guardianConsent,
+                                 FontSize fontSize,
+                                 boolean isHighContrast){
+        this.name = name;
+        this.birthDate = birthDate;
+        this.phone = phone;
+        this.guardianEmail = guardianEmail;
+        this.guardianPhone = guardianPhone;
+        this.guardianConsent = guardianConsent;
+        this.fontSize = fontSize;
+        this.isHighContrast = isHighContrast;
+        this.isProfileCompleted = true;
+
+    }
 }

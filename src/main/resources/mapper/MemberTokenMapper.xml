@@ -15,7 +15,7 @@
 
     </resultMap>
 
-    <select id="findByMemberIdAndUserAgent" resultMap="MemberTokenResultMap">
+    <sql id="selectMemberToken">
         SELECT
             token_id,
             member_id,
@@ -26,6 +26,10 @@
             last_used_at,
             is_revoked
         FROM member_token
+    </sql>
+
+    <select id="findByMemberIdAndUserAgent" resultMap="MemberTokenResultMap">
+        <include refid="selectMemberToken"/>
         WHERE member_id = #{memberId} and user_agent = #{userAgent}
     </select>
 
@@ -57,16 +61,28 @@
     </update>
 
     <select id="findByRefreshToken" resultMap="MemberTokenResultMap">
-        SELECT
-            token_id,
-            member_id,
-            refresh_token,
-            user_agent,
-            issued_at,
-            expires_at,
-            last_used_at,
-            is_revoked
-        FROM member_token
+        <include refid="selectMemberToken"/>
         WHERE refresh_token = #{refreshToken} AND is_revoked = false AND expires_at > NOW()
     </select>
+
+    <update id="logoutMemberToken">
+        UPDATE member_token
+        set
+            is_revoked = true,
+            last_used_at = NOW(),
+            expires_at = NOW()
+        WHERE
+            member_id = #{memberId} AND user_agent = #{userAgent} AND is_revoked = false
+    </update>
+
+    <update id="logoutAllMemberToken" parameterType="long">
+        UPDATE member_token
+        set
+            is_revoked = true,
+            last_used_at = NOW(),
+            expires_at = NOW()
+        WHERE
+            member_id = #{memberId} AND is_revoked = false
+    </update>
+
 </mapper>

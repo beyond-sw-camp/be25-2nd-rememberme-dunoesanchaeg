@@ -18,4 +18,8 @@ public interface MemberTokenMapper {
     // 리프레시 토큰이 있는 경우 새 엑세스 토큰만 재발행
     MemberToken findByRefreshToken(String refreshToken);
 
+    // isRevoked를 true로 만들어 토큰 무효화
+    int logoutMemberToken(@Param("memberId") Long memberId, @Param("userAgent") String userAgent);
+
+    int logoutAllMemberToken(Long memberId);
 }

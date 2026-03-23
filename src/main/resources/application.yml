@@ -27,3 +27,15 @@ springdoc:
 
 server:
   port: 8080
+
+jwt:
+  # 액세스 토큰 만료 시간: 1시간 (60분 * 60초 * 1000)
+  access-token-expiration: 3600000
+  # 리프레시 토큰 만료 시간: 14일 (14일 * 24시간 * 60분 * 60초 * 1000)
+  refresh-token-expiration: 1209600000
+
+logging:
+  level:
+    org.springframework.jdbc: DEBUG
+    com.zaxxer.hikari: DEBUG
+    org.hibernate.SQL: DEBUG

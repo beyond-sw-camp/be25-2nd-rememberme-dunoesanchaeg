@@ -5,9 +5,11 @@ import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
 import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.domain.MemberToken;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.TokenReissueResponse;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,29 +23,24 @@ import static com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus.WITHDR
 @Transactional
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthServiceImpl implements AuthService {
     private final MemberMapper memberMapper;
     private final MemberTokenMapper memberTokenMapper;
+    private final JwtProvider jwtProvider;
+    private final TokenManager tokenManager;
 
     @Override
     public KakaoLoginResponse kakaoAuth(String kakaoId, String email, String userAgent) {
         int result;
         Member member = memberMapper.findByKakaoId(kakaoId);
-
-        // 토큰 작업해야함
-        //private final JwtProvider jwtProvider;
-
-        // JWT 토큰 로직 구현하면 변경해야함-------------------
-        String accessToken = java.util.UUID.randomUUID().toString();
-        String refreshToken = java.util.UUID.randomUUID().toString();
-        LocalDateTime expireDay = LocalDateTime.now().plusDays(14);
-        //------------------------------------------------
-
-
         // 신규유저면 insertMember 아니면 기존유저
         // 기존 유저에서 getUserStatus 가 WITHDRAWN이면 에러
         // 기존유저이면서 ACTIVE이면 updateLastLoginAt 갱신
         if (member == null) {
+            if(email != null && memberMapper.findByEmail(email) != null){
+                throw new BaseException(400, "이미 다른 계정으로 로그인 되었습니다. 해당 계정으로 로그인해주세요");
+            }
             Member newMember = Member.builder()
                     .kakaoId(kakaoId)
                     .email(email)
@@ -64,6 +61,20 @@ public class AuthServiceImpl implements AuthService {
                 throw new BaseException(400, "탈퇴한 회원입니다. 30일 이내 복구 가능합니다.");
             }
 
+            // kakaoId는 같은데 email이 다른 경우
+            if(email != null && !email.equals(member.getEmail())){
+                // 입력받은 이메일을 다른 사람이 사용하고 있는경우
+                if(memberMapper.findByEmail(email) != null){
+                    log.warn("이메일 변경 시도중 중복 발생 memberId: {} conflictEmail: {}",member.getMemberId(), email);
+                    throw new BaseException(400, "이미 다른 계정에서 사용중인 이메일입니다.");
+                }
+                result = memberMapper.updateEmail(member.getMemberId(), email);
+                if(result != 1){
+                    throw new BaseException(500, "이메일 갱신 실패");
+                }
+                member.updateEmail(email);
+            }
+
             result = memberMapper.updateLastLoginAt(member.getMemberId());
 
             if (result != 1) {
@@ -72,7 +83,13 @@ public class AuthServiceImpl implements AuthService {
         }
 
 
+        // JWT 토큰 로직 구현하면 변경해야함-------------------
         // 새 토큰 발행: 로그인이 성공했으므로 새로운 AccessToken과 RefreshToken을 생성
+        String accessToken = jwtProvider.createAccessToken(member.getMemberId(),member.getRole());
+        String refreshToken = jwtProvider.createRefreshToken(member.getMemberId(),member.getRole());
+        LocalDateTime expireDay = LocalDateTime.now().plusDays(14);
+        //------------------------------------------------
+
         // 기존 세션 확인: findByMemberIdAndUserAgent로 "이 유저가 이 기기로 들어온 적이 있는지" 확인
         // memberToken == null 이면 새 리프레시토큰과 나머지 설정
         // not null이면 update토큰
@@ -89,15 +106,18 @@ public class AuthServiceImpl implements AuthService {
                 throw new BaseException(500, "유저 토큰 저장 실패");
             }
 
-            memberToken = newMemberToken;
-
         } else {
-            memberToken.setRefreshToken(refreshToken);
-            memberToken.setExpiresAt(expireDay);
-            result = memberTokenMapper.updateMemberToken(memberToken);
-            if (result != 1) {
-                throw new BaseException(500, "유저 토큰 수정 실패");
-            }
+//            memberToken.setRefreshToken(refreshToken);
+//            memberToken.setExpiresAt(expireDay);
+//            memberToken.setRevoked(false);
+//
+//            result = memberTokenMapper.updateMemberToken(memberToken);
+//            if (result != 1) {
+//                throw new BaseException(500, "유저 토큰 수정 실패");
+//            }
+
+            // 기존 유저의 경우 reactivateToken으로 확인
+            tokenManager.reactivateToken(memberToken, refreshToken, expireDay);
         }
 
         return KakaoLoginResponse.builder()
@@ -107,7 +127,96 @@ public class AuthServiceImpl implements AuthService {
                 .fontSize(member.getFontSize())
                 .isHighContrast(member.isHighContrast())
                 .accessToken(accessToken)
-                .refreshToken(memberToken.getRefreshToken())
+                .refreshToken(refreshToken)
                 .build();
+    }
+
+    @Override
+    public TokenReissueResponse reissue(String refreshToken, String userAgent) {
+        int result;
+        MemberToken token = memberTokenMapper.findByRefreshToken(refreshToken);
+
+        // 토큰이 없는 경우
+        if(token == null){
+            throw new BaseException(401,"유효하지 않은 접근입니다. 다시 로그인해주세요.");
+        }
+
+        // 토큰이 폐기된 경우
+        if (token.isRevoked()) {
+            throw new BaseException(403,"이미 만료된 세션입니다. 다시 로그인해주세요.");
+        }
+
+        // 같은 토큰이 다른 userAgent로 로그인하는 경우 (토큰 탈취)
+        if(!(token.getUserAgent().equals(userAgent))){
+            // @Transactional로 인해 롤백되어버림
+            //token.setRevoked(true);
+            //result = memberTokenMapper.updateMemberToken(token);
+
+            //if(result != 1){
+            //    log.error("보안조치 필요 토큰 수정 실패 - memberId : {}", token.getMemberId());
+            //    throw new BaseException(500,"토큰 수정 실패");
+            //}
+            tokenManager.revokeToken(token);
+
+            log.warn("토큰이 탈취되었습니다. {}", token.getMemberId());
+            throw new BaseException(403, "토큰이 탈취되었습니다.");
+        }
+
+        // 토큰이 만료된 경우 (현재 시간보다 token이 과거인 경우)
+        if(token.getExpiresAt().isBefore(LocalDateTime.now())){
+            tokenManager.revokeToken(token);
+            log.warn("토큰이 만료되었습니다. {}", token.getMemberId());
+            throw new BaseException(401, "토큰이 만료되었습니다. 다시 로그인해주세요.");
+        }
+
+        // 사용자가 WITHDRAWN인 경우
+        // --  현재 작성하고 있는 위치 --
+        Member member = memberMapper.findByMemberId(token.getMemberId());
+        if (member == null) {
+            throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
+        }
+
+        if(member.getUserStatus() == WITHDRAWN){
+            throw new BaseException(400, "탈퇴한 회원입니다. 30일 이내 복구 가능합니다.");
+        }
+
+        // 정상발급
+        // 새로운 토큰 세트 생성
+        String newAccessToken = jwtProvider.createAccessToken(member.getMemberId(), member.getRole());
+        String newRefreshToken = jwtProvider.createRefreshToken(member.getMemberId(), member.getRole());
+
+        //토큰객체에 넣어야함
+        token.setRefreshToken(newRefreshToken);
+        token.setExpiresAt(LocalDateTime.now().plusDays(14));
+
+        result = memberTokenMapper.updateMemberToken(token);
+        if (result != 1){
+            throw new BaseException(500,"토큰 수정 실패");
+        }
+
+
+        return TokenReissueResponse
+                .builder()
+                .refreshToken(newRefreshToken)
+                .accessToken(newAccessToken)
+                .userStatus(member.getUserStatus())
+                .isProfileCompleted(member.isProfileCompleted())
+                .build();
+    }
+
+    @Override
+    public int logout(Long memberId, String userAgent) {
+        int result;
+        result = tokenManager.logoutTransactional(memberId, userAgent);
+
+        return result;
+    }
+
+    @Override
+    public int logoutAll(Long memberId) {
+        int result;
+        result = tokenManager.logoutAllTransactional(memberId);
+
+        return result;
     }
 }
