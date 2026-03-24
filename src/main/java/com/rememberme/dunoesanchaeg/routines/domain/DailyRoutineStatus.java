@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -16,7 +16,7 @@ public class DailyRoutineStatus {
 
     private Long routineId;
     private Long memberId;
-    private LocalDate routineDate;
+    private LocalDateTime createdAt;
 
     private AssignedGameType assignedGameType;
     private Long assignedQuestionId;

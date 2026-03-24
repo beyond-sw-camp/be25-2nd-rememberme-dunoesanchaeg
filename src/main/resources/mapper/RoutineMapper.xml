@@ -5,7 +5,7 @@
     <resultMap id="RoutineResultMap" type="com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus">
         <id property="routineId" column="routine_id"/>
         <result property="memberId" column="member_id"/>
-        <result property="routineDate" column="routine_date"/>
+        <result property="createdAt" column="created_at"/>
         <result property="assignedGameType" column="assigned_game_type"/>
         <result property="assignedQuestionId" column="assigned_question_id"/>
         <result property="isGameFinished" column="is_game_finished"/>
@@ -18,14 +18,14 @@
         SELECT *
         FROM daily_routine_status
         WHERE member_id = #{memberId}
-          AND routine_date = #{routineDate}
+          AND created_at = #{createdAt}
     </select>
 
     <!-- 루틴 생성 후 저장 -->
     <insert id="insertTodayRoutine" keyProperty="memberId">
         INSERT INTO daily_routine_status (
             member_id,
-            routine_date,
+            created_at,
             assigned_game_type,
             assigned_question_id,
             is_game_finished,
@@ -33,7 +33,7 @@
             is_question_finished
         ) VALUES (
                      #{memberId},
-                     #{routineDate},
+                     #{createdAt},
                      #{assignedGameType},
                      #{assignedQuestionId},
                      false,

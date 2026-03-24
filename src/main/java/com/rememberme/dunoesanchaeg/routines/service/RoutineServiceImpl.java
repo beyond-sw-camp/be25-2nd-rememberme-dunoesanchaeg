@@ -7,7 +7,7 @@ import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 @Service
@@ -18,7 +18,7 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     public RoutineResponse getTodayRoutine(Long memberId) {
 
-        LocalDate today = LocalDate.now();
+        LocalDateTime today = LocalDateTime.now();
 
         // 1. 오늘의 루틴 조회
         DailyRoutineStatus routine = routineMapper.findByMemberIdAndDate(memberId, today);
@@ -54,7 +54,7 @@ public class RoutineServiceImpl implements RoutineService {
         // 4. Dto 변환
         return RoutineResponse.builder()
                 .routineId(routine.getRoutineId())
-                .routineDate(routine.getRoutineDate())
+                .createdAt(routine.getCreatedAt())
                 .assignedGameType(routine.getAssignedGameType().name())
                 .assignedQuestionId(routine.getAssignedQuestionId())
                 .isGameFinished(routine.getIsGameFinished())
@@ -67,10 +67,10 @@ public class RoutineServiceImpl implements RoutineService {
     }
 
     // 루틴 생성
-    private DailyRoutineStatus createRoutine(Long memberId, LocalDate today) {
+    private DailyRoutineStatus createRoutine(Long memberId, LocalDateTime today) {
         return DailyRoutineStatus.builder()
                 .memberId(memberId)
-                .routineDate(LocalDate.now())
+                .createdAt(LocalDateTime.now())
                 .assignedGameType(randomGame())
                 .assignedQuestionId(randomQuestion())
                 .isGameFinished(false)
