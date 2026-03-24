@@ -30,4 +30,7 @@ public interface MemberMapper {
 
     // 멤버 추가 프로필 업데이트
     int updateProfile(Member member);
+
+    // 멤버 프로필 수정
+    int patchProfile(Member member);
 }

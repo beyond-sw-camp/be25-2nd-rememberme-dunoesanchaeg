@@ -126,4 +126,15 @@
             updated_at = NOW()
         WHERE member_id = #{memberId}
     </update>
+
+    <!-- patchProfile -->
+    <update id="patchProfile" parameterType="com.rememberme.dunoesanchaeg.member.domain.Member">
+        UPDATE member
+        <set>
+            <if test="name != null">
+                name = #{name}
+            </if>
+        </set>
+        WHERE member_id = #{memberId}
+    </update>
 </mapper>
