@@ -1,8 +1,10 @@
 package com.rememberme.dunoesanchaeg.member.service;
 
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
+import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 
 
 public interface MemberService {
@@ -15,5 +17,6 @@ public interface MemberService {
     // 회원 정보 조회
     RetrieveMemberResponse retrieveMember(Long memberId);
 
-
+    // 회원 정보 수정
+    UpdateMemberResponse updateMember(Long memberId, UpdateMemberRequest request);
 }

@@ -25,5 +25,6 @@ public class RetrieveMemberResponse {
     Boolean isProfileCompleted;
 
     UserStatus userStatus;
+
     LocalDateTime deletedAt;
 }
