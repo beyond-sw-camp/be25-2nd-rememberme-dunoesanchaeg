@@ -7,6 +7,7 @@ import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Random;
 
@@ -18,7 +19,7 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     public RoutineResponse getTodayRoutine(Long memberId) {
 
-        LocalDateTime today = LocalDateTime.now();
+        LocalDate today = LocalDate.now();
 
         // 1. 오늘의 루틴 조회
         DailyRoutineStatus routine = routineMapper.findByMemberIdAndDate(memberId, today);
@@ -54,7 +55,7 @@ public class RoutineServiceImpl implements RoutineService {
         // 4. Dto 변환
         return RoutineResponse.builder()
                 .routineId(routine.getRoutineId())
-                .createdAt(routine.getCreatedAt())
+                .routineDate(routine.getRoutineDate())
                 .assignedGameType(routine.getAssignedGameType().name())
                 .assignedQuestionId(routine.getAssignedQuestionId())
                 .isGameFinished(routine.getIsGameFinished())
@@ -63,19 +64,21 @@ public class RoutineServiceImpl implements RoutineService {
                 .completedCnt(completedCount)
                 .progressRate(progressRate)
                 .feedbackMsg(feedbackMsg)
+                .createdAt(routine.getCreatedAt())
                 .build();
     }
 
     // 루틴 생성
-    private DailyRoutineStatus createRoutine(Long memberId, LocalDateTime today) {
+    private DailyRoutineStatus createRoutine(Long memberId, LocalDate today) {
         return DailyRoutineStatus.builder()
                 .memberId(memberId)
-                .createdAt(LocalDateTime.now())
+                .routineDate(LocalDate.now())
                 .assignedGameType(randomGame())
                 .assignedQuestionId(randomQuestion())
                 .isGameFinished(false)
                 .isRecordFinished(false)
                 .isQuestionFinished(false)
+                .createdAt(LocalDateTime.now())
                 .build();
     }
 
