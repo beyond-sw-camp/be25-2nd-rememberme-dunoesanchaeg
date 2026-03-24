@@ -21,6 +21,7 @@ public class RoutineController {
     @GetMapping("/today")
     public ResponseEntity<ApiResponse<RoutineResponse>> getTodayRoutine(@RequestParam Long memberId) {
         RoutineResponse response = routineService.getTodayRoutine(memberId);
+
         return ResponseEntity.ok(ApiResponse.success(200, "조회 성공", response));
     }
 }

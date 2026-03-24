@@ -11,7 +11,6 @@
         <result property="isGameFinished" column="is_game_finished"/>
         <result property="isRecordFinished" column="is_record_finished"/>
         <result property="isQuestionFinished" column="is_question_finished"/>
-        <result property="createdAt" column="created_at"/>
     </resultMap>
 
     <!-- 멤버 아이디로 루틴 데이터 가져옴 -->
@@ -19,7 +18,28 @@
         SELECT *
         FROM daily_routine_status
         WHERE member_id = #{memberId}
-        AND routine_date = #{date}
+          AND routine_date = #{routineDate}
     </select>
+
+    <!-- 루틴 생성 후 저장 -->
+    <insert id="insertTodayRoutine" keyProperty="memberId">
+        INSERT INTO daily_routine_status (
+            member_id,
+            routine_date,
+            assigned_game_type,
+            assigned_question_id,
+            is_game_finished,
+            is_record_finished,
+            is_question_finished
+        ) VALUES (
+                     #{memberId},
+                     #{routineDate},
+                     #{assignedGameType},
+                     #{assignedQuestionId},
+                     false,
+                     false,
+                     false
+                 );
+    </insert>
 
 </mapper>

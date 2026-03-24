@@ -11,7 +11,7 @@ public interface RoutineMapper {
 
     // 오늘의 루틴 조회 (memberId와 오늘 날짜로)
     DailyRoutineStatus findByMemberIdAndDate(@Param("memberId") Long memberId,
-                                            @Param("date") LocalDate date);
+                                             @Param("routineDate")LocalDate routineDate);
 
     // 오늘의 루틴 삽입
     void insertTodayRoutine(DailyRoutineStatus routine);

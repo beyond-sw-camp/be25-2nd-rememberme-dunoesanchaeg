@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -25,6 +24,4 @@ public class DailyRoutineStatus {
     private Boolean isGameFinished;
     private Boolean isRecordFinished;
     private Boolean isQuestionFinished;
-
-    private LocalDateTime createdAt;
 }
