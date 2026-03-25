@@ -4,10 +4,12 @@ package com.rememberme.dunoesanchaeg.member.domain;
 import com.rememberme.dunoesanchaeg.member.domain.enums.FontSize;
 import com.rememberme.dunoesanchaeg.member.domain.enums.Role;
 import com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus;
+import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -59,5 +61,38 @@ public class Member {
         this.isHighContrast = isHighContrast;
         this.isProfileCompleted = true;
 
+    }
+
+    // UpdateMemberRequest request로 들어온 값중 수정된 값만 변경
+    public void patchProfile(UpdateMemberRequest request,
+                      LocalDate validatedBirthDate,
+                      String guardianEmail,
+                      String guardianPhone,
+                      boolean guardianConsent
+    ){
+        // 빈문자열만 검증
+
+        if (StringUtils.hasText(request.getName())){
+            this.name = request.getName();
+        }
+
+        if (StringUtils.hasText(request.getPhone())){
+            this.phone = request.getPhone();
+        }
+
+        if (request.getFontSize() != null){
+            this.fontSize = request.getFontSize();
+        }
+
+        if (request.getIsHighContrast() != null){
+            this.isHighContrast = request.getIsHighContrast();
+        }
+
+        // 이미 검증됨
+        this.birthDate = validatedBirthDate;
+        this.guardianConsent = guardianConsent;
+        this.guardianEmail = guardianEmail;
+        this.guardianPhone = guardianPhone;
+        this.isProfileCompleted = true;
     }
 }

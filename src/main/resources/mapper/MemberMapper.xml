@@ -104,6 +104,7 @@
     </select>
 
     <!-- findExistMemberPhone -->
+    <!-- 자기 자신이 입력한 전화번호는 제외 -->
     <select id="findExistMemberPhone" resultType="boolean">
         SELECT
             count(*)
@@ -124,46 +125,6 @@
             is_high_contrast = #{isHighContrast},
             is_profile_completed = true,
             updated_at = NOW()
-        WHERE member_id = #{memberId}
-    </update>
-
-    <!-- patchProfile -->
-    <update id="patchProfile" parameterType="com.rememberme.dunoesanchaeg.member.domain.Member">
-        UPDATE member
-        <set>
-            <if test="name != null and name != ''">
-                name = #{name},
-            </if>
-            <if test="birthDate != null and birthDate !=''">
-                birth_date = #{birthDate},
-            </if>
-            <if test="phone != null and phone != ''">
-                phone = #{phone},
-            </if>
-            <choose>
-                <when test="guardianConsent == false">
-                    guardian_consent = false,
-                    guardian_email = null,
-                    guardian_phone = null,
-                </when>
-                <when test="guardianConsent == true">
-                    guardian_consent = true,
-                    <if test="guardianEmail != null and guardianEmail != ''">
-                        guardian_email = #{guardianEmail},
-                    </if>
-                    <if test="guardianPhone != null and guardianPhone != ''">
-                        guardian_phone = #{guardianPhone},
-                    </if>
-                </when>
-            </choose>
-            <if test="fontSize != null">
-                font_size = #{fontSize},
-            </if>
-            <if test="isHighContrast != null">
-                is_high_contrast = #{isHighContrast},
-            </if>
-            updated_at = NOW()
-        </set>
         WHERE member_id = #{memberId}
     </update>
 </mapper>

@@ -3,8 +3,10 @@ package com.rememberme.dunoesanchaeg.member.controller;
 import com.rememberme.dunoesanchaeg.common.ApiResponse;
 import com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus;
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
+import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 import com.rememberme.dunoesanchaeg.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +45,15 @@ public class MemberController {
         }
 
         return ResponseEntity.ok(ApiResponse.success(200, "프로필 조회 성공", response));
+    }
+
+    @PatchMapping("/me")
+    ResponseEntity<ApiResponse<UpdateMemberResponse>> update(
+            @AuthenticationPrincipal Long memberId,
+            @Valid @RequestBody UpdateMemberRequest request
+            ){
+        log.info("memberId : {} 정보수정", memberId);
+        UpdateMemberResponse response = memberService.updateMember(memberId, request);
+        return ResponseEntity.ok(ApiResponse.success(200, "프로필 수정 성공", response));
     }
 }

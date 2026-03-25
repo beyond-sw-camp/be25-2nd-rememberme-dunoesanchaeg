@@ -29,8 +29,6 @@ public interface MemberMapper {
     boolean findExistMemberPhone(@Param("phone") String phone, @Param("memberId") Long memberId);
 
     // 멤버 추가 프로필 업데이트
-    int updateProfile(Member member);
-
     // 멤버 프로필 수정
-    int patchProfile(Member member);
+    int updateProfile(Member member);
 }
