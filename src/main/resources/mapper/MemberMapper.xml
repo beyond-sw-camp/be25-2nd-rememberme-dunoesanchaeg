@@ -127,4 +127,20 @@
             updated_at = NOW()
         WHERE member_id = #{memberId}
     </update>
+
+    <!-- withdrawnMember -->
+    <update id="withdrawMember">
+        UPDATE member
+        SET user_status = 'WITHDRAWN',
+            deleted_at = NOW()
+        WHERE member_id = #{memberId}
+    </update>
+
+    <!-- recoveryMember -->
+    <update id="recoveryMember">
+        UPDATE member
+        SET user_status = 'ACTIVE',
+            deleted_at = null
+        WHERE member_id = #{memberId}
+    </update>
 </mapper>

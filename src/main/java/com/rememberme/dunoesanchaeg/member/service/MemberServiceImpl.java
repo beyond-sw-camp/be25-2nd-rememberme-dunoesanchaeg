@@ -6,10 +6,13 @@ import com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus;
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.RecoveryResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
+import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -18,12 +21,14 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
     private final MemberMapper memberMapper;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final MemberTokenMapper memberTokenMapper;
 
     // 프로필 완료
     @Override
@@ -188,6 +193,39 @@ public class MemberServiceImpl implements MemberService{
                 .updatedAt(updateMember.getUpdatedAt())
                 .build();
     }
+
+    @Override
+    public void withdrawMember(Long memberId) {
+        int result;
+        Member member = memberMapper.findByMemberId(memberId);
+
+        if(member == null){
+            throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
+        }
+
+        if(UserStatus.WITHDRAWN.equals(member.getUserStatus())){
+            throw new BaseException(403, "이미 탈퇴 신청이 완료된 계정입니다.");
+        }
+
+        result = memberMapper.withdrawMember(memberId);
+        if(result != 1){
+            log.error("회원 탈퇴 실패 memberId: {}", memberId);
+            throw new BaseException(500, "회원 탈퇴 처리중 오류가 발생했습니다.");
+        }
+
+        memberTokenMapper.logoutAllMemberToken(memberId);
+        log.info("회원 탈퇴 성공 memberId: {}", memberId);
+    }
+
+    @Override
+    public RecoveryResponse recoveryMember(Long memberId) {
+        //  TODO 멤버아이디로 멤버 객체를 가져온 다음
+        //  getUserStatus를 확인하고 맞으면 recoveryMember 호출하고
+        //  RecoveryResponse 만들어서 반환
+
+        return null;
+    }
+
 
     // 보호자 동의 유효성 검증
     private record GuardianValidation(

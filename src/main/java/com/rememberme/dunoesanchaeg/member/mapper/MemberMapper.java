@@ -31,4 +31,12 @@ public interface MemberMapper {
     // 멤버 추가 프로필 업데이트
     // 멤버 프로필 수정
     int updateProfile(Member member);
+
+    // 멤버 탈퇴
+    int withdrawMember(Long memberId);
+
+    int recoveryMember(Long memberId);
+
+    int resetMember(Long memberId);
+
 }

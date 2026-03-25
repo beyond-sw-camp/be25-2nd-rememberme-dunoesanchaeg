@@ -95,4 +95,10 @@ public class Member {
         this.guardianPhone = guardianPhone;
         this.isProfileCompleted = true;
     }
+
+    // 계정 복구
+    public void restore(){
+        this.userStatus = UserStatus.ACTIVE;
+        this.deletedAt = null;
+    }
 }

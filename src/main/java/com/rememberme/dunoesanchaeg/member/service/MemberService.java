@@ -3,6 +3,7 @@ package com.rememberme.dunoesanchaeg.member.service;
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.RecoveryResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 
@@ -19,4 +20,10 @@ public interface MemberService {
 
     // 회원 정보 수정
     UpdateMemberResponse updateMember(Long memberId, UpdateMemberRequest request);
+
+    //회원 탈퇴
+    void withdrawMember(Long memberId);
+
+    //회원 복구
+    RecoveryResponse recoveryMember(Long memberId);
 }

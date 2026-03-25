@@ -56,4 +56,13 @@ public class MemberController {
         UpdateMemberResponse response = memberService.updateMember(memberId, request);
         return ResponseEntity.ok(ApiResponse.success(200, "프로필 수정 성공", response));
     }
+
+    @DeleteMapping("/me")
+    ResponseEntity<ApiResponse<Void>> withdraw(
+            @AuthenticationPrincipal Long memberId
+    ){
+        log.info("memberId : {} 탈퇴", memberId);
+        memberService.withdrawMember(memberId);
+        return ResponseEntity.ok(ApiResponse.success(200, "회원탈퇴에 성공했습니다. 30일 이내 복구 가능합니다.", null));
+    }
 }
