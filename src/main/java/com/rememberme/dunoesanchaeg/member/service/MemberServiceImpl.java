@@ -2,6 +2,7 @@ package com.rememberme.dunoesanchaeg.member.service;
 
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.member.domain.Member;
+import com.rememberme.dunoesanchaeg.member.domain.enums.FontSize;
 import com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus;
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
@@ -54,34 +55,7 @@ public class MemberServiceImpl implements MemberService{
                 guardianPhone
         );
 
-        try {
-            LocalDate birthDate = LocalDate.parse(additionalInfoRequest.getBirthDate(), DATE_FORMATTER);
-
-            // 미래 날짜 검증
-            if(birthDate.isAfter(LocalDate.now())){
-                throw new BaseException(400, "생년월일은 미래 날짜일 수 없습니다.");
-            }
-
-            member.completeProfile(additionalInfoRequest.getName(),
-                    birthDate,
-                    additionalInfoRequest.getPhone(),
-                    guardianValidation.email(),
-                    guardianValidation.phone(),
-                    guardianValidation.consent(),
-                    additionalInfoRequest.getFontSize(),
-                    additionalInfoRequest.getIsHighContrast()
-            );
-
-        }catch (DateTimeParseException e) {
-            throw new BaseException(400, "생년월일 형식이 올바르지 않습니다. (YYYY-MM-DD)");
-        }
-
-
-        result = memberMapper.updateProfile(member);
-
-        if(result != 1){
-            throw new BaseException(500, "프로필 업데이트 실패");
-        }
+        birthDateValidation(additionalInfoRequest, member, guardianValidation);
 
         return AdditionalInfoResponse.builder()
                 .memberId(memberId)
@@ -91,6 +65,7 @@ public class MemberServiceImpl implements MemberService{
                 .updatedAt(member.getUpdatedAt())
                 .build();
     }
+
 
     // 회원정보 조회
     @Override
@@ -238,6 +213,54 @@ public class MemberServiceImpl implements MemberService{
         }
     }
 
+    private record BirthDateValidation(
+            String name,
+            LocalDate birthDate,
+            String phone,
+            FontSize fontSize,
+            Boolean isHighContrast,
+            GuardianValidation guardianValidation
+    ){}
 
+    // 생년월일 검증
+    private BirthDateValidation birthDateValidation(
+            String name,
+            LocalDate birthDate,
+            String phone,
+            FontSize fontSize,
+            Boolean isHighContrast,
+            GuardianValidation guardianValidation
+    ) {
+        // 사용자에게 받은 생년월일 판단 후 completeProfile 작성 TODO
+        int result;
+        try {
+            LocalDate newBirthDate = LocalDate.parse(additionalInfoRequest.getBirthDate(), DATE_FORMATTER);
+
+            // 미래 날짜 검증
+            if(birthDate.isAfter(LocalDate.now())){
+                throw new BaseException(400, "생년월일은 미래 날짜일 수 없습니다.");
+            }
+
+            member.completeProfile(additionalInfoRequest.getName(),
+                    birthDate,
+                    additionalInfoRequest.getPhone(),
+                    guardianValidation.email(),
+                    guardianValidation.phone(),
+                    guardianValidation.consent(),
+                    additionalInfoRequest.getFontSize(),
+                    additionalInfoRequest.getIsHighContrast()
+            );
+
+        }catch (DateTimeParseException e) {
+            throw new BaseException(400, "생년월일 형식이 올바르지 않습니다. (YYYY-MM-DD)");
+        }
+
+
+        result = memberMapper.updateProfile(member);
+
+        if(result != 1){
+            throw new BaseException(500, "프로필 업데이트 실패");
+        }
+    }
     
 }
