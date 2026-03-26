@@ -13,6 +13,7 @@ import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -222,6 +223,14 @@ public class MemberServiceImpl implements MemberService{
         //  TODO 멤버아이디로 멤버 객체를 가져온 다음
         //  getUserStatus를 확인하고 맞으면 recoveryMember 호출하고
         //  RecoveryResponse 만들어서 반환
+        Member member = memberMapper.findByMemberId(memberId);
+        if(!UserStatus.WITHDRAWN.equals(member.getUserStatus())){
+            throw new BaseException(400, "올바르지 않은 요청입니다. action 값은 RESTORE이어야 합니다.");
+        }
+        int result = memberMapper.recoveryMember(memberId);
+        if(result != 1){
+            throw new BaseException(500, "회원 복구 처리중 오류가 발생했습니다.");
+        }
 
         return null;
     }

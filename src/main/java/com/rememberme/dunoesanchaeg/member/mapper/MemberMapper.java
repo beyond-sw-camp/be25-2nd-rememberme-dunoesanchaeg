@@ -37,6 +37,4 @@ public interface MemberMapper {
 
     int recoveryMember(Long memberId);
 
-    int resetMember(Long memberId);
-
 }

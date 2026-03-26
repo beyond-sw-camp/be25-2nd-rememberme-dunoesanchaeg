@@ -132,6 +132,7 @@
     <update id="withdrawMember">
         UPDATE member
         SET user_status = 'WITHDRAWN',
+            role = 'WITHDRAWN',
             deleted_at = NOW()
         WHERE member_id = #{memberId}
     </update>
@@ -140,6 +141,7 @@
     <update id="recoveryMember">
         UPDATE member
         SET user_status = 'ACTIVE',
+            role = 'USER'
             deleted_at = null
         WHERE member_id = #{memberId}
     </update>
