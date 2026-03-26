@@ -1,6 +1,7 @@
 package com.rememberme.dunoesanchaeg.member.service;
 
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
+import com.rememberme.dunoesanchaeg.member.dto.request.RecoveryRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RecoveryResponse;
@@ -25,5 +26,5 @@ public interface MemberService {
     void withdrawMember(Long memberId);
 
     //회원 복구
-    RecoveryResponse recoveryMember(Long memberId);
+    RecoveryResponse recoveryMember(Long memberId, RecoveryRequest request, String userAgent);
 }

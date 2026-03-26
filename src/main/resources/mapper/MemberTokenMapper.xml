@@ -33,33 +33,6 @@
         WHERE member_id = #{memberId} and user_agent = #{userAgent}
     </select>
 
-    <insert id="insertMemberToken" useGeneratedKeys="true" keyProperty="tokenId" parameterType="com.rememberme.dunoesanchaeg.member.domain.MemberToken">
-        INSERT INTO member_token(
-            member_id,
-            refresh_token,
-            user_agent,
-            expires_at
-        )
-        VALUES (
-            #{memberId},
-            #{refreshToken},
-            #{userAgent},
-            #{expiresAt}
-
-        )
-    </insert>
-
-    <update id="updateMemberToken" parameterType="com.rememberme.dunoesanchaeg.member.domain.MemberToken">
-        UPDATE member_token
-        SET
-            refresh_token = #{refreshToken},
-            expires_at = #{expiresAt},
-            last_used_at = NOW(),
-            is_revoked = #{isRevoked}
-        WHERE
-            member_id = #{memberId} AND user_agent = #{userAgent}
-    </update>
-
     <select id="findByRefreshToken" resultMap="MemberTokenResultMap">
         <include refid="selectMemberToken"/>
         WHERE refresh_token = #{refreshToken} AND is_revoked = false AND expires_at > NOW()
@@ -84,5 +57,31 @@
         WHERE
             member_id = #{memberId} AND is_revoked = false
     </update>
+
+    <insert id="upsertMemberToken" parameterType="com.rememberme.dunoesanchaeg.member.domain.MemberToken">
+        INSERT INTO member_token (
+            member_id,
+            refresh_token,
+            user_agent,
+            issued_at,
+            expires_at,
+            last_used_at,
+            is_revoked
+        )
+        VALUES (
+             #{memberId},
+             #{refreshToken},
+             #{userAgent},
+             NOW(),
+             #{expiresAt},
+             NOW(),
+             #{isRevoked}
+        )
+        ON DUPLICATE KEY UPDATE
+             refresh_token = VALUES(refresh_token),
+             expires_at = VALUES(expires_at),
+             last_used_at = NOW(),
+             is_revoked = VALUES(is_revoked)
+    </insert>
 
 </mapper>

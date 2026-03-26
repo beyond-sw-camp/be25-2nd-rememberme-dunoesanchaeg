@@ -3,8 +3,10 @@ package com.rememberme.dunoesanchaeg.member.controller;
 import com.rememberme.dunoesanchaeg.common.ApiResponse;
 import com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus;
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
+import com.rememberme.dunoesanchaeg.member.dto.request.RecoveryRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.RecoveryResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 import com.rememberme.dunoesanchaeg.member.service.MemberService;
@@ -51,7 +53,7 @@ public class MemberController {
     ResponseEntity<ApiResponse<UpdateMemberResponse>> update(
             @AuthenticationPrincipal Long memberId,
             @Valid @RequestBody UpdateMemberRequest request
-            ){
+    ){
         log.info("memberId : {} 정보수정", memberId);
         UpdateMemberResponse response = memberService.updateMember(memberId, request);
         return ResponseEntity.ok(ApiResponse.success(200, "프로필 수정 성공", response));
@@ -64,5 +66,16 @@ public class MemberController {
         log.info("memberId : {} 탈퇴", memberId);
         memberService.withdrawMember(memberId);
         return ResponseEntity.ok(ApiResponse.success(200, "회원탈퇴에 성공했습니다. 30일 이내 복구 가능합니다.", null));
+    }
+
+    @PostMapping("/me/recovery")
+    ResponseEntity<ApiResponse<RecoveryResponse>> recovery(
+            @AuthenticationPrincipal Long memberId,
+            @RequestHeader("User-Agent") String userAgent,
+            @Valid @RequestBody RecoveryRequest request
+    ){
+        log.info("memberId : {} 복구", memberId);
+        RecoveryResponse response = memberService.recoveryMember(memberId, request, userAgent);
+        return ResponseEntity.ok(ApiResponse.success(200, "회원 복구에 성공했습니다.", response));
     }
 }

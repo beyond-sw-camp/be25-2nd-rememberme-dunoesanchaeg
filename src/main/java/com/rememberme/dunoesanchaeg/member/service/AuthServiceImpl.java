@@ -87,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
         // 새 토큰 발행: 로그인이 성공했으므로 새로운 AccessToken과 RefreshToken을 생성
         String accessToken = jwtProvider.createAccessToken(member.getMemberId(),member.getRole());
         String refreshToken = jwtProvider.createRefreshToken(member.getMemberId(),member.getRole());
-        LocalDateTime expireDay = LocalDateTime.now().plusDays(14);
+        LocalDateTime expireDay = jwtProvider.getRefreshTokenExpire();
         //------------------------------------------------
 
         // 기존 세션 확인: findByMemberIdAndUserAgent로 "이 유저가 이 기기로 들어온 적이 있는지" 확인
@@ -101,8 +101,8 @@ public class AuthServiceImpl implements AuthService {
                     .userAgent(userAgent)
                     .expiresAt(expireDay)
                     .build();
-            result = memberTokenMapper.insertMemberToken(newMemberToken);
-            if (result != 1) {
+            result = memberTokenMapper.upsertMemberToken(newMemberToken);
+            if (result < 1) {
                 throw new BaseException(500, "유저 토큰 저장 실패");
             }
 
@@ -139,6 +139,7 @@ public class AuthServiceImpl implements AuthService {
         if(refreshToken == null){
             throw new BaseException(401, "세션이 만료되었거나 유효하지 않은 접근입니다.");
         }
+
         MemberToken token = memberTokenMapper.findByRefreshToken(refreshToken);
 
         // 토큰이 DB없는 경우
@@ -175,7 +176,6 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 사용자가 WITHDRAWN인 경우
-        // --  현재 작성하고 있는 위치 --
         Member member = memberMapper.findByMemberId(token.getMemberId());
         if (member == null) {
             throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
@@ -192,10 +192,10 @@ public class AuthServiceImpl implements AuthService {
 
         //토큰객체에 넣어야함
         token.setRefreshToken(newRefreshToken);
-        token.setExpiresAt(LocalDateTime.now().plusDays(14));
+        token.setExpiresAt(jwtProvider.getRefreshTokenExpire());
 
-        result = memberTokenMapper.updateMemberToken(token);
-        if (result != 1){
+        result = memberTokenMapper.upsertMemberToken(token);
+        if (result < 1){
             throw new BaseException(500,"토큰 수정 실패");
         }
 

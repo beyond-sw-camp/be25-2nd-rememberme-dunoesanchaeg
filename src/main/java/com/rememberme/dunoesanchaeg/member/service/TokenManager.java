@@ -24,7 +24,7 @@ public class TokenManager {
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void revokeToken(MemberToken token) {
         token.setRevoked(true);
-        memberTokenMapper.updateMemberToken(token);
+        memberTokenMapper.upsertMemberToken(token);
 
     }
 
@@ -47,9 +47,9 @@ public class TokenManager {
         token.setRefreshToken(newRefreshToken);
         token.setExpiresAt(newExpireDate);
         token.setRevoked(false);
-        int result = memberTokenMapper.updateMemberToken(token);
+        int result = memberTokenMapper.upsertMemberToken(token);
 
-        if(result != 1){
+        if(result < 1){
             throw new BaseException(500, "세션 재활성화에 실패했습니다.");
         }
 

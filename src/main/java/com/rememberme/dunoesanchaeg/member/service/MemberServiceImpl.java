@@ -1,9 +1,15 @@
 package com.rememberme.dunoesanchaeg.member.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
+import com.rememberme.dunoesanchaeg.member.domain.MemberToken;
+import com.rememberme.dunoesanchaeg.member.domain.enums.Action;
+import com.rememberme.dunoesanchaeg.member.domain.enums.Role;
+import com.rememberme.dunoesanchaeg.member.dto.request.RecoveryRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -31,6 +37,7 @@ public class MemberServiceImpl implements MemberService{
     private final MemberMapper memberMapper;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private final MemberTokenMapper memberTokenMapper;
+    private final JwtProvider jwtProvider;
 
     // 프로필 완료
     @Override
@@ -208,7 +215,10 @@ public class MemberServiceImpl implements MemberService{
         if(UserStatus.WITHDRAWN.equals(member.getUserStatus())){
             throw new BaseException(403, "이미 탈퇴 신청이 완료된 계정입니다.");
         }
+        // 1. 객체 상태 변경
+        member.withdraw();
 
+        // 2. DB 반영
         result = memberMapper.withdrawMember(memberId);
         if(result != 1){
             log.error("회원 탈퇴 실패 memberId: {}", memberId);
@@ -220,22 +230,61 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public RecoveryResponse recoveryMember(Long memberId) {
-        //  TODO 멤버아이디로 멤버 객체를 가져온 다음
-        //  getUserStatus를 확인하고 맞으면 recoveryMember 호출하고
-        //  RecoveryResponse 만들어서 반환
+    public RecoveryResponse recoveryMember(Long memberId, RecoveryRequest request, String userAgent) {
+        int result;
+
+        if(request.getAction() != Action.RESTORE){
+            throw new BaseException(400, "잘못된 요청입니다.");
+        }
+
         Member member = memberMapper.findByMemberId(memberId);
-        if(!UserStatus.WITHDRAWN.equals(member.getUserStatus())){
-            throw new BaseException(400, "올바르지 않은 요청입니다. action 값은 RESTORE이어야 합니다.");
+
+        if(member == null){
+            throw new BaseException(500, "회원 정보를 찾을 수 없습니다.");
         }
-        int result = memberMapper.recoveryMember(memberId);
+
+        if(!Role.WITHDRAWN.equals(member.getRole())){
+            throw new BaseException(403, "유효하지 않은 접근입니다.");
+        }
+
+        if(UserStatus.WITHDRAWN.equals(member.getUserStatus())
+                && member.getDeletedAt().plusDays(30).isBefore(LocalDateTime.now())){
+            throw new BaseException(403,"이미 삭제된 정보입니다.");
+        }
+
+        member.restore();
+        result = memberMapper.updateProfile(member);
         if(result != 1){
-            throw new BaseException(500, "회원 복구 처리중 오류가 발생했습니다.");
+            throw new BaseException(500, "회원 정보 복구 실패");
         }
+        log.info("회원 정보 복구 완료: {}", memberId);
 
-        //todo 작업해야함
+        //회원 복구 완료 후 새 리프레시 토큰과 엑세스 토큰을 만들어줘야함
 
-        return null;
+        String refreshToken = jwtProvider.createRefreshToken(memberId, member.getRole());
+        String accessToken = jwtProvider.createAccessToken(memberId, member.getRole());
+        
+        MemberToken memberToken = MemberToken.builder()
+                .memberId(member.getMemberId())
+                .refreshToken(refreshToken)
+                .userAgent(userAgent)
+                .expiresAt(jwtProvider.getRefreshTokenExpire())
+                .lastUsedAt(LocalDateTime.now())
+                .isRevoked(false)
+                .build();
+
+        result = memberTokenMapper.upsertMemberToken(memberToken);
+        if(result < 1){
+            throw new BaseException(500, "토큰 갱신 실패");
+        }
+        
+        return RecoveryResponse.builder()
+                .userStatus(member.getUserStatus())
+                .isProfileCompleted(member.isProfileCompleted())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+
     }
 
 

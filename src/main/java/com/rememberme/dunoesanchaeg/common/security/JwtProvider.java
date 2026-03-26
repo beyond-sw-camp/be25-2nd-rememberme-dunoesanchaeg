@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Slf4j
@@ -104,6 +106,11 @@ public class JwtProvider {
                 parseClaim(token)
                         .get("role", String.class)
         );
+    }
+
+    public LocalDateTime getRefreshTokenExpire(){
+        // 현재 시간에 refreshTokenExpiration의 값을 더함
+        return LocalDateTime.now().plus(refreshTokenExpiration, ChronoUnit.MILLIS);
     }
 
 }

@@ -96,9 +96,17 @@ public class Member {
         this.isProfileCompleted = true;
     }
 
+    // 계정탈퇴
+    public void withdraw() {
+        this.userStatus = UserStatus.WITHDRAWN;
+        this.role = Role.WITHDRAWN;
+        this.deletedAt = LocalDateTime.now();
+    }
+
     // 계정 복구
     public void restore(){
         this.userStatus = UserStatus.ACTIVE;
+        this.role = Role.USER;
         this.deletedAt = null;
     }
 }
