@@ -1,5 +1,13 @@
 package com.rememberme.dunoesanchaeg.member.service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus;
@@ -11,16 +19,9 @@ import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 @Slf4j
 @Service
@@ -231,6 +232,8 @@ public class MemberServiceImpl implements MemberService{
         if(result != 1){
             throw new BaseException(500, "회원 복구 처리중 오류가 발생했습니다.");
         }
+
+        //todo 작업해야함
 
         return null;
     }
