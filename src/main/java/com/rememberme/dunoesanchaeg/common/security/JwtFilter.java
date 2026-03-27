@@ -1,6 +1,7 @@
 package com.rememberme.dunoesanchaeg.common.security;
 
-import com.rememberme.dunoesanchaeg.member.domain.enums.Role;
+import com.rememberme.dunoesanchaeg.common.exception.AuthException; // 👈 새로 만든 AuthException 임포트
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,28 +25,45 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain
-    ) throws ServletException, IOException
-    {
-        String header = request.getHeader("Authorization");
-        if(header == null || !header.startsWith("Bearer ")){
+    ) throws ServletException, IOException {
+        try {
+            String header = request.getHeader("Authorization");
+            if (header == null || !header.startsWith("Bearer ")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
+            String token = header.substring(7);
+
+            if (jwtProvider.validateToken(token)) {
+                Claims claims = jwtProvider.getClaims(token);
+                Long memberId = Long.parseLong(claims.getSubject());
+                String roleName = claims.get("role", String.class);
+
+                SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + roleName);
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(memberId, null, Collections.singleton(authority));
+
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
             filterChain.doFilter(request, response);
-            return;
+
+        } catch (AuthException e) { // 👈 BaseException 대신 AuthException을 잡습니다.
+            log.error("JWT 필터 내 인증 예외 발생: {}", e.getMessage());
+            setErrorResponse(response, e.getMessage());
         }
+    }
 
-        String token = header.substring(7);
+    private void setErrorResponse(HttpServletResponse response, String message) throws IOException {
+        // AuthException은 무조건 401이므로 숫자를 고정합니다.
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
+        response.setContentType("application/json;charset=UTF-8");
 
-        if (jwtProvider.validateToken(token)) {
-            Long memberId = jwtProvider.getMemberId(token);
-            Role role = jwtProvider.getRole(token);
-            SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_" + role.name());
+        String json = String.format(
+                "{\"status\": 401, \"message\": \"%s\", \"data\": null}",
+                message
+        );
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(memberId, null, Collections.singleton(simpleGrantedAuthority));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        }
-
-        filterChain.doFilter(request, response);
-
+        response.getWriter().write(json);
     }
 }

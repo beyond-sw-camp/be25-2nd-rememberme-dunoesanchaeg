@@ -1,5 +1,6 @@
 package com.rememberme.dunoesanchaeg.common;
 
+import com.rememberme.dunoesanchaeg.common.exception.AuthException;
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.common.exception.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    // 1. 우리가 직접 던지는 비즈니스 에러 (탈퇴 회원 등)
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ApiResponse<Void>> handleBaseException(BaseException e) {
         log.warn("비즈니스 예외 발생: {}", e.getMessage());
@@ -23,7 +23,6 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(e.getCode(), e.getMessage()));
     }
 
-    // 2. @Valid 검증 실패 에러 (아이디 누락 등)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<List<ErrorResponse>>> handleValidationException(MethodArgumentNotValidException e) {
         List<ErrorResponse> errors = e.getBindingResult().getFieldErrors().stream()
@@ -38,13 +37,18 @@ public class GlobalExceptionHandler {
     }
 
 
-    // 3. 그 외 예상치 못한 모든 서버 에러
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
         log.error("예상치 못한 서버 오류 발생: ", e);
         return ResponseEntity
                 .status(500)
                 .body(ApiResponse.error(500, "서버 내부 오류가 발생했습니다."));
+    }
+
+    // 필터 전용 예외 처리
+    @ExceptionHandler(AuthException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAuthException(AuthException e) {
+        return ResponseEntity.status(401).body(ApiResponse.fail(401, e.getMessage(), null));
     }
 
 }

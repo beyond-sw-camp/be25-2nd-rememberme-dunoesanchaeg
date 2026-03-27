@@ -1,6 +1,6 @@
 package com.rememberme.dunoesanchaeg.common.security;
 
-import com.rememberme.dunoesanchaeg.common.exception.BaseException;
+import com.rememberme.dunoesanchaeg.common.exception.AuthException;
 import com.rememberme.dunoesanchaeg.member.domain.enums.Role;
 import io.jsonwebtoken.*;
 import jakarta.annotation.PostConstruct;
@@ -60,28 +60,26 @@ public class JwtProvider {
                 .compact();
     }
 
-    public boolean validateToken(String token){
-        try{
+    public boolean validateToken(String token) {
+        try {
             Jwts.parser()
                     .verifyWith(key)
                     .build()
                     .parseSignedClaims(token);
             return true;
-
-        }catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.error("잘못된 JWT 서명입니다.");
-            throw new BaseException(401, "유효하지 않은 토큰 서명입니다.");
+            throw new AuthException("유효하지 않은 토큰 서명입니다."); // 👈 변경
         } catch (ExpiredJwtException e) {
             log.error("만료된 JWT 토큰입니다.");
-            throw new BaseException(401, "토큰이 만료되었습니다. 다시 로그인해주세요.");
+            throw new AuthException("토큰이 만료되었습니다. 다시 로그인해주세요."); // 👈 변경
         } catch (UnsupportedJwtException e) {
             log.error("지원되지 않는 JWT 토큰입니다.");
-            throw new BaseException(401, "지원되지 않는 토큰 형식입니다.");
+            throw new AuthException("지원되지 않는 토큰 형식입니다."); // 👈 변경
         } catch (IllegalArgumentException e) {
             log.error("JWT 토큰이 잘못되었습니다.");
-            throw new BaseException(400, "토큰이 비어있거나 잘못되었습니다.");
+            throw new AuthException("토큰이 비어있거나 잘못되었습니다."); // 👈 변경
         }
-
     }
 
     // parseClaim(token)을 통해 통째로 파싱
@@ -115,6 +113,10 @@ public class JwtProvider {
 
     public long getRefreshTokenStepSeconds() {
         return refreshTokenExpiration / 1000;
+    }
+
+    public Claims getClaims(String token) {
+        return parseClaim(token);
     }
 
 }

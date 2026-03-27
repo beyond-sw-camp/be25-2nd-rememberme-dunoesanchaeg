@@ -18,5 +18,4 @@ public class ErrorResponse {
                 .reason(fieldError.getDefaultMessage())
                 .build();
     }
-
 }
