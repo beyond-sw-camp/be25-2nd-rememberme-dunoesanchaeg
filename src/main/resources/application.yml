@@ -5,6 +5,11 @@ spring:
     serialization:
       write-dates-as-timestamps: false # 날짜를 [2026,3,14]가 아닌 "2026-03-14"로 출력
     default-property-inclusion: non_null # null인 필드는 JSON 응답에서 제외
+    time-zone: Asia/Seoul
+  mvc:
+    # 404를 포함한 모든 에러를 표준 규격(RFC 7807)으로 처리
+    problem-details:
+      enabled: true
 
   # 데이터소스 구조만 정의 (값은 각 프로필에서 채움)
   datasource:
@@ -39,3 +44,4 @@ logging:
     org.springframework.jdbc: DEBUG
     com.zaxxer.hikari: DEBUG
     org.hibernate.SQL: DEBUG
+

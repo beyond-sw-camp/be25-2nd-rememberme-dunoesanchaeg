@@ -1,7 +1,8 @@
 spring:
   datasource:
     # 운영 환경에서는 기본값 없이 반드시 환경 변수로 받아야 안전함
-    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
 

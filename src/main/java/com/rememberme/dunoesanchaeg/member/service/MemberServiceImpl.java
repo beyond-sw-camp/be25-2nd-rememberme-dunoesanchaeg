@@ -99,10 +99,13 @@ public class MemberServiceImpl implements MemberService{
             throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
         }
 
+        if(UserStatus.WITHDRAWN.equals(member.getUserStatus())){
+            return RetrieveMemberResponse.ofWithdrawn(member);
+        }
+
         if(!member.isProfileCompleted()){
             throw new BaseException(403, "프로필 작성이 완료되지 않았습니다. 프로필 등록이 필요합니다.");
         }
-
 
         String email = maskEmail(member.getEmail());
 
@@ -253,7 +256,7 @@ public class MemberServiceImpl implements MemberService{
         }
 
         member.restore();
-        result = memberMapper.updateProfile(member);
+        result = memberMapper.recoveryMember(member.getMemberId());
         if(result != 1){
             throw new BaseException(500, "회원 정보 복구 실패");
         }
