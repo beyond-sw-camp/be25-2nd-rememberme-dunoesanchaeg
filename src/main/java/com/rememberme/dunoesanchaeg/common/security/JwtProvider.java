@@ -113,4 +113,8 @@ public class JwtProvider {
         return LocalDateTime.now().plus(refreshTokenExpiration, ChronoUnit.MILLIS);
     }
 
+    public long getRefreshTokenStepSeconds() {
+        return refreshTokenExpiration / 1000;
+    }
+
 }

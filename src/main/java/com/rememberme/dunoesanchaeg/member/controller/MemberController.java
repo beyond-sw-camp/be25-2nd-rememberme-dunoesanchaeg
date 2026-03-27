@@ -1,6 +1,8 @@
 package com.rememberme.dunoesanchaeg.member.controller;
 
 import com.rememberme.dunoesanchaeg.common.ApiResponse;
+import com.rememberme.dunoesanchaeg.common.security.CookieUtil;
+import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
 import com.rememberme.dunoesanchaeg.member.domain.enums.UserStatus;
 import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.RecoveryRequest;
@@ -10,9 +12,12 @@ import com.rememberme.dunoesanchaeg.member.dto.response.RecoveryResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 import com.rememberme.dunoesanchaeg.member.service.MemberService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +28,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class MemberController {
     private final MemberService memberService;
+    private final CookieUtil cookieUtil;
+    private final JwtProvider jwtProvider;
 
     @PutMapping("/profile")
     ResponseEntity<ApiResponse<AdditionalInfoResponse>> addProfile(
@@ -61,10 +68,15 @@ public class MemberController {
 
     @DeleteMapping("/me")
     ResponseEntity<ApiResponse<Void>> withdraw(
-            @AuthenticationPrincipal Long memberId
+            @AuthenticationPrincipal Long memberId,
+            HttpServletResponse response
     ){
         log.info("memberId : {} 탈퇴", memberId);
         memberService.withdrawMember(memberId);
+
+        ResponseCookie cookie = cookieUtil.deleteRefreshTokenCookie();
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
         return ResponseEntity.ok(ApiResponse.success(200, "회원탈퇴에 성공했습니다. 30일 이내 복구 가능합니다.", null));
     }
 
@@ -72,10 +84,17 @@ public class MemberController {
     ResponseEntity<ApiResponse<RecoveryResponse>> recovery(
             @AuthenticationPrincipal Long memberId,
             @RequestHeader("User-Agent") String userAgent,
-            @Valid @RequestBody RecoveryRequest request
+            @Valid @RequestBody RecoveryRequest request,
+            HttpServletResponse response
     ){
         log.info("memberId : {} 복구", memberId);
-        RecoveryResponse response = memberService.recoveryMember(memberId, request, userAgent);
-        return ResponseEntity.ok(ApiResponse.success(200, "회원 복구에 성공했습니다.", response));
+        RecoveryResponse recoveryResponse = memberService.recoveryMember(memberId, request, userAgent);
+
+        // 쿠키 저장
+        ResponseCookie cookie = cookieUtil.createRefreshTokenCookie(recoveryResponse.getRefreshToken(), jwtProvider.getRefreshTokenStepSeconds());
+
+        // 쿠키 등록
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return ResponseEntity.ok(ApiResponse.success(200, "회원 복구에 성공했습니다.", recoveryResponse));
     }
 }

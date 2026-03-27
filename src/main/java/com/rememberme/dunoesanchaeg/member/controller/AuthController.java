@@ -2,6 +2,8 @@ package com.rememberme.dunoesanchaeg.member.controller;
 
 
 import com.rememberme.dunoesanchaeg.common.ApiResponse;
+import com.rememberme.dunoesanchaeg.common.security.CookieUtil;
+import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
 import com.rememberme.dunoesanchaeg.member.dto.request.KakaoLoginRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.ReissueResponse;
@@ -22,6 +24,8 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 public class AuthController {
     private final AuthService authService;
+    private final CookieUtil cookieUtil;
+    private final JwtProvider jwtProvider;
 
     @PostMapping("/kakao-auth")
     public ResponseEntity<ApiResponse<KakaoLoginResponse>> loginWithKakao(
@@ -32,13 +36,7 @@ public class AuthController {
         KakaoLoginResponse kakaoLoginResponse = authService
                 .kakaoAuth(kakaoLoginRequest.getKakaoId(),kakaoLoginRequest.getEmail(), userAgent);
 
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", kakaoLoginResponse.getRefreshToken())
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(14 * 24 * 60 * 60) //14일
-                .path("/")
-                .sameSite("Strict")
-                .build();
+        ResponseCookie cookie = cookieUtil.createRefreshTokenCookie(kakaoLoginResponse.getRefreshToken(), jwtProvider.getRefreshTokenStepSeconds());
 
         response.addHeader("Set-Cookie", cookie.toString());
 
@@ -56,13 +54,7 @@ public class AuthController {
         TokenReissueResponse reissue = authService.reissue(refreshToken, userAgent);
 
         // 쿠키 생성
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", reissue.getRefreshToken())
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(14 * 24 * 60 * 60) //14일
-                .path("/")
-                .sameSite("Strict")
-                .build();
+        ResponseCookie cookie = cookieUtil.createRefreshTokenCookie(reissue.getRefreshToken(), jwtProvider.getRefreshTokenStepSeconds());
 
         // 쿠키 재설정
         response.addHeader("Set-Cookie", cookie.toString());
@@ -89,13 +81,7 @@ public class AuthController {
         if(result != 1){
             log.info("이미 로그아웃된 세션이거나 존재하지 않는 세션입니다. memberId: {}", memberId);
         }
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(0) //즉시 만료
-                .path("/")
-                .sameSite("Strict")
-                .build();
+        ResponseCookie cookie = cookieUtil.deleteRefreshTokenCookie();
 
         // 쿠키 재설정
         response.addHeader("Set-Cookie", cookie.toString());
@@ -115,13 +101,7 @@ public class AuthController {
         }else{
             log.info("[전체 로그아웃 알림] 이미 로그아웃된 세션이거나 존재하지 않는 세션입니다. memberId: {}", memberId);
         }
-        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
-                .httpOnly(true)
-                .secure(false)
-                .maxAge(0) //즉시 만료
-                .path("/")
-                .sameSite("Strict")
-                .build();
+        ResponseCookie cookie = cookieUtil.deleteRefreshTokenCookie();
 
         // 쿠키 재설정
         response.addHeader("Set-Cookie", cookie.toString());
