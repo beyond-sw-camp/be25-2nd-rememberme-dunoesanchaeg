@@ -141,7 +141,7 @@
     <update id="recoveryMember">
         UPDATE member
         SET user_status = 'ACTIVE',
-            role = 'USER'
+            role = 'USER',
             deleted_at = null
         WHERE member_id = #{memberId}
     </update>
