@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
-<mapper namespace="com.rememberme.dunoesanchaeg.member.mapper.SchedularMapper">
+<mapper namespace="com.rememberme.dunoesanchaeg.member.mapper.SchedulerMapper">
     <delete id="deleteRevokedToken">
         DELETE FROM member_token
         WHERE is_revoked = true OR expires_at <![CDATA[ < ]]> NOW()
@@ -20,14 +20,23 @@
             deleted_at <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 30 DAY)
     </select>
 
-    <!-- TODO 매퍼 구성해야함
-        // 카카오 탈퇴 상태 변경
-        int updateKakaoUnlinkedStatus();
+    <update id="updateKakaoUnlinkedStatus" parameterType="Long">
+        UPDATE member
+        SET
+            is_kakao_unlinked = true,
+            role = 'WITHDRAWN'
+        WHERE user_status = 'WITHDRAWN' AND member_id = #{memberId}
+    </update>
 
-        // 탈퇴 회원 영구삭제
-        int removeMemberPermanently();
-    -->
-
+    <delete id="removeMemberPermanently">
+        DELETE
+        FROM member
+        WHERE is_kakao_unlinked = true
+          AND
+            user_status = 'WITHDRAWN'
+          AND
+            deleted_at <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 30 DAY)
+    </delete>
 
 </mapper>
 

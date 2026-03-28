@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class DeleteRevokedToken {
+public class DeleteRevokedTokenScheduler {
     private final SchedulerMapper schedulerMapper;
 
     // 매 새벽 3시마다 실행

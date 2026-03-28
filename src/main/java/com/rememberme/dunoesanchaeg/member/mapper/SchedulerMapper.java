@@ -1,6 +1,9 @@
 package com.rememberme.dunoesanchaeg.member.mapper;
 
+import com.rememberme.dunoesanchaeg.member.dto.target.WithdrawalTargetDto;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 @Mapper
 public interface SchedulerMapper {
@@ -9,10 +12,10 @@ public interface SchedulerMapper {
     int deleteRevokedToken();
 
     //탈퇴 회원 조회
-    int selectWithdrawnMember();
+    List<WithdrawalTargetDto> selectWithdrawnMember();
 
     // 카카오 탈퇴 상태 변경
-    int updateKakaoUnlinkedStatus();
+    int updateKakaoUnlinkedStatus(Long memberId);
 
     // 탈퇴 회원 영구삭제
     int removeMemberPermanently();
