@@ -57,10 +57,6 @@ public class AuthServiceImpl implements AuthService {
             member = newMember;
 
         } else {
-            if (member.getUserStatus() == WITHDRAWN) {
-                throw new BaseException(400, "탈퇴한 회원입니다. 30일 이내 복구 가능합니다.");
-            }
-
             // kakaoId는 같은데 email이 다른 경우
             if(email != null && !email.equals(member.getEmail())){
                 // 입력받은 이메일을 다른 사람이 사용하고 있는경우

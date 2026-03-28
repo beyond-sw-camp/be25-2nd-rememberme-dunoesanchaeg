@@ -206,6 +206,7 @@ public class MemberServiceImpl implements MemberService{
                 .build();
     }
 
+    //계정 탈퇴
     @Override
     public void withdrawMember(Long memberId) {
         int result;
@@ -232,11 +233,12 @@ public class MemberServiceImpl implements MemberService{
         log.info("회원 탈퇴 성공 memberId: {}", memberId);
     }
 
+    //계정 복구
     @Override
     public RecoveryResponse recoveryMember(Long memberId, RecoveryRequest request, String userAgent) {
         int result;
 
-        if(request.getAction() != Action.RESTORE){
+        if(!Action.RESTORE.equals(request.getAction())){
             throw new BaseException(400, "잘못된 요청입니다.");
         }
 
