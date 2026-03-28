@@ -20,4 +20,5 @@ public interface MemberTokenMapper {
     int logoutMemberToken(@Param("memberId") Long memberId, @Param("userAgent") String userAgent);
 
     int logoutAllMemberToken(Long memberId);
+
 }
