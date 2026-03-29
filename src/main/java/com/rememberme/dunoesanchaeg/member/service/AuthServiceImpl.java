@@ -29,6 +29,7 @@ public class AuthServiceImpl implements AuthService {
     private final MemberTokenMapper memberTokenMapper;
     private final JwtProvider jwtProvider;
     private final TokenManager tokenManager;
+    private final KakaoClient kakaoClient;
 
     @Override
     public KakaoLoginResponse kakaoAuth(Long kakaoId, String email, String userAgent) {
@@ -208,7 +209,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public int logout(Long memberId, String userAgent) {
         int result;
+        Member member = memberMapper.findByMemberId(memberId);
+        if (member == null) {
+            throw new BaseException(404, "존재하지 않는 회원입니다.");
+        }
+
         result = tokenManager.logoutTransactional(memberId, userAgent);
+
+        kakaoClient.logout(member.getKakaoId());
 
         return result;
     }
@@ -216,6 +224,14 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public int logoutAll(Long memberId) {
         int result;
+        Member member = memberMapper.findByMemberId(memberId);
+        if (member == null) {
+            throw new BaseException(404, "존재하지 않는 회원입니다.");
+        }
+
+        kakaoClient.logout(member.getKakaoId());
+
+        log.info("모든 유저 기기에서 로그아웃 - memberId: {}", memberId);
         result = tokenManager.logoutAllTransactional(memberId);
 
         return result;

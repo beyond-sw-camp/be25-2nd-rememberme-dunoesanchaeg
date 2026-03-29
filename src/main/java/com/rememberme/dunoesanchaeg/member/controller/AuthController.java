@@ -8,7 +8,9 @@ import com.rememberme.dunoesanchaeg.member.dto.request.KakaoLoginRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.ReissueResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.TokenReissueResponse;
+import com.rememberme.dunoesanchaeg.member.dto.target.KakaoUserInfo;
 import com.rememberme.dunoesanchaeg.member.service.AuthService;
+import com.rememberme.dunoesanchaeg.member.service.KakaoClient;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class AuthController {
     private final AuthService authService;
     private final CookieUtil cookieUtil;
     private final JwtProvider jwtProvider;
+    private final KakaoClient kakaoClient;
 
     @PostMapping("/kakao-auth")
     public ResponseEntity<ApiResponse<KakaoLoginResponse>> loginWithKakao(
@@ -33,8 +36,12 @@ public class AuthController {
             @Valid @RequestBody KakaoLoginRequest kakaoLoginRequest,
             HttpServletResponse response
     ){
+        // 카카오 토큰 검증
+        KakaoUserInfo userInfo = kakaoClient.getKakaoUserInfo(kakaoLoginRequest.getAccessToken());
+
+        // 카카오 로그인 처리
         KakaoLoginResponse kakaoLoginResponse = authService
-                .kakaoAuth(kakaoLoginRequest.getKakaoId(),kakaoLoginRequest.getEmail(), userAgent);
+                .kakaoAuth(userInfo.getKakaoId(),userInfo.getEmail(), userAgent);
 
         ResponseCookie cookie = cookieUtil.createRefreshTokenCookie(kakaoLoginResponse.getRefreshToken(), jwtProvider.getRefreshTokenStepSeconds());
 
