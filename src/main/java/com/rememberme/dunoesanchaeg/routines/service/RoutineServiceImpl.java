@@ -1,10 +1,12 @@
 package com.rememberme.dunoesanchaeg.routines.service;
 
+import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus;
 import com.rememberme.dunoesanchaeg.routines.domain.enums.AssignedGameType;
 import com.rememberme.dunoesanchaeg.routines.dto.response.RoutineResponse;
 import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,6 +21,11 @@ public class RoutineServiceImpl implements RoutineService {
     @Override
     public RoutineResponse getTodayRoutine(Long memberId) {
 
+        // 인증 확인 -> memberId가 null인 경우 에러 처리
+        if (memberId == null) {
+            throw new BaseException(401, "인증 정보가 유효하지 않습니다.");
+        }
+
         LocalDate today = LocalDate.now();
 
         // 1. 오늘의 루틴 조회
@@ -27,7 +34,24 @@ public class RoutineServiceImpl implements RoutineService {
         // 2. 없으면 생성 필요
         if (routine == null) {
             routine = createRoutine(memberId, today);
-            routineMapper.insertTodayRoutine(routine);
+
+
+            try {
+                int insertTodayRoutine = routineMapper.insertTodayRoutine(routine);
+
+                if(insertTodayRoutine != 1){
+                    throw new BaseException(500, "오늘의 루틴을 생성하는 과정에 에러가 발생했습니다");
+                }
+            } catch (DuplicateKeyException e) {
+                routine = routineMapper.findByMemberIdAndDate(memberId, today);
+
+                if (routine == null) {
+                    throw new BaseException(500, "오늘의 루틴 생성 중 충돌이 발생했습니다.");
+                }
+            } catch (Exception e) {
+                throw new BaseException(500, "에러가 발생했습니다.");
+            }
+
         }
 
         // 3. progressRate 구현
@@ -72,7 +96,7 @@ public class RoutineServiceImpl implements RoutineService {
     private DailyRoutineStatus createRoutine(Long memberId, LocalDate today) {
         return DailyRoutineStatus.builder()
                 .memberId(memberId)
-                .routineDate(LocalDate.now())
+                .routineDate(today)
                 .assignedGameType(randomGame())
                 .assignedQuestionId(randomQuestion())
                 .isGameFinished(false)

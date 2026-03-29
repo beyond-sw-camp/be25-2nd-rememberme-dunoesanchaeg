@@ -23,7 +23,7 @@
     </select>
 
     <!-- 루틴 생성 후 저장 -->
-    <insert id="insertTodayRoutine" keyProperty="routineId">
+    <insert id="insertTodayRoutine" useGeneratedKeys="true" keyProperty="routineId">
         INSERT INTO daily_routine_status (
             member_id,
             routine_date,

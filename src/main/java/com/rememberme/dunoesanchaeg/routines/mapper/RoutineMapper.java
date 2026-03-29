@@ -14,7 +14,7 @@ public interface RoutineMapper {
                                              @Param("routineDate") LocalDate routineDate);
 
     // 오늘의 루틴 삽입
-    void insertTodayRoutine(DailyRoutineStatus routine);
+    int insertTodayRoutine(DailyRoutineStatus routine);
 
     // 오늘의 루틴 업데이트
     void updateTodayRoutine(DailyRoutineStatus routine);
