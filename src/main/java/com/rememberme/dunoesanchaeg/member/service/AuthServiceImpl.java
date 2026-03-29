@@ -31,7 +31,7 @@ public class AuthServiceImpl implements AuthService {
     private final TokenManager tokenManager;
 
     @Override
-    public KakaoLoginResponse kakaoAuth(String kakaoId, String email, String userAgent) {
+    public KakaoLoginResponse kakaoAuth(Long kakaoId, String email, String userAgent) {
         int result;
         Member member = memberMapper.findByKakaoId(kakaoId);
         // 신규유저면 insertMember 아니면 기존유저

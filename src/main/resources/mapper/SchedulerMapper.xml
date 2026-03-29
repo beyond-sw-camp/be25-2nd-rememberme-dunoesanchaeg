@@ -20,7 +20,7 @@
             deleted_at <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 30 DAY)
     </select>
 
-    <update id="updateKakaoUnlinkedStatus" parameterType="Long">
+    <update id="updateKakaoUnlinkedStatus" parameterType="long">
         UPDATE member
         SET
             is_kakao_unlinked = true,

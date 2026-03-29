@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 @Builder
 public class Member {
     private Long memberId;
-    private String kakaoId;
+    private Long kakaoId;
     private String email;
     private Role role;
     private String name;

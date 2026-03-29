@@ -56,7 +56,7 @@
 
 
     <!--  카카오 아이디와 일치하는 멤버의 데이터를 가져옴  -->
-    <select id="findByKakaoId" resultMap="MemberResultMap" parameterType="string">
+    <select id="findByKakaoId" resultMap="MemberResultMap" parameterType="long">
         <include refid="selectMemberSql"/>
         WHERE kakao_id = #{kakaoId}
     </select>

@@ -10,7 +10,7 @@ public interface MemberMapper {
     Member findByMemberId(Long memberId);
 
     // 카카오아이디로 유저 조회
-    Member findByKakaoId(String kakaoId);
+    Member findByKakaoId(Long kakaoId);
 
     // 이메일로 유저 조회
     Member findByEmail(String email);

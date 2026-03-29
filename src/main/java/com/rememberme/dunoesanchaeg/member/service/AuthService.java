@@ -8,7 +8,7 @@ public interface AuthService {
 
     // 카카오 로그인
     KakaoLoginResponse kakaoAuth(
-            String kakaoId,
+            Long kakaoId,
             String email,
             String userAgent
     );

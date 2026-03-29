@@ -45,3 +45,6 @@ logging:
     com.zaxxer.hikari: DEBUG
     org.hibernate.SQL: DEBUG
 
+#kakao:
+#  client-id: ${KAKAO_CLIENT_ID}
+#  admin-key: ${KAKAO_ADMIN_KEY}
