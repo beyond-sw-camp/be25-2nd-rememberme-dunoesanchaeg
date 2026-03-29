@@ -31,6 +31,11 @@ public class DailyQuestionLogServiceImpl implements DailyQuestionLogService {
             throw new BaseException(500, "참여 기록을 저장하지 못하였습니다.");
         }
 
+        if (dailyQuestionLog.getDailyQuestionLogId() == null) {
+
+            throw new BaseException(500, "참여 기록을 생성하지 못하였습니다.");
+        }
+
         return dailyQuestionLog.getDailyQuestionLogId();
     }
 
@@ -41,7 +46,7 @@ public class DailyQuestionLogServiceImpl implements DailyQuestionLogService {
         result = dailyQuestionLogMapper.deleteTodayQuestionLog(memberId, dailyQuestionLogId);
         if (result != 1) {
 
-            throw new BaseException(500, "참여 기록을 삭제하지 못하였습니다.");
+            throw new BaseException(500, "참여 기록을 갱신하지 못하였습니다.");
         }
     }
 
