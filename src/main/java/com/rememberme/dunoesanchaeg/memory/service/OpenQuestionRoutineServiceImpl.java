@@ -29,6 +29,11 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
     @Transactional
     public OpenQuestionStartResponse startOpenQuestion(Long memberId) {
 
+        if (memberId == null) {
+
+            throw new BaseException(400, "잘못된 요청입니다.");
+        }
+
         LocalDate today = LocalDate.now();
         LocalDateTime now = LocalDateTime.now();
 
@@ -51,12 +56,7 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
         // 해당 질문 정보 조회
         QuestionBank questionBank = questionBankService.getOpenQuestionById(assignedQuestionId);
 
-        if (questionBank == null) {
-
-            throw new BaseException(404, "현재 질문을 확인할 수 없습니다. 고객센터(☎010-1234-1234)로 문의 주시기 바랍니다.");
-        }
-
-        if (!questionBank.getIsActive()) {
+        if (questionBank == null || !questionBank.getIsActive()) {
 
             throw new BaseException(404, "현재 질문을 확인할 수 없습니다. 고객센터(☎010-1234-1234)로 문의 주시기 바랍니다.");
         }
@@ -90,6 +90,11 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
     @Transactional
     public OpenQuestionExitResponse exitOpenQuestion(Long memberId, Long dailyQuestionLogId) {
 
+        if (memberId == null || dailyQuestionLogId == null) {
+
+            throw new BaseException(400, "잘못된 요청입니다.");
+        }
+
         dailyQuestionLogService.delete(memberId, dailyQuestionLogId);
 
         return new OpenQuestionExitResponse(dailyQuestionLogId, DailyQuestionLogStatus.EXITED);
@@ -98,6 +103,16 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
     @Override
     @Transactional
     public OpenQuestionCompleteResponse completeOpenQuestion(Long memberId, Long dailyQuestionLogId, Integer responseSecond) {
+
+        if (memberId == null || dailyQuestionLogId == null || responseSecond == null) {
+
+            throw new BaseException(400, "잘못된 요청입니다.");
+        }
+
+        if (responseSecond < 10) {
+
+            throw new BaseException(400, "10초 이상 생각한 후 답변해주세요.");
+        }
 
         DailyQuestionLog dailyQuestionLog = DailyQuestionLog.builder()
                 .dailyQuestionLogId(dailyQuestionLogId)
@@ -111,15 +126,3 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
         return new OpenQuestionCompleteResponse(dailyQuestionLogId, DailyQuestionLogStatus.COMPLETED);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
