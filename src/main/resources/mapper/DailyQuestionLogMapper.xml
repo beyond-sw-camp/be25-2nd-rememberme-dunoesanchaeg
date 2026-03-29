@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.routines.mapper.DailyQuestionLogMapper">
+
+    <select id="countTodayQuestionLog" resultType="int">
+        SELECT COUNT(*)
+        FROM daily_question_log
+        WHERE member_id = #{memberId}
+          AND record_date = #{recordDate}
+          AND status = #{dailyQuestionLogStatus}
+    </select>
+
+    <insert id="insertTodayQuestionLog"
+            parameterType="com.rememberme.dunoesanchaeg.routines.domain.DailyQuestionLog"
+            useGeneratedKeys="true"
+            keyProperty="dailyQuestionLogId">
+        INSERT INTO daily_question_log (
+            member_id,
+            record_date,
+            question_id,
+            status,
+            created_at
+        ) VALUES (
+                     #{memberId},
+                     #{recordDate},
+                     #{questionId},
+                     #{dailyQuestionLogStatus},
+                     #{createdAt}
+                 )
+    </insert>
+
+    <update id="deleteTodayQuestionLog">
+        UPDATE daily_question_log
+        SET status = 'EXITED'
+        WHERE daily_question_log_id = #{dailyQuestionLogId}
+          AND member_id = #{memberId}
+          AND status = 'STARTED'
+    </update>
+
+    <update id="updateTodayQuestionLog"
+            parameterType="com.rememberme.dunoesanchaeg.routines.domain.DailyQuestionLog">
+        UPDATE daily_question_log
+        SET response_second = #{responseSecond},
+            status = #{dailyQuestionLogStatus}
+        WHERE daily_question_log_id = #{dailyQuestionLogId}
+          AND member_id = #{memberId}
+          AND status = 'STARTED'
+    </update>
+
+</mapper>
