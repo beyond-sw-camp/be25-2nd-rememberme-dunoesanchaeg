@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
         int result;
         Member member = memberMapper.findByKakaoId(kakaoId);
         // 신규유저면 insertMember 아니면 기존유저
-        // 기존 유저에서 getUserStatus 가 WITHDRAWN이면 에러
+        // 기존 유저에서 getUserStatus 가 WITHDRAWN이면 회원 복구로직 OR 스케줄러로 삭제
         // 기존유저이면서 ACTIVE이면 updateLastLoginAt 갱신
         if (member == null) {
             if(email != null && memberMapper.findByEmail(email) != null){
@@ -72,13 +72,13 @@ public class AuthServiceImpl implements AuthService {
                 member.updateEmail(email);
             }
 
-            result = memberMapper.updateLastLoginAt(member.getMemberId());
-
-            if (result != 1) {
-                throw new BaseException(500, "마지막 로그인 갱신 실패");
-            }
         }
 
+        // 신규회원이든 기존 회원이든 로그인하면 마지막 로그인 시간 갱신
+        result = memberMapper.updateLastLoginAt(member.getMemberId());
+        if (result != 1) {
+            throw new BaseException(500, "마지막 로그인 갱신 실패");
+        }
 
         // JWT 토큰 로직 구현하면 변경해야함-------------------
         // 새 토큰 발행: 로그인이 성공했으므로 새로운 AccessToken과 RefreshToken을 생성

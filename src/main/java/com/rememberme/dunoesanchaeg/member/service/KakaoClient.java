@@ -98,4 +98,40 @@ public class KakaoClient {
             log.warn("카카오 서버 로그아웃 호출 실패 (이미 만료되었을 수 있음): {}", e.getMessage());
         }
     }
+
+    public void unlinkKakao(Long kakaoId) {
+        // 1. 연동 해제 전용 URL
+        String url = "https://kapi.kakao.com/v1/user/unlink";
+
+        // 2. 헤더 설정 (Admin Key 방식)
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "KakaoAK " + adminKey);
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        // 3. 파라미터 설정 (누구를 끊을 것인가?)
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("target_id_type", "user_id");
+        params.add("target_id", String.valueOf(kakaoId));
+
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+
+        try {
+            // 4. API 호출
+            ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                log.info("카카오 연동 해제 성공 - kakaoId: {}", kakaoId);
+            } else {
+                log.error("카카오 연동 해제 응답 에러: {}", response.getStatusCode());
+            }
+        } catch (org.springframework.web.client.HttpClientErrorException e) {
+            // 에러 발생 시 상세 로그 (401 등 원인 파악용)
+            log.error("카카오 연동 해제 실패 - 상태 코드: {}", e.getStatusCode());
+            log.error("에러 바디: {}", e.getResponseBodyAsString());
+            throw e; // 서비스 계층에서 알 수 있도록 예외를 던집니다.
+        } catch (Exception e) {
+            log.error("카카오 연동 해제 중 알 수 없는 에러: {}", e.getMessage());
+            throw e;
+        }
+    }
 }
