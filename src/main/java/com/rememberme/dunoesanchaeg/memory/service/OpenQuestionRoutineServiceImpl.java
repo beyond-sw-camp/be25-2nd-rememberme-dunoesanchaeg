@@ -7,6 +7,7 @@ import com.rememberme.dunoesanchaeg.memory.domain.enums.DailyQuestionLogStatus;
 import com.rememberme.dunoesanchaeg.memory.dto.response.OpenQuestionCompleteResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.OpenQuestionExitResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.OpenQuestionStartResponse;
+import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
