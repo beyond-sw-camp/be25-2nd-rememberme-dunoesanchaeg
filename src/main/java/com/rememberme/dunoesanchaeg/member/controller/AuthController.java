@@ -8,7 +8,6 @@ import com.rememberme.dunoesanchaeg.member.dto.request.KakaoLoginRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.ReissueResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.TokenReissueResponse;
-import com.rememberme.dunoesanchaeg.member.dto.target.KakaoUserInfo;
 import com.rememberme.dunoesanchaeg.member.service.AuthService;
 import com.rememberme.dunoesanchaeg.member.service.KakaoClient;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,14 +35,18 @@ public class AuthController {
             @Valid @RequestBody KakaoLoginRequest kakaoLoginRequest,
             HttpServletResponse response
     ){
-        // 카카오 토큰 검증
-        KakaoUserInfo userInfo = kakaoClient.getKakaoUserInfo(kakaoLoginRequest.getAccessToken());
+        log.info("카카오 로그인 요청 수신 - 인가 코드 확인 완료");
 
-        // 카카오 로그인 처리
+        // 1. [핵심] 컨트롤러에서 kakaoClient를 호출하지 않습니다.
+        // 서비스(authService)가 code를 받아 내부에서 모든 통신을 처리하도록 합니다.
         KakaoLoginResponse kakaoLoginResponse = authService
-                .kakaoAuth(userInfo.getKakaoId(),userInfo.getEmail(), userAgent);
+                .kakaoAuth(kakaoLoginRequest.getCode(), userAgent);
 
-        ResponseCookie cookie = cookieUtil.createRefreshTokenCookie(kakaoLoginResponse.getRefreshToken(), jwtProvider.getRefreshTokenStepSeconds());
+        // 2. 리프레시 토큰 쿠키 생성 (기존 로직 유지)
+        ResponseCookie cookie = cookieUtil.createRefreshTokenCookie(
+                kakaoLoginResponse.getRefreshToken(),
+                jwtProvider.getRefreshTokenStepSeconds()
+        );
 
         response.addHeader("Set-Cookie", cookie.toString());
 

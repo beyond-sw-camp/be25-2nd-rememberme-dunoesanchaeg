@@ -6,6 +6,7 @@ import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.domain.MemberToken;
 import com.rememberme.dunoesanchaeg.member.dto.response.KakaoLoginResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.TokenReissueResponse;
+import com.rememberme.dunoesanchaeg.member.dto.target.KakaoUserInfo;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,15 @@ public class AuthServiceImpl implements AuthService {
     private final KakaoClient kakaoClient;
 
     @Override
-    public KakaoLoginResponse kakaoAuth(Long kakaoId, String email, String userAgent) {
+    public KakaoLoginResponse kakaoAuth(String code, String userAgent) {
         int result;
+
+        // 카카오 로그인 후 받아오는 code에서 엑세스 토큰 추출
+        String kakaoAccessToken = kakaoClient.getKakaoAccessToken(code);
+        KakaoUserInfo kakaoUserInfo = kakaoClient.getKakaoUserInfo(kakaoAccessToken);
+        Long kakaoId = kakaoUserInfo.getKakaoId();
+        String email = kakaoUserInfo.getEmail();
+
         Member member = memberMapper.findByKakaoId(kakaoId);
         // 신규유저면 insertMember 아니면 기존유저
         // 기존 유저에서 getUserStatus 가 WITHDRAWN이면 회원 복구로직 OR 스케줄러로 삭제
