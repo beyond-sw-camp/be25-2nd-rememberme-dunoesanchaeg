@@ -23,12 +23,20 @@ public class TrophyItemResponse {
 	@JsonProperty("acquired_at")
 	private OffsetDateTime acquiredAt;
 
-	public static TrophyItemResponse from(Trophy trophy) {
+	public static TrophyItemResponse trophyItemResponse(Trophy trophy) {
 		return TrophyItemResponse.builder()
 				.trophyId(trophy.getTrophyId())
 				.trophyType(trophy.getTrophyType())
 				.trophyName(trophy.getTrophyName())
 				.acquiredAt(trophy.getAcquiredAt())
 				.build();
+	}
+	private static String resolveTrophyName(String trophyType) {
+		if (trophyType == null || !trophyType.startsWith("total_routine_count_")) {
+			return "";
+		}
+
+		String countText = trophyType.replace("total_routine_count_", "");
+		return countText + "일 루틴 달성 기념";
 	}
 }
