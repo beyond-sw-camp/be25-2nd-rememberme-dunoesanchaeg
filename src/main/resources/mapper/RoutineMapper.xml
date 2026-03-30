@@ -44,4 +44,12 @@
                      #{createdAt}
                  );
     </insert>
+
+    <!-- 개방형질문 기능 구현에 필요한 코드 -->
+    <select id="selectAssignedQuestionId" resultType="long">
+        SELECT assigned_question_id
+        FROM daily_routine_status
+        WHERE member_id = #{memberId}
+          AND routine_date = #{routineDate}
+    </select>
 </mapper>
