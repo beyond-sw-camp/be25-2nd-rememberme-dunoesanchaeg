@@ -5,6 +5,20 @@
 
 <mapper namespace="com.rememberme.dunoesanchaeg.trophies.mapper.TrophyMapper">
 
+    <resultMap id="TrophyResultMap" type="com.rememberme.dunoesanchaeg.trophies.domain.Trophy">
+        <id property="trophyId" column="trophy_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="trophyType" column="trophy_type"/>
+        <result property="acquiredAt" column="acquired_at"/>
+    </resultMap>
+
+    <sql id="trophyColumns">
+        t.trophy_id,
+        t.member_id,
+        t.trophy_type,
+        t.acquired_at
+    </sql>
+
     <select id="existsByMemberIdAndTrophyType" resultType="boolean">
         SELECT EXISTS(
             SELECT 1
@@ -15,7 +29,9 @@
     </select>
 
     <insert id="insertTrophy"
-            parameterType="com.rememberme.dunoesanchaeg.trophies.domain.Trophy">
+            parameterType="com.rememberme.dunoesanchaeg.trophies.domain.Trophy"
+            useGeneratedKeys="true"
+            keyProperty="trophyId">
         INSERT INTO trophy (
             member_id,
             trophy_type,
@@ -28,13 +44,9 @@
     </insert>
 
     <select id="findTrophiesByMemberId"
-            parameterType="long"
-            resultType="com.rememberme.dunoesanchaeg.trophies.domain.Trophy">
+            resultMap="TrophyResultMap">
         SELECT
-            t.trophy_id   AS trophyId,
-            t.member_id   AS memberId,
-            t.trophy_type AS trophyType,
-            t.acquired_at AS acquiredAt
+        <include refid="trophyColumns"/>
         FROM trophy t
         WHERE t.member_id = #{memberId}
         ORDER BY t.acquired_at DESC, t.trophy_id DESC
