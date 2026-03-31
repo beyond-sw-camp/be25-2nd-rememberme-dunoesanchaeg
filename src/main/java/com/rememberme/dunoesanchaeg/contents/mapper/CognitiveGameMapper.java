@@ -1,6 +1,6 @@
 package com.rememberme.dunoesanchaeg.contents.mapper;
 
-import com.rememberme.dunoesanchaeg.contents.domain.enums.GameType;
+import com.rememberme.dunoesanchaeg.routines.domain.enums.AssignedGameType;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -9,7 +9,7 @@ public interface CognitiveGameMapper {
 
     void insertGameResult(
             @Param("memberId") Long memberId,
-            @Param("gameType") GameType gameType,
+            @Param("gameType") AssignedGameType gameType,
             @Param("correctCount") int correctCount,
             @Param("totalTryCount") int totalTryCount
     );

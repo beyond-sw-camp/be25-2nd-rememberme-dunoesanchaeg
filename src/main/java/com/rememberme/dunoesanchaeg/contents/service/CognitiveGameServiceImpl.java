@@ -41,6 +41,6 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
                 request.getTotalTryCount()
         );
 
-        routineMapper.updateGameFinished(memberId, LocalDate.now());
+        // routineMapper.updateGameFinished(memberId, LocalDate.now());
     }
 }
