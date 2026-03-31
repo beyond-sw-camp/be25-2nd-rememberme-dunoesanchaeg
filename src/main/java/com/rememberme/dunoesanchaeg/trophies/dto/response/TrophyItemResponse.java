@@ -5,7 +5,7 @@ import com.rememberme.dunoesanchaeg.trophies.domain.Trophy;
 import lombok.Builder;
 import lombok.Getter;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -18,7 +18,7 @@ public class TrophyItemResponse {
 	private String trophyName;
 
 	@JsonProperty("acquired_at")
-	private OffsetDateTime acquiredAt;
+	private LocalDateTime acquiredAt;
 
 	public static TrophyItemResponse trophyItemResponse(Trophy trophy) {
 		return TrophyItemResponse.builder()

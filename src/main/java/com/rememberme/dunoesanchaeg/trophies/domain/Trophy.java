@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -18,6 +18,6 @@ public class Trophy {
 	private Long trophyId;
 	private Long memberId;
 	private String trophyName;
-	private OffsetDateTime acquiredAt;
+	private LocalDateTime acquiredAt;
 
 }
