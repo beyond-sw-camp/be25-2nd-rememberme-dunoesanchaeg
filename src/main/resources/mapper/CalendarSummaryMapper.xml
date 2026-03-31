@@ -52,8 +52,15 @@
         SELECT
             CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END AS is_written,
             MAX(sleep_level) AS sleep_level,
+            MAX(sleep_memo) AS sleep_memo,
             MAX(mood_level) AS mood_level,
-            MAX(meal_level) AS meal_level
+            MAX(mood_memo) AS mood_memo,
+            MAX(meal_level) AS meal_level,
+            MAX(meal_memo) AS meal_memo,
+            MAX(exercise_level) AS exercise_level,
+            MAX(exercise_memo) AS exercise_memo,
+            MAX(social_level) AS social_level,
+            MAX(social_memo) AS social_memo
         FROM daily_record
         WHERE member_id = #{memberId}
           AND record_date = #{targetDate}

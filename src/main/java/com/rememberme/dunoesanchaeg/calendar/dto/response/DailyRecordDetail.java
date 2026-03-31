@@ -18,12 +18,38 @@ public class DailyRecordDetail {
 	@JsonProperty("is_written")
 	private Boolean isWritten;
 
-	@JsonProperty("sleep_level")
-	private Level sleepLevel;
-
+	// 기분 상태
 	@JsonProperty("mood_level")
 	private Level moodLevel;
 
+	@JsonProperty("mood_memo")
+	private String moodMemo;
+
+	// 수면 상태
+	@JsonProperty("sleep_level")
+	private Level sleepLevel;
+
+	@JsonProperty("sleep_memo")
+	private String sleepMemo;
+
+	// 식사 상태
 	@JsonProperty("meal_level")
 	private Level mealLevel;
+
+	@JsonProperty("meal_memo")
+	private String mealMemo;
+
+	// 운동 상태
+	@JsonProperty("exercise_level")
+	private Level exerciseLevel;
+
+	@JsonProperty("exercise_memo")
+	private String exerciseMemo;
+
+	// 사회활동 상태
+	@JsonProperty("social_level")
+	private Level socialLevel;
+
+	@JsonProperty("social_memo")
+	private String socialMemo;
 }
