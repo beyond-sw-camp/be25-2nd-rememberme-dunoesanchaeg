@@ -41,7 +41,7 @@
     </update>
 
     <update id="updateTodayQuestionLog"
-            parameterType="com.rememberme.dunoesanchaeg.routines.domain.DailyQuestionLog">
+            parameterType="com.rememberme.dunoesanchaeg.memory.domain.DailyQuestionLog">
         UPDATE daily_question_log
         SET response_second = #{responseSecond},
             status = #{dailyQuestionLogStatus}
