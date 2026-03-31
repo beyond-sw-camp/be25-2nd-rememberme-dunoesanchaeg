@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+// update 쪽이랑 중간이탈처리 구현 필요
+
 @RestController
 @RequestMapping("/api/v1/cognitive-games")
 @RequiredArgsConstructor
