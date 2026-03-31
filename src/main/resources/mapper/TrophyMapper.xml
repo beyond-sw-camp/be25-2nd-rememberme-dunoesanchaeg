@@ -8,23 +8,23 @@
     <resultMap id="TrophyResultMap" type="com.rememberme.dunoesanchaeg.trophies.domain.Trophy">
         <id property="trophyId" column="trophy_id"/>
         <result property="memberId" column="member_id"/>
-        <result property="trophyType" column="trophy_type"/>
+        <result property="trophyName" column="trophy_name"/>
         <result property="acquiredAt" column="acquired_at"/>
     </resultMap>
 
     <sql id="trophyColumns">
         t.trophy_id,
         t.member_id,
-        t.trophy_type,
+        t.trophy_name,
         t.acquired_at
     </sql>
 
-    <select id="existsByMemberIdAndTrophyType" resultType="boolean">
+    <select id="existsByMemberIdAndTrophyName" resultType="boolean">
         SELECT EXISTS(
             SELECT 1
             FROM trophy
             WHERE member_id = #{memberId}
-              AND trophy_type = #{trophyType}
+              AND trophy_name = #{trophyName}
         )
     </select>
 
@@ -34,17 +34,16 @@
             keyProperty="trophyId">
         INSERT INTO trophy (
             member_id,
-            trophy_type,
+            trophy_name,
             acquired_at
         ) VALUES (
                      #{memberId},
-                     #{trophyType},
+                     #{trophyName},
                      NOW()
                  )
     </insert>
 
-    <select id="findTrophiesByMemberId"
-            resultMap="TrophyResultMap">
+    <select id="findTrophiesByMemberId" resultMap="TrophyResultMap">
         SELECT
         <include refid="trophyColumns"/>
         FROM trophy t

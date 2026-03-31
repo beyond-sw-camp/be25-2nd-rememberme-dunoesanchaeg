@@ -14,8 +14,8 @@ public class TrophyItemResponse {
 	@JsonProperty("trophy_id")
 	private Long trophyId;
 
-	@JsonProperty("trophy_type")
-	private String trophyType;
+	@JsonProperty("trophy_name")
+	private String trophyName;
 
 	@JsonProperty("acquired_at")
 	private OffsetDateTime acquiredAt;
@@ -23,16 +23,16 @@ public class TrophyItemResponse {
 	public static TrophyItemResponse trophyItemResponse(Trophy trophy) {
 		return TrophyItemResponse.builder()
 				.trophyId(trophy.getTrophyId())
-				.trophyType(trophy.getTrophyType())
+				.trophyName(trophy.getTrophyName())
 				.acquiredAt(trophy.getAcquiredAt())
 				.build();
 	}
-	private static String resolveTrophyName(String trophyType) {
-		if (trophyType == null || !trophyType.startsWith("total_routine_count_")) {
+	private static String resolveTrophyName(String trophyName) {
+		if (trophyName == null || !trophyName.startsWith("total_routine_count_")) {
 			return "";
 		}
 
-		String countText = trophyType.replace("total_routine_count_", "");
+		String countText = trophyName.replace("total_routine_count_", "");
 		return countText + "일 루틴 달성 기념";
 	}
 }

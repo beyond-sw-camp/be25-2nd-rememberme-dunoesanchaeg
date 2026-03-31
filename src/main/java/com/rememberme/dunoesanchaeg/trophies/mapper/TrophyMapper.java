@@ -9,7 +9,7 @@ import java.util.List;
 @Mapper
 public interface TrophyMapper {
 
-	boolean existsByMemberIdAndTrophyType(Long memberId, String trophyType);
+	boolean existsByMemberIdAndTrophyName(Long memberId, String trophyName);
 
 	int insertTrophy(Trophy trophy);
 

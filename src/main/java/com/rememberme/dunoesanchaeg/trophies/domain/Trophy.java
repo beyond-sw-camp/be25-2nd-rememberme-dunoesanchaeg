@@ -14,14 +14,14 @@ public class Trophy {
 
 	private Long trophyId;
 	private Long memberId;
-	private String trophyType;
+	private String trophyName;
 	private OffsetDateTime acquiredAt;
 
 	@Builder
-	public Trophy(Long trophyId, Long memberId, String trophyType, OffsetDateTime acquiredAt) {
+	public Trophy(Long trophyId, Long memberId, String trophyName, OffsetDateTime acquiredAt) {
 		this.trophyId = trophyId;
 		this.memberId = memberId;
-		this.trophyType = trophyType;
+		this.trophyName = trophyName;
 		this.acquiredAt = acquiredAt;
 	}
 }

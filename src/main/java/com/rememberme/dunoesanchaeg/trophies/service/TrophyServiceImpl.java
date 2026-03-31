@@ -49,16 +49,16 @@ public class TrophyServiceImpl implements TrophyService {
 			return;
 		}
 
-		String trophyType = createTrophyType(totalRoutineCount);
+		String trophyName = createTrophyType(totalRoutineCount);
 
-		boolean alreadyExists = trophyMapper.existsByMemberIdAndTrophyType(memberId, trophyType);
+		boolean alreadyExists = trophyMapper.existsByMemberIdAndTrophyName(memberId, trophyName);
 		if (alreadyExists) {
 			return;
 		}
 
 		Trophy trophy = Trophy.builder()
 				.memberId(memberId)
-				.trophyType(trophyType)
+				.trophyName(trophyName)
 				.build();
 
 		trophyMapper.insertTrophy(trophy);
