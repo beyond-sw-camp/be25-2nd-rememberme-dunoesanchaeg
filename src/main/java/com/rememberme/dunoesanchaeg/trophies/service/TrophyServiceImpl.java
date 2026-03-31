@@ -18,7 +18,6 @@ import java.util.List;
 public class TrophyServiceImpl implements TrophyService {
 
 	private static final int TROPHY_UNIT = 10;
-	private static final int MAX_TROPHY_COUNT = 50;
 
 	private final TrophyMapper trophyMapper;
 	private final MemberMapper memberMapper;
@@ -49,7 +48,7 @@ public class TrophyServiceImpl implements TrophyService {
 			return;
 		}
 
-		String trophyName = createTrophyType(totalRoutineCount);
+		String trophyName = createTrophyName(totalRoutineCount);
 
 		boolean alreadyExists = trophyMapper.existsByMemberIdAndTrophyName(memberId, trophyName);
 		if (alreadyExists) {
@@ -79,11 +78,10 @@ public class TrophyServiceImpl implements TrophyService {
 
 	private boolean isAwardTarget(int totalRoutineCount) {
 		return totalRoutineCount > 0
-				&& totalRoutineCount % TROPHY_UNIT == 0
-				&& totalRoutineCount <= MAX_TROPHY_COUNT;
+				&& totalRoutineCount % TROPHY_UNIT == 0;
 	}
 
-	private String createTrophyType(int totalRoutineCount) {
+	private String createTrophyName(int totalRoutineCount) {
 		return "total_routine_count_" + totalRoutineCount;
 	}
 }
