@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+    <mapper namespace="com.rememberme.dunoesanchaeg.contents.mapper.CognitiveGameMapper">
+
+        <insert id="insertGameResult">
+            INSERT INTO daily_game_log (
+            member_id,
+            played_date,
+            game_type,
+            total_try_count,
+            correct_count,
+            play_time_seconds,
+            is_valid
+            )
+            VALUES (
+            #{memberId},
+            CURRENT_DATE,
+            #{gameType},
+            #{totalTryCount},
+            #{correctCount},
+            0,
+            TRUE
+            )
+        </insert>
+
+    </mapper>
