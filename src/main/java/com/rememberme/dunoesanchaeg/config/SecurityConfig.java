@@ -58,6 +58,7 @@ public class SecurityConfig {
                                 "/api/v1/open-questions/**", // 질문
                                 "/api/v1/daily-records/**",  // 기록
                                 "/api/v1/statistics/**",     // 통계
+                                "/api/v1/trophies",          // 트로피
                                 "/v3/api-docs/**",           // Swagger용
                                 "/swagger-ui/**"             // Swagger UI용
                         ).permitAll()
