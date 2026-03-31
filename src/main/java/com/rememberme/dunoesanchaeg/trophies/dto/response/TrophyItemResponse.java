@@ -17,9 +17,6 @@ public class TrophyItemResponse {
 	@JsonProperty("trophy_type")
 	private String trophyType;
 
-	@JsonProperty("trophy_name")
-	private String trophyName;
-
 	@JsonProperty("acquired_at")
 	private OffsetDateTime acquiredAt;
 
@@ -27,7 +24,6 @@ public class TrophyItemResponse {
 		return TrophyItemResponse.builder()
 				.trophyId(trophy.getTrophyId())
 				.trophyType(trophy.getTrophyType())
-				.trophyName(trophy.getTrophyName())
 				.acquiredAt(trophy.getAcquiredAt())
 				.build();
 	}
