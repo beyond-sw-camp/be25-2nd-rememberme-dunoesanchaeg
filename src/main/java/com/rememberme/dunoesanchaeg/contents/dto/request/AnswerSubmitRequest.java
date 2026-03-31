@@ -13,9 +13,11 @@ public class AnswerSubmitRequest {
     @NotNull(message = "게임 타입은 필수입니다.")
     private AssignedGameType gameType;
 
+    @NotNull(message = "정답 개수는 필수입니다.")
     @Min(value = 0, message = "정답 개수는 0 이상이어야 합니다.")
-    private int correctCount;
+    private Integer correctCount;
 
+    @NotNull(message = "총 시도 횟수는 필수입니다.")
     @Min(value = 1, message = "총 시도 횟수는 1 이상이어야 합니다.")
-    private int totalTryCount;
+    private Integer totalTryCount;
 }
