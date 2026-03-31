@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.rememberme.dunoesanchaeg.routines.mapper.DailyQuestionLogMapper">
+<mapper namespace="com.rememberme.dunoesanchaeg.memory.mapper.DailyQuestionLogMapper">
 
     <select id="countTodayQuestionLog" resultType="int">
         SELECT COUNT(*)
@@ -14,7 +14,7 @@
     </select>
 
     <insert id="insertTodayQuestionLog"
-            parameterType="com.rememberme.dunoesanchaeg.routines.domain.DailyQuestionLog"
+            parameterType="com.rememberme.dunoesanchaeg.memory.domain.DailyQuestionLog"
             useGeneratedKeys="true"
             keyProperty="dailyQuestionLogId">
         INSERT INTO daily_question_log (
