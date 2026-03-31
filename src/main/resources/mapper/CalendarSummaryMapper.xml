@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.calendar.mapper.CalendarSummaryMapper">
+
+    <resultMap id="gameRecordResultMap"
+               type="com.rememberme.dunoesanchaeg.calendar.dto.response.GameRecord">
+        <result property="isPlayed" column="is_played"/>
+        <result property="playTimeSeconds" column="play_time_seconds"/>
+        <result property="correctCount" column="correct_count"/>
+    </resultMap>
+
+    <resultMap id="questionRecordResultMap"
+               type="com.rememberme.dunoesanchaeg.calendar.dto.response.QuestionRecord">
+        <result property="isAnswered" column="is_answered"/>
+        <result property="questionText" column="question_text"/>
+    </resultMap>
+
+    <resultMap id="dailyRecordDetailResultMap"
+               type="com.rememberme.dunoesanchaeg.calendar.dto.response.DailyRecordDetail">
+        <result property="isWritten" column="is_written"/>
+        <result property="sleepLevel" column="sleep_level"/>
+        <result property="moodLevel" column="mood_level"/>
+        <result property="mealLevel" column="meal_level"/>
+    </resultMap>
+
+    <select id="findGameRecord" resultMap="gameRecordResultMap">
+        SELECT
+            CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END AS is_played,
+            COALESCE(MAX(play_time_seconds), 0) AS play_time_seconds,
+            COALESCE(MAX(correct_count), 0) AS correct_count
+        FROM daily_game_log
+        WHERE member_id = #{memberId}
+          AND played_date = #{targetDate}
+          AND is_valid = TRUE
+    </select>
+
+    <select id="findQuestionRecord" resultMap="questionRecordResultMap">
+        SELECT
+            CASE WHEN COUNT(dq.daily_question_log_id) > 0 THEN TRUE ELSE FALSE END AS is_answered,
+            MAX(qb.question_text) AS question_text
+        FROM daily_question_log dq
+                 JOIN question_bank qb ON dq.question_id = qb.question_id
+        WHERE dq.member_id = #{memberId}
+          AND dq.record_date = #{targetDate}
+          AND dq.status = 'COMPLETED'
+    </select>
+
+    <select id="findDailyRecord" resultMap="dailyRecordDetailResultMap">
+        SELECT
+            CASE WHEN COUNT(*) > 0 THEN TRUE ELSE FALSE END AS is_written,
+            MAX(sleep_level) AS sleep_level,
+            MAX(mood_level) AS mood_level,
+            MAX(meal_level) AS meal_level
+        FROM daily_record
+        WHERE member_id = #{memberId}
+          AND record_date = #{targetDate}
+    </select>
+
+</mapper>
