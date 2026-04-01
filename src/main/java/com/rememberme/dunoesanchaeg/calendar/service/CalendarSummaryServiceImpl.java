@@ -7,19 +7,17 @@ import com.rememberme.dunoesanchaeg.calendar.dto.response.GameRecord;
 import com.rememberme.dunoesanchaeg.calendar.dto.response.QuestionRecord;
 import com.rememberme.dunoesanchaeg.calendar.mapper.CalendarSummaryMapper;
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
-import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
 public class CalendarSummaryServiceImpl implements CalendarSummaryService {
-
-	private static final int TOTAL_DAILY_MISSIONS = 3;
 
 	private final CalendarSummaryMapper calendarSummaryMapper;
 	private final MemberMapper memberMapper;
@@ -27,7 +25,7 @@ public class CalendarSummaryServiceImpl implements CalendarSummaryService {
 	@Override
 	@Transactional(readOnly = true)
 	public CalendarSummaryResponse getCalendarSummary(Long memberId, CalendarSummaryRequest request) {
-		validateMember(memberId);
+		validateMemberExists(memberId);
 
 		LocalDate targetDate = request.toLocalDate();
 
@@ -35,6 +33,7 @@ public class CalendarSummaryServiceImpl implements CalendarSummaryService {
 		QuestionRecord questionRecord = calendarSummaryMapper.findQuestionRecord(memberId, targetDate);
 		DailyRecordDetail dailyRecord = calendarSummaryMapper.findDailyRecord(memberId, targetDate);
 
+		// 가변 인자를 사용하여 미션 상태값들을 넘깁니다.
 		int progressRate = calculateProgressRate(
 				gameRecord.getIsPlayed(),
 				questionRecord.getIsAnswered(),
@@ -42,7 +41,7 @@ public class CalendarSummaryServiceImpl implements CalendarSummaryService {
 		);
 
 		return CalendarSummaryResponse.builder()
-				.targetDate(targetDate.toString())
+				.targetDate(targetDate) // 이제 toString()을 하지 않고 객체 그대로 넘깁니다.
 				.progressRate(progressRate)
 				.gameRecord(gameRecord)
 				.questionRecord(questionRecord)
@@ -50,32 +49,27 @@ public class CalendarSummaryServiceImpl implements CalendarSummaryService {
 				.build();
 	}
 
-	private Member validateMember(Long memberId) {
+	private int calculateProgressRate(Boolean... statuses) {
+		// 1. 방어 로직: 인자가 없거나 null인 경우 0% 반환
+		if (statuses == null || statuses.length == 0) {
+			return 0;
+		}
+
+		// 2. 완료된 미션 개수 카운트 (null 체크 포함)
+		long completedCount = Arrays.stream(statuses)
+				.filter(status -> Boolean.TRUE.equals(status))
+				.count();
+
+		// 3. 계산 (이미 위에서 length == 0을 걸러냈으므로 안전합니다)
+		return (int) ((completedCount * 100) / statuses.length);
+	}
+
+	private void validateMemberExists(Long memberId) {
 		if (memberId == null) {
 			throw new BaseException(401, "로그인이 필요합니다.");
 		}
-
-		Member member = memberMapper.findByMemberId(memberId);
-		if (member == null) {
-			throw new BaseException(404, "사용자 정보를 찾을 수 없습니다. 다시 로그인해 주세요.");
+		if (memberMapper.findByMemberId(memberId) == null) {
+			throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
 		}
-
-		return member;
-	}
-
-	private int calculateProgressRate(Boolean isPlayed, Boolean isAnswered, Boolean isWritten) {
-		int completedCount = 0;
-
-		if (Boolean.TRUE.equals(isPlayed)) {
-			completedCount++;
-		}
-		if (Boolean.TRUE.equals(isAnswered)) {
-			completedCount++;
-		}
-		if (Boolean.TRUE.equals(isWritten)) {
-			completedCount++;
-		}
-
-		return completedCount * 100 / TOTAL_DAILY_MISSIONS;
 	}
 }
