@@ -29,11 +29,22 @@ public class CalendarSummaryServiceImpl implements CalendarSummaryService {
 
 		LocalDate targetDate = request.toLocalDate();
 
+		// 1. DB 조회 (데이터가 없으면 null이 반환될 수 있음)
 		GameRecord gameRecord = calendarSummaryMapper.findGameRecord(memberId, targetDate);
 		QuestionRecord questionRecord = calendarSummaryMapper.findQuestionRecord(memberId, targetDate);
 		DailyRecordDetail dailyRecord = calendarSummaryMapper.findDailyRecord(memberId, targetDate);
 
-		// 가변 인자를 사용하여 미션 상태값들을 넘깁니다.
+		// 2. 객체 Null 체크 및 기본값 할당 (NPE 방지)
+		if (gameRecord == null) {
+			gameRecord = GameRecord.builder().isPlayed(false).build();
+		}
+		if (questionRecord == null) {
+			questionRecord = QuestionRecord.builder().isAnswered(false).build();
+		}
+		if (dailyRecord == null) {
+			dailyRecord = DailyRecordDetail.builder().isWritten(false).build();
+		}
+
 		int progressRate = calculateProgressRate(
 				gameRecord.getIsPlayed(),
 				questionRecord.getIsAnswered(),
@@ -41,14 +52,13 @@ public class CalendarSummaryServiceImpl implements CalendarSummaryService {
 		);
 
 		return CalendarSummaryResponse.builder()
-				.targetDate(targetDate) // 이제 toString()을 하지 않고 객체 그대로 넘깁니다.
+				.targetDate(targetDate)
 				.progressRate(progressRate)
 				.gameRecord(gameRecord)
 				.questionRecord(questionRecord)
 				.dailyRecord(dailyRecord)
 				.build();
 	}
-
 	private int calculateProgressRate(Boolean... statuses) {
 		// 1. 방어 로직: 인자가 없거나 null인 경우 0% 반환
 		if (statuses == null || statuses.length == 0) {
