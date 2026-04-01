@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/kakaoAuth")
-    public ApiResponse<KakaoLoginResponse> loginWithKakao(
+    public ResponseEntity<ApiResponse<KakaoLoginResponse>> loginWithKakao(
             @RequestHeader("User-Agent") String userAgent,
             @Valid @RequestBody KakaoLoginRequest kakaoLoginRequest,
             HttpServletResponse response
@@ -42,11 +43,11 @@ public class AuthController {
 
         response.addHeader("Set-Cookie", cookie.toString());
 
-        return ApiResponse.success(200, "카카오 로그인 성공", kakaoLoginResponse);
+        return ResponseEntity.ok(ApiResponse.success(200, "카카오 로그인 성공", kakaoLoginResponse));
     }
 
     @PostMapping("/reissue") //
-    public ApiResponse<ReissueResponse> reissueToken(
+    public ResponseEntity<ApiResponse<ReissueResponse>> reissueToken(
             @CookieValue("refreshToken") String refreshToken,
             @Valid @RequestHeader("User-Agent") String userAgent,
             HttpServletResponse response)
@@ -78,11 +79,11 @@ public class AuthController {
                 .isProfileCompleted(reissue.getIsProfileCompleted())
                 .build();
 
-        return ApiResponse.success(200,"토큰 재발급 성공", reissueResponse);
+        return ResponseEntity.ok(ApiResponse.success(200,"토큰 재발급 성공", reissueResponse));
     }
 
     @PostMapping("/logout")
-    public ApiResponse<Void> logout(
+    public ResponseEntity<ApiResponse<Void>> logout(
             @AuthenticationPrincipal Long memberId,
             @RequestHeader("User-Agent") String userAgent,
             HttpServletResponse response
@@ -103,11 +104,11 @@ public class AuthController {
         // 쿠키 재설정
         response.addHeader("Set-Cookie", cookie.toString());
 
-        return ApiResponse.success(200, "로그아웃 성공", null);
+        return ResponseEntity.ok(ApiResponse.success(200, "로그아웃 성공"));
     }
 
-    @PostMapping("/logoutAll")
-    public ApiResponse<Void> logoutAll(
+    @PostMapping("/logout/all")
+    public ResponseEntity<ApiResponse<Void>> logoutAll(
             @AuthenticationPrincipal Long memberId,
             HttpServletResponse response
 
@@ -129,7 +130,7 @@ public class AuthController {
         // 쿠키 재설정
         response.addHeader("Set-Cookie", cookie.toString());
 
-        return ApiResponse.success(200, "전체 로그아웃 성공", null);
+        return ResponseEntity.ok(ApiResponse.success(200, "전체 로그아웃 성공"));
     }
 
 }

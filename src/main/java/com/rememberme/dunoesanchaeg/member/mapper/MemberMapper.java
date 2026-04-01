@@ -12,6 +12,9 @@ public interface MemberMapper {
     // 카카오아이디로 유저 조회
     Member findByKakaoId(String kakaoId);
 
+    // 이메일로 유저 조회
+    Member findByEmail(String email);
+
     // 데이터가 DB에 잘 들어갔는지 판단.
     int insertMember(Member member);
 
@@ -19,7 +22,12 @@ public interface MemberMapper {
     // return 1이면 성공
     int updateLastLoginAt(Long memberId);
 
-    Member findByEmail(String email);
-
+    // 이메일 갱신
     int updateEmail(@Param("memberId") Long memberId, @Param("email") String email);
+
+    // 전화번호 중복 확인
+    boolean findExistMemberPhone(@Param("phone") String phone, @Param("memberId") Long memberId);
+
+    // 멤버 추가 프로필 업데이트
+    int updateProfile(Member member);
 }
