@@ -44,11 +44,11 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    ResponseEntity<ApiResponse<RetrieveMemberResponse>> retrieve(
+    ResponseEntity<ApiResponse<RetrieveMemberResponse>> search(
             @AuthenticationPrincipal Long memberId
     ){
         log.info("memberId : {} 정보조회", memberId);
-        RetrieveMemberResponse response = memberService.retrieveMember(memberId);
+        RetrieveMemberResponse response = memberService.searchMember(memberId);
         if (UserStatus.WITHDRAWN.equals(response.getUserStatus())) {
             return ResponseEntity.ok(ApiResponse.success(200, "탈퇴한 회원입니다. 30일 이내 복구 가능합니다.", response));
         }

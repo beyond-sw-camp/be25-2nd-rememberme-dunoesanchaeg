@@ -17,7 +17,7 @@ public interface MemberService {
     );
     
     // 회원 정보 조회
-    RetrieveMemberResponse retrieveMember(Long memberId);
+    RetrieveMemberResponse searchMember(Long memberId);
 
     // 회원 정보 수정
     UpdateMemberResponse updateMember(Long memberId, UpdateMemberRequest request);

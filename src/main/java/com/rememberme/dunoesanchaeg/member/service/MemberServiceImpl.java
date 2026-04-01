@@ -93,7 +93,7 @@ public class MemberServiceImpl implements MemberService{
 
     // 회원정보 조회
     @Override
-    public RetrieveMemberResponse retrieveMember(Long memberId) {
+    public RetrieveMemberResponse searchMember(Long memberId) {
         Member member = memberMapper.findByMemberId(memberId);
         if(member == null) {
             throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
