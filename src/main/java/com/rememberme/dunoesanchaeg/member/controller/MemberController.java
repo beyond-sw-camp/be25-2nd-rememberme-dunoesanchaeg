@@ -9,7 +9,7 @@ import com.rememberme.dunoesanchaeg.member.dto.request.RecoveryRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RecoveryResponse;
-import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.SearchMemberResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 import com.rememberme.dunoesanchaeg.member.service.MemberService;
 import jakarta.servlet.http.HttpServletResponse;
@@ -44,11 +44,11 @@ public class MemberController {
     }
 
     @GetMapping("/me")
-    ResponseEntity<ApiResponse<RetrieveMemberResponse>> search(
+    ResponseEntity<ApiResponse<SearchMemberResponse>> search(
             @AuthenticationPrincipal Long memberId
     ){
         log.info("memberId : {} 정보조회", memberId);
-        RetrieveMemberResponse response = memberService.searchMember(memberId);
+        SearchMemberResponse response = memberService.searchMember(memberId);
         if (UserStatus.WITHDRAWN.equals(response.getUserStatus())) {
             return ResponseEntity.ok(ApiResponse.success(200, "탈퇴한 회원입니다. 30일 이내 복구 가능합니다.", response));
         }

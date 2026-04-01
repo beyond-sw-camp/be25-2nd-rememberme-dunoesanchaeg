@@ -14,12 +14,12 @@ spring:
   # 데이터소스 구조만 정의 (값은 각 프로필에서 채움)
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    hikari:
-      maximum-pool-size: 10 # 서비스 규모에 따라 조절 (보통 vCPU * 2 + 1)
-      minimum-idle: 5
-      idle-timeout: 300000 # 5분
-      max-lifetime: 1800000 # 30분 (DB의 wait_timeout보다 짧아야 함)
-      connection-timeout: 30000 # 30초 안에 연결 안 되면 에러
+#    hikari:
+#      maximum-pool-size: 10 # 서비스 규모에 따라 조절 (보통 vCPU * 2 + 1)
+#      minimum-idle: 5
+#      idle-timeout: 300000 # 5분
+#      max-lifetime: 1800000 # 30분 (DB의 wait_timeout보다 짧아야 함)
+#      connection-timeout: 30000 # 30초 안에 연결 안 되면 에러
 
 
 mybatis:

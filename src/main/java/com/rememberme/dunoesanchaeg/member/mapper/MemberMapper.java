@@ -7,10 +7,10 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface MemberMapper {
     // memberId로 유저 조회
-    Member findByMemberId(Long memberId);
+    Member findByMemberId(@Param("memberId") Long memberId);
 
     // 카카오아이디로 유저 조회
-    Member findByKakaoId(Long kakaoId);
+    Member findByKakaoId(@Param("kakaoId") Long kakaoId);
 
     // 이메일로 유저 조회
     Member findByEmail(String email);
@@ -20,7 +20,7 @@ public interface MemberMapper {
 
     // 최종 로그인 시간 갱신
     // return 1이면 성공
-    int updateLastLoginAt(Long memberId);
+    int updateLastLoginAt(@Param("memberId") Long memberId);
 
     // 이메일 갱신
     int updateEmail(@Param("memberId") Long memberId, @Param("email") String email);

@@ -12,12 +12,14 @@ import java.time.LocalDateTime;
 
 @Builder
 @Value
-public class RetrieveMemberResponse {
+public class SearchMemberResponse {
     String name;
     String email;
     String phone;
     FontSize fontSize;
     Role role;
+
+    String birthDate;
 
     @JsonProperty("isHighContrast")
     Boolean isHighContrast;
@@ -27,12 +29,19 @@ public class RetrieveMemberResponse {
 
     UserStatus userStatus;
 
+    @JsonProperty("guardianConsent")
+    Boolean guardianConsent;
+
+    String guardianEmail;
+    String guardianPhone;
+
+
     LocalDateTime deletedAt;
 
 
     // 탈퇴 유예 회원용 - 복구 안내에 필요한 최소 정보만 제공
-    public static RetrieveMemberResponse ofWithdrawn(Member member) {
-        return RetrieveMemberResponse.builder()
+    public static SearchMemberResponse ofWithdrawn(Member member) {
+        return SearchMemberResponse.builder()
                 .name(member.getName())
                 .email(member.getEmail())
                 .phone(member.getPhone())

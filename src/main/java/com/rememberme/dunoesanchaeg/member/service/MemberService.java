@@ -5,7 +5,7 @@ import com.rememberme.dunoesanchaeg.member.dto.request.RecoveryRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RecoveryResponse;
-import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.SearchMemberResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 
 
@@ -17,7 +17,7 @@ public interface MemberService {
     );
     
     // 회원 정보 조회
-    RetrieveMemberResponse searchMember(Long memberId);
+    SearchMemberResponse searchMember(Long memberId);
 
     // 회원 정보 수정
     UpdateMemberResponse updateMember(Long memberId, UpdateMemberRequest request);

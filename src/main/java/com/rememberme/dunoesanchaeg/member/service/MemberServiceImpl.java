@@ -21,7 +21,7 @@ import com.rememberme.dunoesanchaeg.member.dto.request.AdditionalInfoRequest;
 import com.rememberme.dunoesanchaeg.member.dto.request.UpdateMemberRequest;
 import com.rememberme.dunoesanchaeg.member.dto.response.AdditionalInfoResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.RecoveryResponse;
-import com.rememberme.dunoesanchaeg.member.dto.response.RetrieveMemberResponse;
+import com.rememberme.dunoesanchaeg.member.dto.response.SearchMemberResponse;
 import com.rememberme.dunoesanchaeg.member.dto.response.UpdateMemberResponse;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper;
@@ -93,14 +93,14 @@ public class MemberServiceImpl implements MemberService{
 
     // 회원정보 조회
     @Override
-    public RetrieveMemberResponse searchMember(Long memberId) {
+    public SearchMemberResponse searchMember(Long memberId) {
         Member member = memberMapper.findByMemberId(memberId);
         if(member == null) {
             throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
         }
 
         if(UserStatus.WITHDRAWN.equals(member.getUserStatus())){
-            return RetrieveMemberResponse.ofWithdrawn(member);
+            return SearchMemberResponse.ofWithdrawn(member);
         }
 
         if(!member.isProfileCompleted()){
@@ -109,10 +109,14 @@ public class MemberServiceImpl implements MemberService{
 
         String email = maskEmail(member.getEmail());
 
-        return RetrieveMemberResponse.builder()
+        return SearchMemberResponse.builder()
                 .name(member.getName())
                 .email(email)
                 .phone(member.getPhone())
+                .birthDate(member.getBirthDate() != null ? member.getBirthDate().format(DATE_FORMATTER) : null)
+                .guardianConsent(member.isGuardianConsent())
+                .guardianEmail(member.getGuardianEmail())
+                .guardianPhone(member.getGuardianPhone())
                 .fontSize(member.getFontSize())
                 .role(member.getRole())
                 .isHighContrast(member.isHighContrast())
