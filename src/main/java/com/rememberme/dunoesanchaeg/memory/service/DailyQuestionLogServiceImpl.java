@@ -28,12 +28,12 @@ public class DailyQuestionLogServiceImpl implements DailyQuestionLogService {
         result = dailyQuestionLogMapper.insertTodayQuestionLog(dailyQuestionLog);
         if (result != 1) {
 
-            throw new BaseException(500, "참여 기록을 저장하지 못하였습니다.");
+            throw new BaseException(500, "개방형질문 루틴 시작 처리에 실패하였습니다.");
         }
 
         if (dailyQuestionLog.getDailyQuestionLogId() == null) {
 
-            throw new BaseException(500, "참여 기록을 생성하지 못하였습니다.");
+            throw new BaseException(500, "개방형질문 내용 조회에 실패하였습니다.");
         }
 
         return dailyQuestionLog.getDailyQuestionLogId();
@@ -46,7 +46,7 @@ public class DailyQuestionLogServiceImpl implements DailyQuestionLogService {
         result = dailyQuestionLogMapper.deleteTodayQuestionLog(memberId, dailyQuestionLogId);
         if (result != 1) {
 
-            throw new BaseException(500, "참여 기록을 갱신하지 못하였습니다.");
+            throw new BaseException(500, "개방형질문 루틴 이탈 처리에 실패하였습니다.");
         }
     }
 
@@ -57,7 +57,7 @@ public class DailyQuestionLogServiceImpl implements DailyQuestionLogService {
         result = dailyQuestionLogMapper.updateTodayQuestionLog(dailyQuestionLog);
         if (result != 1) {
 
-            throw new BaseException(500, "참여 기록을 저장하지 못하였습니다.");
+            throw new BaseException(500, "개방형질문 루틴 완료 처리에 실패하였습니다.");
         }
     }
 }
