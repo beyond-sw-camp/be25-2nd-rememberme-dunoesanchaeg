@@ -1,10 +1,22 @@
 spring:
+  config:
+    activate:
+      on-profile: prod
+  jpa:
+    hibernate:
+      ddl-auto: none # 운영 DB는 절대 건드리지 않음
+    show-sql: false   # 로그 폭탄 방지
   datasource:
     # 운영 환경에서는 기본값 없이 반드시 환경 변수로 받아야 안전함
     url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
 
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,text/html,text/xml,text/plain
 
 # 운영 환경에서는 보안을 위해 Swagger와 API 문서를 비활성화
 springdoc:
@@ -28,3 +40,17 @@ mybatis:
 jwt:
   # 실제 운영 서버의 환경 변수(JWT_SECRET)에서 값을 가져옵니다.
   secret: ${JWT_SECRET}
+
+kakao:
+  client-id: ${KAKAO_CLIENT_ID}
+  admin-key: ${KAKAO_ADMIN_KEY}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
+  client-secret: ${KAKAO_CLIENT_SECRET}
+
+cookie:
+  domain: ${COOKIE_DOMAIN} # .dunoesanchaeg.com (서브도메인 간 공유용)
+  secure: true            # HTTPS에서만 쿠키 전송
+  same-site: None         # 프론트와 백엔드 도메인이 다를 경우 필수
+
+cors:
+  allowed-origin: ${CORS_ALLOWED_ORIGIN}

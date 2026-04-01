@@ -14,6 +14,12 @@ spring:
   # 데이터소스 구조만 정의 (값은 각 프로필에서 채움)
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10 # 서비스 규모에 따라 조절 (보통 vCPU * 2 + 1)
+      minimum-idle: 5
+      idle-timeout: 300000 # 5분
+      max-lifetime: 1800000 # 30분 (DB의 wait_timeout보다 짧아야 함)
+      connection-timeout: 30000 # 30초 안에 연결 안 되면 에러
 
 
 mybatis:
@@ -32,6 +38,9 @@ springdoc:
 
 server:
   port: 8080
+  error:
+    include-stacktrace: never # 에러 발생 시 상세 코드(Stacktrace) 노출 차단
+    forward-headers-strategy: native # AWS ALB/ELB 사용 시 클라이언트 IP 유지를 위해 필수
 
 jwt:
   # 액세스 토큰 만료 시간: 1시간 (60분 * 60초 * 1000)
@@ -45,8 +54,3 @@ logging:
     com.zaxxer.hikari: DEBUG
     org.hibernate.SQL: DEBUG
 
-#kakao:
-#  client-id: ${KAKAO_CLIENT_ID}
-#  admin-key: ${KAKAO_ADMIN_KEY}
-#  redirect-uri: ${KAKAO_REDIRECT_URI}
-#  client-secret: ${KAKAO_CLIENT_SECRET}
