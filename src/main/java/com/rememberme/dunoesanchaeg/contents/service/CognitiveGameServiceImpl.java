@@ -6,6 +6,7 @@ import com.rememberme.dunoesanchaeg.contents.dto.response.TodayGameResponse;
 import com.rememberme.dunoesanchaeg.contents.mapper.CognitiveGameMapper;
 import com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus;
 import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
+import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
 
     private final CognitiveGameMapper cognitiveGameMapper;
     private final RoutineMapper routineMapper;
+    private final RoutineService routineService;
 
     @Override
     public TodayGameResponse getTodayGame(Long memberId) {
@@ -65,6 +67,8 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
         );
 
         routineMapper.updateGameComplete(routine.getRoutineId());
+
+        routineService.completeRoutineItem(memberId, "GAME");
     }
 
     private void validateGameResult(AnswerSubmitRequest request) {
