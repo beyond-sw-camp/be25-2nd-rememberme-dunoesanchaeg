@@ -13,5 +13,5 @@ public class OpenQuestionStartResponse {
 
     private final String questionText;
 
-    private final DailyQuestionLogStatus dailyQuestionLogStatus;
+    private final DailyQuestionLogStatus status;
 }

@@ -67,7 +67,7 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
                 .memberId(memberId)
                 .recordDate(today)
                 .questionId(questionBank.getQuestionId())
-                .dailyQuestionLogStatus(DailyQuestionLogStatus.STARTED)
+                .status(DailyQuestionLogStatus.STARTED)
                 .createdAt(now)
                 .build();
 
@@ -119,7 +119,7 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
                 .dailyQuestionLogId(dailyQuestionLogId)
                 .memberId(memberId)
                 .responseSecond(responseSecond)
-                .dailyQuestionLogStatus(DailyQuestionLogStatus.COMPLETED)
+                .status(DailyQuestionLogStatus.COMPLETED)
                 .build();
 
         dailyQuestionLogService.updateTodayQuestionLog(dailyQuestionLog);

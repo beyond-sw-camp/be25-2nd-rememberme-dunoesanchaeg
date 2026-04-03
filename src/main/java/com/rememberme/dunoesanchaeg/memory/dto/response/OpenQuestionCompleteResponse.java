@@ -9,5 +9,5 @@ import lombok.Getter;
 public class OpenQuestionCompleteResponse {
     private final Long dailyQuestionLogId;
 
-    private final DailyQuestionLogStatus dailyQuestionLogStatus;
+    private final DailyQuestionLogStatus status;
 }

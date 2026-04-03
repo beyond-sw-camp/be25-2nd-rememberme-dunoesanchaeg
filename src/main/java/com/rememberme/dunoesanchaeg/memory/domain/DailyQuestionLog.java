@@ -26,7 +26,7 @@ public class DailyQuestionLog {
 
     private Long questionId;
 
-    private DailyQuestionLogStatus dailyQuestionLogStatus;
+    private DailyQuestionLogStatus status;
 
     private LocalDateTime createdAt;
 }

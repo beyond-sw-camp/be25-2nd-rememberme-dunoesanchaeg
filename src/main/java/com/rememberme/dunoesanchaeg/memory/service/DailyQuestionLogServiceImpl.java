@@ -16,9 +16,9 @@ public class DailyQuestionLogServiceImpl implements DailyQuestionLogService {
     private final DailyQuestionLogMapper dailyQuestionLogMapper;
 
     @Override
-    public boolean existsTodayQuestionLog(Long memberId, LocalDate recordDate, DailyQuestionLogStatus dailyQuestionLogStatus) {
+    public boolean existsTodayQuestionLog(Long memberId, LocalDate recordDate, DailyQuestionLogStatus status) {
 
-        return dailyQuestionLogMapper.countTodayQuestionLog(memberId, recordDate, dailyQuestionLogStatus) > 0;
+        return dailyQuestionLogMapper.countTodayQuestionLog(memberId, recordDate, status) > 0;
     }
 
     @Override

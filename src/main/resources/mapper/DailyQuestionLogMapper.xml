@@ -10,7 +10,7 @@
         FROM daily_question_log
         WHERE member_id = #{memberId}
           AND record_date = #{recordDate}
-          AND status = #{dailyQuestionLogStatus}
+          AND status = #{status}
     </select>
 
     <insert id="insertTodayQuestionLog"
@@ -27,7 +27,7 @@
                      #{memberId},
                      #{recordDate},
                      #{questionId},
-                     #{dailyQuestionLogStatus},
+                     #{status},
                      #{createdAt}
                  )
     </insert>
@@ -44,7 +44,7 @@
             parameterType="com.rememberme.dunoesanchaeg.memory.domain.DailyQuestionLog">
         UPDATE daily_question_log
         SET response_second = #{responseSecond},
-            status = #{dailyQuestionLogStatus}
+            status = #{status}
         WHERE daily_question_log_id = #{dailyQuestionLogId}
           AND member_id = #{memberId}
           AND status = 'STARTED'

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 // 개방형질문 로그 관리 담당
 public interface DailyQuestionLogService {
 
-    boolean existsTodayQuestionLog(Long memberId, LocalDate recordDate, DailyQuestionLogStatus dailyQuestionLogStatus);
+    boolean existsTodayQuestionLog(Long memberId, LocalDate recordDate, DailyQuestionLogStatus status);
 
     Long createTodayQuestionLog(DailyQuestionLog dailyQuestionLog);
 

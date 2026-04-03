@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Mapper
 public interface DailyQuestionLogMapper {
     // 개방형질문 로그 확인
-    int countTodayQuestionLog(@Param("memberId") Long memberId, @Param("recordDate") LocalDate recordDate, @Param("dailyQuestionLogStatus") DailyQuestionLogStatus dailyQuestionLogStatus);
+    int countTodayQuestionLog(@Param("memberId") Long memberId, @Param("recordDate") LocalDate recordDate, @Param("status") DailyQuestionLogStatus status);
 
     // 개방형질문 로그 저장
     int insertTodayQuestionLog(DailyQuestionLog dailyQuestionLog);
