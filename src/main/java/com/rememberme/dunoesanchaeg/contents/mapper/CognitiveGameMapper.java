@@ -13,7 +13,9 @@ public interface CognitiveGameMapper {
             @Param("memberId") Long memberId,
             @Param("playedDate") LocalDate playedDate,
             @Param("gameType") AssignedGameType gameType,
-            @Param("correctCount") int correctCount,
-            @Param("totalTryCount") int totalTryCount
+            @Param("correctCount") Integer correctCount,
+            @Param("totalTryCount") Integer totalTryCount,
+            @Param("playTimeSeconds") Integer playTimeSeconds,
+            @Param("isValid") Boolean isValid
     );
 }

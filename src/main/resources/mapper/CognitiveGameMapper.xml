@@ -7,22 +7,22 @@
 
         <insert id="insertGameResult">
             INSERT INTO daily_game_log (
-            member_id,
-            played_date,
-            game_type,
-            total_try_count,
-            correct_count,
-            play_time_seconds,
-            is_valid
+                member_id,
+                played_date,
+                game_type,
+                total_try_count,
+                correct_count,
+                play_time_seconds,
+                is_valid
             )
             VALUES (
-            #{memberId},
-            #{playedDate},
-            #{gameType},
-            #{totalTryCount},
-            #{correctCount},
-            0,
-            TRUE
+                #{memberId},
+                #{playedDate},
+                #{gameType},
+                #{totalTryCount},
+                #{correctCount},
+                #{playTimeSeconds},
+                #{isValid}
             )
         </insert>
 

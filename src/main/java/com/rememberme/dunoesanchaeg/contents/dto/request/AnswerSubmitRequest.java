@@ -20,4 +20,8 @@ public class AnswerSubmitRequest {
     @NotNull(message = "총 시도 횟수는 필수입니다.")
     @Min(value = 1, message = "총 시도 횟수는 1 이상이어야 합니다.")
     private Integer totalTryCount;
+
+    @NotNull(message = "플레이 시간은 필수입니다.")
+    @Min(value = 0, message = "플레이 시간은 0 이상이어야 합니다.")
+    private Integer playTimeSeconds;
 }

@@ -58,7 +58,7 @@ public class DailyRecordServiceImpl implements DailyRecordService {
             }
         }
 
-        routineService.completeRoutineItem(memberId, "RECORD");
+        // routineService.completeRoutineItem(memberId, "RECORD");
 
         return new DailyRecordSaveResponse(
                 today,
