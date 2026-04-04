@@ -13,7 +13,7 @@ public class NoticeDetailResponse {
 
     String title;
 
-    String context;
+    String content;
 
     LocalDateTime createdAt;
 

@@ -66,6 +66,7 @@ public class SecurityConfig {
                                 "/api/v1/open-questions/**", // 질문
                                 "/api/v1/daily-records/**",  // 기록
                                 "/api/v1/trophies",          // 트로피
+                                "/api/v1/notices/**",        // 공지
                                 "/api/v1/calendar/**",       // 캘린더
                                 "/api/v1/statistics/**"     // 통계
                         ).authenticated()
