@@ -60,7 +60,7 @@ public class SecurityConfig {
                                 "/api/v1/statistics/**",     // 통계
                                 "/api/v1/trophies",          // 트로피
                                 "/api/v1/calendar/**",       // 캘린더
-                                "/api/v1/support/**",
+                                "/api/v1/notices/**",
                                 "/v3/api-docs/**",           // Swagger용
                                 "/swagger-ui/**"             // Swagger UI용
                         ).permitAll()
