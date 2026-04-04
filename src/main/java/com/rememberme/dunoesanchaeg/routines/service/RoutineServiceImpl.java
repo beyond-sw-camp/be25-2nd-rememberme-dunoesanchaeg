@@ -116,4 +116,11 @@ public class RoutineServiceImpl implements RoutineService {
     private Long randomQuestion() {
         return (long) (new Random().nextInt(10) + 1);
     }
+
+    // 개방형질문 기능 구현에 필요한 코드
+    @Override
+    public Long getAssignedQuestionId(Long memberId, LocalDate routineDate) {
+
+        return routineMapper.selectAssignedQuestionId(memberId, routineDate);
+    }
 }
