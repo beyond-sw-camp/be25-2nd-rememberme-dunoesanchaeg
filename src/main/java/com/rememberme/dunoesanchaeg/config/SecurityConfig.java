@@ -60,7 +60,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/api/v1/auth/logout/**",    // 로그아웃
                                 "/api/v1/members/me",        // 프로필 조회 수정
-                                "/api/v1/members/me//profile",   // 프로필 추가
+                                "/api/v1/members/me/profile",   // 프로필 추가
                                 "/api/v1/routines/**",       // 루틴 관련
                                 "/api/v1/cognitive-games/**",// 미니게임
                                 "/api/v1/open-questions/**", // 질문
