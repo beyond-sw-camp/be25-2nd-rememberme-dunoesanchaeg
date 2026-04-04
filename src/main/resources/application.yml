@@ -42,10 +42,11 @@ server:
     include-stacktrace: never # 에러 발생 시 상세 코드(Stacktrace) 노출 차단
     forward-headers-strategy: native # AWS ALB/ELB 사용 시 클라이언트 IP 유지를 위해 필수
 
+# application.yml (운영 서버용)
 jwt:
-  # 액세스 토큰 만료 시간: 1시간 (60분 * 60초 * 1000)
-  access-token-expiration: 3600000
-  # 리프레시 토큰 만료 시간: 14일 (14일 * 24시간 * 60분 * 60초 * 1000)
+  # 액세스 토큰: 30분 (30 * 60 * 1000)
+  access-token-expiration: 1800000
+  # 리프레시 토큰: 14일 (14 * 24 * 60 * 60 * 1000)
   refresh-token-expiration: 1209600000
 
 logging:

@@ -12,10 +12,10 @@ public class CookieUtil {
 
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
-                .secure(false) // 배포 시 true(HTTPS 전용) 권장
+                .secure(true) // 배포 시 true(HTTPS 전용) 권장
                 .path("/")
                 .maxAge(maxAgeSeconds)
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
     }
 
