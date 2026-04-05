@@ -7,7 +7,6 @@ import com.rememberme.dunoesanchaeg.common.security.SecurityUtil;
 import com.rememberme.dunoesanchaeg.statistics.dto.request.StatisticsRequest;
 import com.rememberme.dunoesanchaeg.statistics.dto.response.StatisticsResponse;
 import com.rememberme.dunoesanchaeg.statistics.service.StatisticsService;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +23,6 @@ public class StatisticsController {
 
     private final StatisticsService StatisticsService;
 
-    @Operation(summary = "종목별 최근 7회 플레이 종합 통계 조회", description = "타겟 날짜를 기준으로 각 종목별 최근 7회 플레이 기록을 합산하여 조회합니다.")
     @GetMapping("/games/weekly-types")
     public ResponseEntity<ApiResponse<StatisticsResponse>> getWeeklyTypeStatistics(
             @Valid @ModelAttribute StatisticsRequest request) {
