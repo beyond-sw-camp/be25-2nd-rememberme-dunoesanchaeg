@@ -21,7 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StatisticsController {
 
-    private final StatisticsService weeklyGameTypeStatisticsService;
+
+    private final StatisticsService StatisticsService;
 
     @Operation(summary = "종목별 최근 7회 플레이 종합 통계 조회", description = "타겟 날짜를 기준으로 각 종목별 최근 7회 플레이 기록을 합산하여 조회합니다.")
     @GetMapping("/games/weekly-types")
@@ -31,7 +32,7 @@ public class StatisticsController {
         Long memberId = SecurityUtil.getCurrentMemberId();
 
         StatisticsResponse response =
-                weeklyGameTypeStatisticsService.getWeeklyTypeStatistics(memberId, request);
+                StatisticsService.getWeeklyTypeStatistics(memberId, request);
 
         return ResponseEntity.ok(
                 ApiResponse.success(200, "종목별 최근 7회 플레이 종합 통계 조회를 성공했습니다.", response)

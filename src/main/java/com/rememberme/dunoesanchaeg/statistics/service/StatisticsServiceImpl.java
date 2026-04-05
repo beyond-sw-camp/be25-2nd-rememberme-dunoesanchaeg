@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class StatisticsServiceImpl implements StatisticsService {
 
-    private final StatisticsMapper weeklyGameTypeStatisticsMapper;
+    private final StatisticsMapper StatisticsMapper;
     private final MemberMapper memberMapper;
 
     @Override
@@ -35,7 +35,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         validateNotFuture(targetDate);
 
-        List<StatisticsItemResponse> rawStats = weeklyGameTypeStatisticsMapper.findWeeklyTypeStatistics(memberId, targetDate);
+        List<StatisticsItemResponse> rawStats = StatisticsMapper.findWeeklyTypeStatistics(memberId, targetDate);
 
         Map<GameType, StatisticsItemResponse> statMap = new EnumMap<>(GameType.class);
 
