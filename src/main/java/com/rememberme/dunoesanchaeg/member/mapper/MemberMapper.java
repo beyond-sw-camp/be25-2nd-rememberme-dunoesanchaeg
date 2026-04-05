@@ -35,6 +35,7 @@ public interface MemberMapper {
     // 멤버 탈퇴
     int withdrawMember(Long memberId);
 
+    // 탈퇴멤버 복구
     int recoveryMember(Long memberId);
 
 }

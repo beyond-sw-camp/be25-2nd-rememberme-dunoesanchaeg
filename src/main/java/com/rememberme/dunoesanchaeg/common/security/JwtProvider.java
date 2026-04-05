@@ -92,19 +92,19 @@ public class JwtProvider {
                 .getPayload();
     }
 
-    public Long getMemberId(String token) {
-        return Long.parseLong(
-                parseClaim(token)
-                        .getSubject()
-        );
-    }
-
-    public Role getRole(String token){
-        return Role.valueOf(
-                parseClaim(token)
-                        .get("role", String.class)
-        );
-    }
+//    public Long getMemberId(String token) {
+//        return Long.parseLong(
+//                parseClaim(token)
+//                        .getSubject()
+//        );
+//    }
+//
+//    public Role getRole(String token){
+//        return Role.valueOf(
+//                parseClaim(token)
+//                        .get("role", String.class)
+//        );
+//    }
 
     public LocalDateTime getRefreshTokenExpire(){
         // 현재 시간에 refreshTokenExpiration의 값을 더함

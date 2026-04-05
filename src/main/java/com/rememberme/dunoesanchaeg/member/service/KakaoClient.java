@@ -112,7 +112,6 @@ public class KakaoClient {
         String url = "https://kapi.kakao.com/v1/user/logout";
 
         HttpHeaders headers = new HttpHeaders();
-        // 카카오 디벨로퍼 '앱 키' 탭에 있는 [Admin 키]를 넣으세요.
         headers.set("Authorization", "KakaoAK " + adminKey);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -138,7 +137,7 @@ public class KakaoClient {
         headers.set("Authorization", "KakaoAK " + adminKey);
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-        // 3. 파라미터 설정 (누구를 끊을 것인가?)
+        // 3. 파라미터 설정
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("target_id_type", "user_id");
         params.add("target_id", String.valueOf(kakaoId));
@@ -158,7 +157,7 @@ public class KakaoClient {
             // 에러 발생 시 상세 로그 (401 등 원인 파악용)
             log.error("카카오 연동 해제 실패 - 상태 코드: {}", e.getStatusCode());
             log.error("에러 바디: {}", e.getResponseBodyAsString());
-            throw e; // 서비스 계층에서 알 수 있도록 예외를 던집니다.
+            throw e; // 서비스 계층에서 알 수 있도록 예외처리
         } catch (Exception e) {
             log.error("카카오 연동 해제 중 알 수 없는 에러: {}", e.getMessage());
             throw e;

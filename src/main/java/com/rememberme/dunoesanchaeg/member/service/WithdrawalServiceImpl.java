@@ -42,7 +42,7 @@ public class WithdrawalServiceImpl implements WithdrawalService {
             log.info("새로 연동 해제할 대상자가 없습니다. 기존 처리 건 삭제를 진행합니다.");
         }
 
-        // 최종적으로 연동 해제가 확인된 유저들만 영구 삭제합니다.
+        // 최종적으로 연동 해제가 확인된 유저들만 영구 삭제
         int result = schedulerMapper.removeMemberPermanently();
         log.info("탈퇴 처리 완료 - 총 {}건 영구 삭제", result);
     }

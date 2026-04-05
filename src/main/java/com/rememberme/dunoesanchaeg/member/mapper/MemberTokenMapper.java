@@ -19,6 +19,7 @@ public interface MemberTokenMapper {
     // isRevoked를 true로 만들어 토큰 무효화
     int logoutMemberToken(@Param("memberId") Long memberId, @Param("userAgent") String userAgent);
 
+    // 내부 로직용 전체 로그아웃
     int logoutAllMemberToken(Long memberId);
 
 }
