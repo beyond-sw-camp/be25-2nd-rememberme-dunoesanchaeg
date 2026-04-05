@@ -48,14 +48,14 @@ public class JwtFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
 
-        } catch (AuthException e) { // 👈 BaseException 대신 AuthException을 잡습니다.
+        } catch (AuthException e) { // AuthException을 잡음
             log.error("JWT 필터 내 인증 예외 발생: {}", e.getMessage());
             setErrorResponse(response, e.getMessage());
         }
     }
 
     private void setErrorResponse(HttpServletResponse response, String message) throws IOException {
-        // AuthException은 무조건 401이므로 숫자를 고정합니다.
+        // AuthException 무조건 401이므로 숫자를 고정
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401
         response.setContentType("application/json;charset=UTF-8");
 

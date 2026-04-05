@@ -69,20 +69,20 @@ public class JwtProvider {
             return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.error("잘못된 JWT 서명입니다.");
-            throw new AuthException("유효하지 않은 토큰 서명입니다."); // 👈 변경
+            throw new AuthException("유효하지 않은 토큰 서명입니다.");
         } catch (ExpiredJwtException e) {
             log.error("만료된 JWT 토큰입니다.");
-            throw new AuthException("토큰이 만료되었습니다. 다시 로그인해주세요."); // 👈 변경
+            throw new AuthException("토큰이 만료되었습니다. 다시 로그인해주세요.");
         } catch (UnsupportedJwtException e) {
             log.error("지원되지 않는 JWT 토큰입니다.");
-            throw new AuthException("지원되지 않는 토큰 형식입니다."); // 👈 변경
+            throw new AuthException("지원되지 않는 토큰 형식입니다.");
         } catch (IllegalArgumentException e) {
             log.error("JWT 토큰이 잘못되었습니다.");
-            throw new AuthException("토큰이 비어있거나 잘못되었습니다."); // 👈 변경
+            throw new AuthException("토큰이 비어있거나 잘못되었습니다.");
         }
     }
 
-    // parseClaim(token)을 통해 통째로 파싱
+    // parseClaim을 통해 통째로 파싱
     // 필터에서 한번만 파싱해서 중복 파싱 방지
     private Claims parseClaim(String token){
         return Jwts.parser()

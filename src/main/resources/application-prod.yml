@@ -52,5 +52,6 @@ cookie:
   secure: true            # HTTPS에서만 쿠키 전송
   same-site: None         # 프론트와 백엔드 도메인이 다를 경우 필수
 
-cors:
-  allowed-origin: ${CORS_ALLOWED_ORIGIN}
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGIN}

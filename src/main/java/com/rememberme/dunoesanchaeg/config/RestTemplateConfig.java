@@ -14,6 +14,6 @@ public class RestTemplateConfig {
         return builder
                 .setConnectTimeout(Duration.ofSeconds(5))
                 .setReadTimeout(Duration.ofSeconds(5))
-                .build(); // 부트가 알아서 최적의 팩토리를 선택해 빌드해줍니다.
+                .build();
     }
 }

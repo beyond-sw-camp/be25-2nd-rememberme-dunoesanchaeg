@@ -4,6 +4,7 @@ import com.rememberme.dunoesanchaeg.common.security.JwtFilter;
 import com.rememberme.dunoesanchaeg.common.security.JwtProvider;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -23,6 +24,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtProvider jwtProvider;
+
+    @Value("${app.cors.allowed-origins}")
+    private List<String> allowedOrigins;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -45,7 +49,7 @@ public class SecurityConfig {
                             response.getWriter().write("{\"code\": 401, \"message\": \"로그인이 필요한 서비스입니다.\"}");
                         })
                 )
-                // 5. 경로별 권한 제어 (개발 편의를 위한 프리패스 설정)
+                // 5. 경로별 권한 제어
                 .authorizeHttpRequests(auth -> auth
                         // 인증 없어도 접근 가능
                         .requestMatchers(
@@ -74,7 +78,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/v1/members/me/recovery").hasRole("WITHDRAWN")
                         .anyRequest()
                         .authenticated()
-                ) // JwtFilter는 스프링 시큐리티 내부에서만 사용됨.
+                ) // JwtFilter는 스프링 시큐리티 내부에서만 사용
                 .addFilterBefore(new JwtFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -85,7 +89,7 @@ public class SecurityConfig {
         CorsConfiguration config = new CorsConfiguration();
 
         // Vue.js 개발 서버(Vite) 포트 허용
-        config.setAllowedOrigins(List.of("http://localhost:5173"));
+        config.setAllowedOrigins(allowedOrigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization")); // 프론트에서 JWT 토큰을 읽을 수 있게 허용
