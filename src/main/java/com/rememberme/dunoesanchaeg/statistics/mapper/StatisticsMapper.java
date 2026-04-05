@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface StatisticsMapper {
 
-    List<StatisticsItemResponse> findWeeklyTypeStatistics(
+    List<StatisticsItemResponse> findStatistics(
             @Param("memberId") Long memberId,
             @Param("targetDate") LocalDate targetDate
     );

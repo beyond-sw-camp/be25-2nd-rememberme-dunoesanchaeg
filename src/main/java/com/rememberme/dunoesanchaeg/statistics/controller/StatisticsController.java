@@ -23,14 +23,13 @@ public class StatisticsController {
 
     private final StatisticsService StatisticsService;
 
-    @GetMapping("/games/weekly-types")
+    @GetMapping("/games")
     public ResponseEntity<ApiResponse<StatisticsResponse>> getWeeklyTypeStatistics(
             @Valid @ModelAttribute StatisticsRequest request) {
 
         Long memberId = SecurityUtil.getCurrentMemberId();
 
-        StatisticsResponse response =
-                StatisticsService.getWeeklyTypeStatistics(memberId, request);
+        StatisticsResponse response = StatisticsService.getStatistics(memberId, request);
 
         return ResponseEntity.ok(
                 ApiResponse.success(200, "종목별 최근 7회 플레이 종합 통계 조회를 성공했습니다.", response)

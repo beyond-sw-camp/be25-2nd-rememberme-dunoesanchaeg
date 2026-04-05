@@ -27,7 +27,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
     @Override
     @Transactional(readOnly = true)
-    public StatisticsResponse getWeeklyTypeStatistics(Long memberId, StatisticsRequest request) {
+    public StatisticsResponse getStatistics(Long memberId, StatisticsRequest request) {
 
         validateMember(memberId);
 
@@ -35,7 +35,7 @@ public class StatisticsServiceImpl implements StatisticsService {
 
         validateNotFuture(targetDate);
 
-        List<StatisticsItemResponse> rawStats = StatisticsMapper.findWeeklyTypeStatistics(memberId, targetDate);
+        List<StatisticsItemResponse> rawStats = StatisticsMapper.findStatistics(memberId, targetDate);
 
         Map<GameType, StatisticsItemResponse> statMap = new EnumMap<>(GameType.class);
 
@@ -102,8 +102,7 @@ public class StatisticsServiceImpl implements StatisticsService {
         LocalDate today = LocalDate.now();
         if (targetDate.isAfter(today)) {
             throw new BaseException(
-                    400,
-                    "미래의 날짜는 조회할 수 없습니다. 오늘 또는 과거의 날짜를 선택해주세요."
+                    400, "미래의 날짜는 조회할 수 없습니다. 오늘 또는 과거의 날짜를 선택해주세요."
             );
         }
     }
