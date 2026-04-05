@@ -55,3 +55,6 @@ logging:
     com.zaxxer.hikari: DEBUG
     org.hibernate.SQL: DEBUG
 
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGIN:http://localhost:5173}
