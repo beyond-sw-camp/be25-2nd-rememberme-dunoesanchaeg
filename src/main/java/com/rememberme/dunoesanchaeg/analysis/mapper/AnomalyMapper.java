@@ -41,4 +41,8 @@ public interface AnomalyMapper {
                         @Param("metricScope") MetricScope metricScope,
                         @Param("status") String status,
                         @Param("reason") String reason);
+
+        // 보호자 이메일 조회 (수신 동의한 경우만)
+        String findGuardianEmail(@Param("memberId") Long memberId);
+
 }

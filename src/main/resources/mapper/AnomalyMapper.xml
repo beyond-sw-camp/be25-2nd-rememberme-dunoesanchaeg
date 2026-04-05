@@ -88,4 +88,11 @@
         )
     </insert>
 
+    <select id="findGuardianEmail" resultType="String">
+        SELECT guardian_email
+        FROM member
+        WHERE member_id = #{memberId}
+          AND guardian_consent = true
+    </select>
+
 </mapper>
