@@ -77,7 +77,7 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .build();
     }
 
-    private Member validateMember(Long memberId) {
+    private void validateMember(Long memberId) {
         if (memberId == null) {
             throw new BaseException(401, "로그인이 필요합니다.");
         }
@@ -87,7 +87,6 @@ public class StatisticsServiceImpl implements StatisticsService {
             throw new BaseException(404, "사용자 정보를 찾을 수 없습니다. 다시 로그인해 주세요.");
         }
 
-        return member;
     }
 
     private LocalDate parseTargetDate(String targetDate) {
