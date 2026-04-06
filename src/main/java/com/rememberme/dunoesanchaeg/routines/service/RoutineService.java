@@ -1,5 +1,6 @@
 package com.rememberme.dunoesanchaeg.routines.service;
 
+import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import com.rememberme.dunoesanchaeg.routines.dto.response.RoutineResponse;
 
 import java.time.LocalDate;
@@ -13,7 +14,7 @@ public interface RoutineService {
     Long getAssignedQuestionId(Long memberId, LocalDate routineDate);
 
     // GAME, RECORD, QUESTION 완료 업데이트
-    void completeRoutineItem(Long memberId, String type);
+    void completeRoutineItem(Long memberId, MissionTypes missionTypes);
 
     // totalRoutineCount 계산 (트로피 연결)
     void totalRoutineCount(Long memberId);

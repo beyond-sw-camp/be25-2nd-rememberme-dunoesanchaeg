@@ -4,6 +4,7 @@ import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus;
 import com.rememberme.dunoesanchaeg.routines.domain.enums.AssignedGameType;
+import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import com.rememberme.dunoesanchaeg.routines.dto.response.RoutineResponse;
 import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
 import com.rememberme.dunoesanchaeg.trophies.service.TrophyService;
@@ -75,9 +76,11 @@ public class RoutineServiceImpl implements RoutineService {
     // GAME, RECORD, QUESTION 완료로 업데이트
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public void completeRoutineItem(Long memberId, String type) {
+    public void completeRoutineItem(Long memberId, MissionTypes missionTypes) {
         // 타입 검증
-        String validatedType = validateType(type);
+        if (missionTypes == null) {
+            throw new BaseException(400, "루틴 타입이 필요합니다.");
+        }
 
         LocalDate today = LocalDate.now();
         DailyRoutineStatus routine = routineMapper.findByMemberIdAndDate(memberId, today);
@@ -87,7 +90,7 @@ public class RoutineServiceImpl implements RoutineService {
         }
 
         // 1. GAME, RECORD, QUESTION -> TRUE로 업데이트
-        int updateResult = processUpdate(routine, validatedType);
+        int updateResult = processUpdate(routine, missionTypes);
 
         // 2. 항목이 처음으로 완료 처리된 경우에만 전체 완료 체크 진행
         if (updateResult == 1) {
@@ -101,33 +104,16 @@ public class RoutineServiceImpl implements RoutineService {
         }
     }
 
-    // 미션 타입 검증 (GAME, RECORD, QUESTION이 아닌 경우 예외 처리)
-    private String validateType(String type) {
-        if (type == null) {
-            throw new BaseException(400, "루틴 타입이 필요합니다.");
-        }
-
-        String upper = type.toUpperCase();
-
-        if (!upper.equals("GAME") &&
-                !upper.equals("RECORD") &&
-                !upper.equals("QUESTION")) {
-            throw new BaseException(400, "잘못된 루틴 타입입니다.");
-        }
-
-        return upper;
-    }
-
     // GAME, RECORD, QUESTION -> TRUE로 업데이트
-    private int processUpdate(DailyRoutineStatus routine, String type) {
-        return switch (type) {
-            case "GAME" -> Boolean.FALSE.equals(routine.getIsGameFinished()) ?
+    private int processUpdate(DailyRoutineStatus routine, MissionTypes missionTypes) {
+        return switch (missionTypes) {
+            case GAME -> Boolean.FALSE.equals(routine.getIsGameFinished()) ?
                     routineMapper.updateGameComplete(routine.getRoutineId()) : 0;
-            case "RECORD" -> Boolean.FALSE.equals(routine.getIsRecordFinished()) ?
+            case RECORD -> Boolean.FALSE.equals(routine.getIsRecordFinished()) ?
                     routineMapper.updateRecordComplete(routine.getRoutineId()) : 0;
-            case "QUESTION" -> Boolean.FALSE.equals(routine.getIsQuestionFinished()) ?
+            case QUESTION -> Boolean.FALSE.equals(routine.getIsQuestionFinished()) ?
                     routineMapper.updateQuestionComplete(routine.getRoutineId()) : 0;
-            default -> throw new BaseException(400, "잘못된 루틴 타입입니다: " + type);
+//            default -> throw new BaseException(400, "잘못된 루틴 타입입니다: " + missionTypes);
         };
     }
 

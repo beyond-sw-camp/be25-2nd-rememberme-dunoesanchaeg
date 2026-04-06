@@ -1,6 +1,7 @@
 package com.rememberme.dunoesanchaeg.routines.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RoutineResponse {
+
+    private MissionTypes missionTypes; // GAME, RECORD, QUESTION
 
     private Long routineId;
 

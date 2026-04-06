@@ -6,6 +6,7 @@ import com.rememberme.dunoesanchaeg.memory.dto.request.DailyRecordSaveRequest;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordSaveResponse;
 import com.rememberme.dunoesanchaeg.memory.mapper.DailyRecordMapper;
+import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -58,7 +59,7 @@ public class DailyRecordServiceImpl implements DailyRecordService {
             }
         }
 
-        routineService.completeRoutineItem(memberId, "RECORD");
+        routineService.completeRoutineItem(memberId, MissionTypes.RECORD);
 
         return new DailyRecordSaveResponse(
                 today,
