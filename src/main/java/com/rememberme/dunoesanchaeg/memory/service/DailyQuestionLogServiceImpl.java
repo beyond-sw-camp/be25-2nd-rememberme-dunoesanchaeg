@@ -21,6 +21,13 @@ public class DailyQuestionLogServiceImpl implements DailyQuestionLogService {
         return dailyQuestionLogMapper.countTodayQuestionLog(memberId, recordDate, status) > 0;
     }
 
+    // 추가
+    @Override
+    public DailyQuestionLog getTodayQuestionLog(Long memberId, LocalDate recordDate) {
+
+        return dailyQuestionLogMapper.selectTodayQuestionLog(memberId, recordDate);
+    }
+
     @Override
     public Long createTodayQuestionLog(DailyQuestionLog dailyQuestionLog) {
         int result;

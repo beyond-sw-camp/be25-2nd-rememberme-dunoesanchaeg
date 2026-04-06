@@ -71,10 +71,30 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
                 .createdAt(now)
                 .build();
 
+        // 추가
         try {
             Long dailyQuestionLogId = dailyQuestionLogService.createTodayQuestionLog(dailyQuestionLog);
             dailyQuestionLog.setDailyQuestionLogId(dailyQuestionLogId);
         } catch (DuplicateKeyException e) {
+            // 동시 요청이 들어온 경우에도 기존 로그를 조회해서 복구 및 응답
+            DailyQuestionLog duplicatedLog = dailyQuestionLogService.getTodayQuestionLog(memberId, today);
+
+            if (duplicatedLog != null && duplicatedLog.getStatus() == DailyQuestionLogStatus.STARTED) {
+
+                QuestionBank existingQuestion = questionBankService.getOpenQuestionById(duplicatedLog.getQuestionId());
+
+                if (existingQuestion == null || !existingQuestion.getIsActive()) {
+
+                    throw new BaseException(404, "현재 질문을 확인할 수 없습니다. 고객센터(☎010-1234-1234)로 문의 주시기 바랍니다.");
+                }
+
+                return new OpenQuestionStartResponse(
+                        duplicatedLog.getDailyQuestionLogId(),
+                        existingQuestion.getQuestionId(),
+                        existingQuestion.getQuestionText(),
+                        DailyQuestionLogStatus.STARTED
+                );
+            }
 
             throw new BaseException(409, "오늘은 이미 참여하였습니다.");
         }
