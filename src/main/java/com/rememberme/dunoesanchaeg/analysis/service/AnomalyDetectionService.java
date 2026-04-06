@@ -50,27 +50,27 @@ public class AnomalyDetectionService {
         // 장기 휴면 복귀 여부 확인 (7일 이상 경과했으면 스택 0으로 초기화)
         if (state.getLastActivityAt() != null && state.getLastActivityAt().isBefore(LocalDateTime.now().minusDays(7))) {
             log.info(" - 7일 이상 휴면: 스택 초기화");
-            state.setConsecutiveCount(0);
+            state = state.toBuilder().consecutiveCount(0).build();
         }
 
         // 활동 시간 업데이트
-        state.setLastActivityAt(LocalDateTime.now());
+        state = state.toBuilder().lastActivityAt(LocalDateTime.now()).build();
 
         // 이상 여부 탐지
         boolean isAnomalyDetected = checkAnomaly(metricScope, recentLogs);
 
         // 스택 등락 반영
         if (isAnomalyDetected) {
-            state.setConsecutiveCount(state.getConsecutiveCount() + 1);
+            state = state.toBuilder().consecutiveCount(state.getConsecutiveCount() + 1).build();
             log.info(" - 이상 징후 포착! 현재 연속 횟수: {}", state.getConsecutiveCount());
         } else {
-            state.setConsecutiveCount(0); // 정상이면 리셋
+            state = state.toBuilder().consecutiveCount(0).build(); // 정상이면 리셋
             log.info(" - 정상 기록으로 판단되어 스택 리셋");
         }
 
         // 연속 2회 이상이면 이메일 알림 발송
         if (state.getConsecutiveCount() >= 2) {
-            handleAlertTrigger(state);
+            state = handleAlertTrigger(state);
         }
 
         // 변경된 스택 및 시간 기록
@@ -112,34 +112,38 @@ public class AnomalyDetectionService {
                 .orElse(0.0);
     }
 
-    private void handleAlertTrigger(AlertState state) {
+    private AlertState handleAlertTrigger(AlertState state) {
         // 쿨타임 정책 확인 (7일 이내 발송 기록이 있으면 스킵)
         if (state.getLastSentAt() != null && state.getLastSentAt().isAfter(LocalDateTime.now().minusDays(7))) {
             log.info(" - 알림 스킵 (쿨타임 미달): 마지막 발송일 {}", state.getLastSentAt());
             anomalyMapper.insertAlertHistory(
                     state.getMemberId(), state.getAlertType(), state.getMetricScope(),
                     "SKIPPED", "WITHIN_7_DAYS_COOLDOWN");
-            return;
+            return state;
         }
 
         try {
             // 이메일 발송
             emailService.sendAnomalyAlertToGuardian(state.getMemberId(), state.getMetricScope());
 
-            // 발송 성공 처리
-            state.setLastSentAt(LocalDateTime.now());
+            // 발송 성공 처리 및 스택 리셋
+            state = state.toBuilder()
+                    .lastSentAt(LocalDateTime.now())
+                    .consecutiveCount(0)
+                    .build();
+            
             anomalyMapper.insertAlertHistory(
                     state.getMemberId(), state.getAlertType(), state.getMetricScope(),
                     "SENT", null);
 
-            // 스택 리셋
-            state.setConsecutiveCount(0);
         } catch (Exception e) {
             log.error("알림 발송 중 에러 발생: {}", e.getMessage());
             anomalyMapper.insertAlertHistory(
                     state.getMemberId(), state.getAlertType(), state.getMetricScope(),
                     "FAILED", "EMAIL_SEND_ERROR");
         }
+        
+        return state;
     }
 
     private AlertType determineAlertType(MetricScope metricScope) {
@@ -150,11 +154,11 @@ public class AnomalyDetectionService {
     }
 
     private AlertState initAlertState(Long memberId, AlertType alertType, MetricScope metricScope) {
-        AlertState state = new AlertState();
-        state.setMemberId(memberId);
-        state.setAlertType(alertType);
-        state.setMetricScope(metricScope);
-        state.setConsecutiveCount(0);
-        return state;
+        return AlertState.builder()
+                .memberId(memberId)
+                .alertType(alertType)
+                .metricScope(metricScope)
+                .consecutiveCount(0)
+                .build();
     }
 }
