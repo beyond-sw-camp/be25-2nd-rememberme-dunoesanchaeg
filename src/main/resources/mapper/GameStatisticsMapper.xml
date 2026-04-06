@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.statistics.mapper.StatisticsMapper">
+
+    <resultMap id="StatisticsItemResultMap"
+               type="com.rememberme.dunoesanchaeg.statistics.dto.response.StatisticsItemResponse">
+        <result property="gameType" column="game_type"/>
+        <result property="playCount" column="play_count"/>
+        <result property="totalQuestions" column="total_questions"/>
+        <result property="totalCorrect" column="total_correct"/>
+        <result property="accuracy" column="accuracy"/>
+    </resultMap>
+
+    <select id="findStatistics" resultMap="StatisticsItemResultMap">
+        SELECT
+            game_type,
+            COUNT(*) AS play_count,
+            COALESCE(SUM(total_try_count), 0) AS total_questions,
+            COALESCE(SUM(correct_count), 0) AS total_correct,
+            CASE
+                WHEN COALESCE(SUM(total_try_count), 0) = 0 THEN NULL
+                ELSE FLOOR(SUM(correct_count) * 100 / SUM(total_try_count))
+                END AS accuracy
+        FROM (
+                 (
+                     SELECT game_type, total_try_count, correct_count
+                     FROM daily_game_log
+                     WHERE member_id = #{memberId}
+                       AND game_type = 'WORD_MEMORY'
+                       AND played_date &lt;= #{targetDate}
+                       AND is_valid = 1
+                     ORDER BY played_date DESC, created_at DESC, session_id DESC
+                         LIMIT 7
+                 )
+                 UNION ALL
+                 (
+                     SELECT game_type, total_try_count, correct_count
+                     FROM daily_game_log
+                     WHERE member_id = #{memberId}
+                       AND game_type = 'ARITHMETIC'
+                       AND played_date &lt;= #{targetDate}
+                       AND is_valid = 1
+                     ORDER BY played_date DESC, created_at DESC, session_id DESC
+                         LIMIT 7
+                 )
+                 UNION ALL
+                 (
+                     SELECT game_type, total_try_count, correct_count
+                     FROM daily_game_log
+                     WHERE member_id = #{memberId}
+                       AND game_type = 'DESCARTES_RPS'
+                       AND played_date &lt;= #{targetDate}
+                       AND is_valid = 1
+                     ORDER BY played_date DESC, created_at DESC, session_id DESC
+                         LIMIT 7
+                 )
+             ) AS recent_records
+        GROUP BY game_type
+        ORDER BY FIELD(game_type, 'WORD_MEMORY', 'ARITHMETIC', 'DESCARTES_RPS')
+    </select>
+</mapper>
