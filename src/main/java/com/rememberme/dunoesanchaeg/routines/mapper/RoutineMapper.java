@@ -18,4 +18,7 @@ public interface RoutineMapper {
 
     // 오늘의 루틴 업데이트
     void updateTodayRoutine(DailyRoutineStatus routine);
+
+    // 개방형질문 기능 구현에 필요한 코드
+    Long selectAssignedQuestionId(@Param("memberId") Long memberId, @Param("routineDate") LocalDate routineDate);
 }

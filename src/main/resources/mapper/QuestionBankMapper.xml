@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.memory.mapper.QuestionBankMapper">
+
+    <resultMap id="bankResultMap" type="com.rememberme.dunoesanchaeg.memory.domain.QuestionBank">
+        <id property="questionId" column="question_id"/>
+        <result property="questionText" column="question_text"/>
+        <result property="questionBankCategory" column="category"/>
+        <result property="isActive" column="is_active"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="selectOpenQuestionById" resultMap="bankResultMap">
+        SELECT question_id,
+               question_text,
+               category,
+               is_active,
+               created_at
+        FROM question_bank
+        WHERE question_id = #{questionId}
+          AND is_active = TRUE
+    </select>
+
+</mapper>
