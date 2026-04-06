@@ -2,6 +2,7 @@ package com.rememberme.dunoesanchaeg.contents.service;
 
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.contents.dto.request.AnswerSubmitRequest;
+import com.rememberme.dunoesanchaeg.contents.dto.request.GameResultInsertDto;
 import com.rememberme.dunoesanchaeg.contents.dto.response.GameFinishedResponse;
 import com.rememberme.dunoesanchaeg.contents.dto.response.TodayGameResponse;
 import com.rememberme.dunoesanchaeg.contents.mapper.CognitiveGameMapper;
@@ -71,17 +72,19 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
         boolean isValid = request.getPlayTimeSeconds() >= MIN_VALID_PLAY_TIME
                 && request.getCorrectCount() <= request.getTotalTryCount();
 
-        int inserted = cognitiveGameMapper.insertGameResult(
-                memberId,
-                today,
-                request.getGameType(),
-                request.getCorrectCount(),
-                request.getTotalTryCount(),
-                request.getPlayTimeSeconds(),
-                isValid
-        );
+        GameResultInsertDto dto = GameResultInsertDto.builder()
+                .memberId(memberId)
+                .playedDate(today)
+                .gameType(request.getGameType())
+                .correctCount(request.getCorrectCount())
+                .totalTryCount(request.getTotalTryCount())
+                .playTimeSeconds(request.getPlayTimeSeconds())
+                .isValid(isValid)
+                .build();
 
-        if(inserted == 0){
+        int inserted = cognitiveGameMapper.insertGameResult(dto);
+
+        if(inserted != 1){
             throw new BaseException(500, "게임 결과 저장에 실패했습니다.");
         }
 
