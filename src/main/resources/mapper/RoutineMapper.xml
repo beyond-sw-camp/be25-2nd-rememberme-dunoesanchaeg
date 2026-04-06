@@ -61,7 +61,7 @@
         WHERE routine_id = #{routineId}
     </update>
 
-    <!-- 개발형질문 기능 구현에 필요한 코드 -->
+    <!-- 개방형질문 기능 구현에 필요한 코드 -->
     <select id="selectAssignedQuestionId" resultType="long">
         SELECT assigned_question_id
         FROM daily_routine_status
