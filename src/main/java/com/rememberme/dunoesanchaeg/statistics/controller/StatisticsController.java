@@ -1,6 +1,5 @@
 package com.rememberme.dunoesanchaeg.statistics.controller;
 
-// 1. Java 표준 및 서드파티 라이브러리 Import
 
 import com.rememberme.dunoesanchaeg.common.ApiResponse;
 import com.rememberme.dunoesanchaeg.common.security.SecurityUtil;
