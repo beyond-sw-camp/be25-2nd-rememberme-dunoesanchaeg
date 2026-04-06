@@ -1,11 +1,12 @@
 package com.rememberme.dunoesanchaeg.memory.service;
 
+import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.memory.domain.DailyRecord;
 import com.rememberme.dunoesanchaeg.memory.dto.request.DailyRecordSaveRequest;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.DailyRecordSaveResponse;
 import com.rememberme.dunoesanchaeg.memory.mapper.DailyRecordMapper;
-import com.rememberme.dunoesanchaeg.common.exception.BaseException;
+import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ import java.time.LocalDate;
 public class DailyRecordServiceImpl implements DailyRecordService {
 
     private final DailyRecordMapper dailyRecordMapper;
+
+    private final RoutineService routineService;
 
     @Override
     public DailyRecordSaveResponse saveDailyRecord(Long memberId, DailyRecordSaveRequest request) {
@@ -54,6 +57,8 @@ public class DailyRecordServiceImpl implements DailyRecordService {
                 throw new BaseException(500, "하루 기록 수정 실패");
             }
         }
+
+        // routineService.completeRoutineItem(memberId, "RECORD");
 
         return new DailyRecordSaveResponse(
                 today,
