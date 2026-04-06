@@ -44,4 +44,28 @@
                      #{createdAt}
                  );
     </insert>
+
+    <update id="updateTodayRoutine">
+        UPDATE daily_routine_status
+        SET assigned_game_type = #{assignedGameType},
+            assigned_question_id = #{assignedQuestionId},
+            is_game_finished = #{isGameFinished},
+            is_record_finished = #{isRecordFinished},
+            is_question_finished = #{isQuestionFinished}
+        WHERE routine_id = #{routineId}
+    </update>
+
+    <update id="updateGameComplete">
+        UPDATE daily_routine_status
+        SET is_game_finished = true
+        WHERE routine_id = #{routineId}
+    </update>
+
+    <!-- 개방형질문 기능 구현에 필요한 코드 -->
+    <select id="selectAssignedQuestionId" resultType="long">
+        SELECT assigned_question_id
+        FROM daily_routine_status
+        WHERE member_id = #{memberId}
+          AND routine_date = #{routineDate}
+    </select>
 </mapper>
