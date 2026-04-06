@@ -9,6 +9,9 @@ import com.rememberme.dunoesanchaeg.memory.dto.response.OpenQuestionExitResponse
 import com.rememberme.dunoesanchaeg.memory.dto.response.OpenQuestionStartResponse;
 import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
+import com.rememberme.dunoesanchaeg.analysis.domain.event.CognitiveEvent;
+import com.rememberme.dunoesanchaeg.analysis.domain.enums.MetricScope;
+import org.springframework.context.ApplicationEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
@@ -26,6 +29,7 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
 
     // 일일 루틴 생성 서비스
     private final RoutineService routineService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     @Override
     @Transactional
@@ -146,6 +150,8 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
         dailyQuestionLogService.updateTodayQuestionLog(dailyQuestionLog);
 
         routineService.completeRoutineItem(memberId, MissionTypes.QUESTION);
+
+        applicationEventPublisher.publishEvent(new CognitiveEvent(this, memberId, MetricScope.QUESTION));
 
         return new OpenQuestionCompleteResponse(dailyQuestionLogId, DailyQuestionLogStatus.COMPLETED);
     }

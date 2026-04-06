@@ -10,6 +10,9 @@ import com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus;
 import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
 import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
+import com.rememberme.dunoesanchaeg.analysis.domain.event.CognitiveEvent;
+import com.rememberme.dunoesanchaeg.analysis.domain.enums.MetricScope;
+import org.springframework.context.ApplicationEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +27,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
     private final CognitiveGameMapper cognitiveGameMapper;
     private final RoutineMapper routineMapper;
     private final RoutineService routineService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     private static final int TOTAL_ROUNDS = 3;
     private static final int ROUND_TIME_LIMIT_SEC = 15;
@@ -93,6 +97,8 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
 
         // 희주님 루틴 업데이트 구현되면 넣기
         routineService.completeRoutineItem(memberId, MissionTypes.GAME);
+
+        applicationEventPublisher.publishEvent(new CognitiveEvent(this, memberId, MetricScope.valueOf(request.getGameType().name())));
 
         return GameFinishedResponse.builder()
                 .correctCount(request.getCorrectCount())
