@@ -5,7 +5,7 @@
 
 <mapper namespace="com.rememberme.dunoesanchaeg.statistics.mapper.StatisticsMapper">
 
-    <resultMap id="weeklyTypeStatisticsItemResultMap"
+    <resultMap id="StatisticsItemResultMap"
                type="com.rememberme.dunoesanchaeg.statistics.dto.response.StatisticsItemResponse">
         <result property="gameType" column="game_type"/>
         <result property="playCount" column="play_count"/>
@@ -14,7 +14,7 @@
         <result property="accuracy" column="accuracy"/>
     </resultMap>
 
-    <select id="findWeeklyTypeStatistics" resultMap="weeklyTypeStatisticsItemResultMap">
+    <select id="findStatistics" resultMap="StatisticsItemResultMap">
         SELECT
             game_type,
             COUNT(*) AS play_count,
