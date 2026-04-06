@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Mapper
 public interface CognitiveGameMapper {
 
-    void insertGameResult(
+    int insertGameResult(
             @Param("memberId") Long memberId,
             @Param("playedDate") LocalDate playedDate,
             @Param("gameType") AssignedGameType gameType,

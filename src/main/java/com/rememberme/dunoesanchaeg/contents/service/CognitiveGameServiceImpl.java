@@ -71,7 +71,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
         boolean isValid = request.getPlayTimeSeconds() >= MIN_VALID_PLAY_TIME
                 && request.getCorrectCount() <= request.getTotalTryCount();
 
-        cognitiveGameMapper.insertGameResult(
+        int inserted = cognitiveGameMapper.insertGameResult(
                 memberId,
                 today,
                 request.getGameType(),
@@ -80,6 +80,10 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
                 request.getPlayTimeSeconds(),
                 isValid
         );
+
+        if(inserted == 0){
+            throw new BaseException(500, "게임 결과 저장에 실패했습니다.");
+        }
 
         routineMapper.updateGameComplete(routine.getRoutineId());
 
