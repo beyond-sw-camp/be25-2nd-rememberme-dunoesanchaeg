@@ -7,6 +7,7 @@ import com.rememberme.dunoesanchaeg.contents.dto.response.GameFinishedResponse;
 import com.rememberme.dunoesanchaeg.contents.dto.response.TodayGameResponse;
 import com.rememberme.dunoesanchaeg.contents.mapper.CognitiveGameMapper;
 import com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus;
+import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
 import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
 import lombok.RequiredArgsConstructor;
@@ -91,7 +92,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
         routineMapper.updateGameComplete(routine.getRoutineId());
 
         // 희주님 루틴 업데이트 구현되면 넣기
-        // routineService.completeRoutineItem(memberId, "GAME");
+        routineService.completeRoutineItem(memberId, MissionTypes.GAME);
 
         return GameFinishedResponse.builder()
                 .correctCount(request.getCorrectCount())

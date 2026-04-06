@@ -7,6 +7,7 @@ import com.rememberme.dunoesanchaeg.memory.domain.enums.DailyQuestionLogStatus;
 import com.rememberme.dunoesanchaeg.memory.dto.response.OpenQuestionCompleteResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.OpenQuestionExitResponse;
 import com.rememberme.dunoesanchaeg.memory.dto.response.OpenQuestionStartResponse;
+import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DuplicateKeyException;
@@ -143,6 +144,8 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
                 .build();
 
         dailyQuestionLogService.updateTodayQuestionLog(dailyQuestionLog);
+
+        routineService.completeRoutineItem(memberId, MissionTypes.QUESTION);
 
         return new OpenQuestionCompleteResponse(dailyQuestionLogId, DailyQuestionLogStatus.COMPLETED);
     }
