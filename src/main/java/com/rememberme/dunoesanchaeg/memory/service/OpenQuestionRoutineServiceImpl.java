@@ -124,6 +124,8 @@ public class OpenQuestionRoutineServiceImpl implements OpenQuestionRoutineServic
 
         dailyQuestionLogService.updateTodayQuestionLog(dailyQuestionLog);
 
+        routineService.completeRoutineItem(memberId, "QUESTION");
+
         return new OpenQuestionCompleteResponse(dailyQuestionLogId, DailyQuestionLogStatus.COMPLETED);
     }
 }

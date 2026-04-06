@@ -91,7 +91,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
         routineMapper.updateGameComplete(routine.getRoutineId());
 
         // 희주님 루틴 업데이트 구현되면 넣기
-        // routineService.completeRoutineItem(memberId, "GAME");
+        routineService.completeRoutineItem(memberId, "GAME");
 
         return GameFinishedResponse.builder()
                 .correctCount(request.getCorrectCount())
