@@ -30,4 +30,7 @@ public interface MemberMapper {
 
     // 멤버 추가 프로필 업데이트
     int updateProfile(Member member);
+
+    // total_routine_count + 1 업데이트
+    int incrementTotalRoutineCount(@Param("memberId") Long memberId );
 }
