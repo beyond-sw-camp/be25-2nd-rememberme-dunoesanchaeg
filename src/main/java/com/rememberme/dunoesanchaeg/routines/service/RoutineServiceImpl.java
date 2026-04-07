@@ -196,9 +196,8 @@ public class RoutineServiceImpl implements RoutineService {
     }
 
     // 랜덤 질문 부여
-    // ///////////////////////// 랜덤 질문 수는 아직 정해지지 않음 ...
     private Long randomQuestion() {
-        return (long) (random.nextInt(10) + 1);
+        return (long) (random.nextInt(61) + 1);
     }
 
     // 개방형질문 기능 구현에 필요한 코드
