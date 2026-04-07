@@ -12,6 +12,21 @@ spring:
 
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SYSTEM_EMAIL}   # (시스템 메일 발송 주체가 될 계정)
+    password: ${EMAIL_SYSTEM_PASSWORD}       # (발급받은 16자리 앱 비밀번호 기입)
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 server:
   compression:
