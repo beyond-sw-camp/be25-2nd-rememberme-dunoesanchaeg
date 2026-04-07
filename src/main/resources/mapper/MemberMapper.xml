@@ -145,4 +145,11 @@
             deleted_at = null
         WHERE member_id = #{memberId}
     </update>
+
+    <!--  incrementTotalRoutineCount  -->
+    <update id="incrementTotalRoutineCount">
+        UPDATE member
+        SET total_routine_count = total_routine_count + 1
+        WHERE member_id = #{memberId}
+    </update>
 </mapper>

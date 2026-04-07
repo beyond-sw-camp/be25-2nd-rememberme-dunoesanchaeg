@@ -33,9 +33,12 @@ public interface MemberMapper {
     int updateProfile(Member member);
 
     // 멤버 탈퇴
-    int withdrawMember(Long memberId);
+    int withdrawMember(@Param("memberId") Long memberId);
 
     // 탈퇴멤버 복구
-    int recoveryMember(Long memberId);
+    int recoveryMember(@Param("memberId") Long memberId);
+
+    // total_routine_count + 1 업데이트
+    int incrementTotalRoutineCount(@Param("memberId") Long memberId );
 
 }
