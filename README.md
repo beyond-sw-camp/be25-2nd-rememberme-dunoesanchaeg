@@ -1,4 +1,4 @@
-# REMEMBER-ME
+# 두뇌산책
 
 <img width="1000" alt="두뇌산책_썸네일" src="images/두뇌산책.png" />
 
