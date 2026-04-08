@@ -18,6 +18,7 @@ import java.util.List;
 public class TrophyServiceImpl implements TrophyService {
 
 	private static final int TROPHY_UNIT = 10;
+	private static final int MAX_TROPHY_COUNT = 50;
 
 	private final TrophyMapper trophyMapper;
 	private final MemberMapper memberMapper;
@@ -78,6 +79,7 @@ public class TrophyServiceImpl implements TrophyService {
 
 	private boolean isAwardTarget(int totalRoutineCount) {
 		return totalRoutineCount > 0
+				&& totalRoutineCount <= MAX_TROPHY_COUNT
 				&& totalRoutineCount % TROPHY_UNIT == 0;
 	}
 
