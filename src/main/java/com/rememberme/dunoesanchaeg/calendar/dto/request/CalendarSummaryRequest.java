@@ -17,8 +17,8 @@ public class CalendarSummaryRequest {
 
 	@NotBlank(message = "필수 파라미터입니다. (YYYY-MM-DD 형식으로 입력해주세요.)")
 	@Pattern(
-			regexp = "2026-03-31",
-			message = "필수 파라미터입니다. (YYYY-MM-DD 형식으로 입력해주세요.)"
+			regexp = "^\\d{4}-\\d{2}-\\d{2}$",
+			message = "날짜 형식은 YYYY-MM-DD 이어야 합니다."
 	)
 	private String targetDate;
 
