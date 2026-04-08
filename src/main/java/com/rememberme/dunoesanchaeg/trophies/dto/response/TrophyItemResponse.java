@@ -27,12 +27,4 @@ public class TrophyItemResponse {
 				.acquiredAt(trophy.getAcquiredAt())
 				.build();
 	}
-	private static String resolveTrophyName(String trophyName) {
-		if (trophyName == null || !trophyName.startsWith("total_routine_count_")) {
-			return "";
-		}
-
-		String countText = trophyName.replace("total_routine_count_", "");
-		return countText + "일 루틴 달성 기념";
-	}
 }

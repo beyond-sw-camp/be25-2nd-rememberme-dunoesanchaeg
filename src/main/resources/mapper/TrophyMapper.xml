@@ -7,17 +7,9 @@
 
     <resultMap id="TrophyResultMap" type="com.rememberme.dunoesanchaeg.trophies.domain.Trophy">
         <id property="trophyId" column="trophy_id"/>
-        <result property="memberId" column="member_id"/>
         <result property="trophyName" column="trophy_name"/>
         <result property="acquiredAt" column="acquired_at"/>
     </resultMap>
-
-    <sql id="trophyColumns">
-        t.trophy_id,
-        t.member_id,
-        t.trophy_name,
-        t.acquired_at
-    </sql>
 
     <select id="existsByMemberIdAndTrophyName" resultType="boolean">
         SELECT EXISTS(
@@ -45,10 +37,12 @@
 
     <select id="findTrophiesByMemberId" resultMap="TrophyResultMap">
         SELECT
-        <include refid="trophyColumns"/>
-        FROM trophy t
-        WHERE t.member_id = #{memberId}
-        ORDER BY t.acquired_at DESC, t.trophy_id DESC
+            trophy_id,
+            trophy_name,
+            acquired_at
+        FROM trophy
+        WHERE member_id = #{memberId}
+        ORDER BY acquired_at DESC, trophy_id DESC
     </select>
 
 </mapper>
