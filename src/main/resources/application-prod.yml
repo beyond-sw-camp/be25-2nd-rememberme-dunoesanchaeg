@@ -1,17 +1,20 @@
 spring:
   config:
+    import: "aws-parameterstore:/config/brainwalk/"
     activate:
       on-profile: prod
+
   jpa:
     hibernate:
       ddl-auto: none # 운영 DB는 절대 건드리지 않음
     show-sql: false   # 로그 폭탄 방지
+
   datasource:
     # 운영 환경에서는 기본값 없이 반드시 환경 변수로 받아야 안전함
     url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
-
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
+
   mail:
     host: smtp.gmail.com
     port: 587
