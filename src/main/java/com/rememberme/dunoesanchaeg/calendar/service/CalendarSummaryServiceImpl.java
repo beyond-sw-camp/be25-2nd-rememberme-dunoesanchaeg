@@ -1,6 +1,8 @@
 package com.rememberme.dunoesanchaeg.calendar.service;
 
+import com.rememberme.dunoesanchaeg.calendar.dto.request.CalendarMonthRequest;
 import com.rememberme.dunoesanchaeg.calendar.dto.request.CalendarSummaryRequest;
+import com.rememberme.dunoesanchaeg.calendar.dto.response.CalendarMonthResponse;
 import com.rememberme.dunoesanchaeg.calendar.dto.response.CalendarSummaryResponse;
 import com.rememberme.dunoesanchaeg.calendar.dto.response.DailyRecordDetail;
 import com.rememberme.dunoesanchaeg.calendar.dto.response.GameRecord;
@@ -13,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Arrays;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -59,6 +63,7 @@ public class CalendarSummaryServiceImpl implements CalendarSummaryService {
 				.dailyRecord(dailyRecord)
 				.build();
 	}
+
 	private int calculateProgressRate(Boolean... statuses) {
 		// 1. 방어 로직: 인자가 없거나 null인 경우 0% 반환
 		if (statuses == null || statuses.length == 0) {
@@ -72,6 +77,33 @@ public class CalendarSummaryServiceImpl implements CalendarSummaryService {
 
 		// 3. 계산 (이미 위에서 length == 0을 걸러냈으므로 안전합니다)
 		return (int) ((completedCount * 100) / statuses.length);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public CalendarMonthResponse getMonthlyCompletedRoutineDays(
+			Long memberId,
+			CalendarMonthRequest request
+	) {
+		validateMemberExists(memberId);
+
+		LocalDate targetDate = request.toLocalDate();
+		YearMonth targetMonth = YearMonth.from(targetDate);
+
+		LocalDate startDate = targetMonth.atDay(1);
+		LocalDate endDate = targetMonth.atEndOfMonth();
+
+		List<LocalDate> completedDates =
+				calendarSummaryMapper.findCompletedRoutineDates(memberId, startDate, endDate);
+
+		List<String> completedDateStrings = completedDates.stream()
+				.map(LocalDate::toString)
+				.toList();
+
+		return CalendarMonthResponse.builder()
+				.targetMonth(targetMonth.toString())
+				.completedDates(completedDateStrings)
+				.build();
 	}
 
 	private void validateMemberExists(Long memberId) {
