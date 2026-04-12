@@ -23,8 +23,11 @@ public class TokenManager {
     // 토큰 폐기
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void revokeToken(MemberToken token) {
-        token.setRevoked(true);
-        memberTokenMapper.upsertMemberToken(token);
+        MemberToken revokeToken = token
+                .toBuilder()
+                .isRevoked(true)
+                .build();
+        memberTokenMapper.upsertMemberToken(revokeToken);
 
     }
 
@@ -44,10 +47,11 @@ public class TokenManager {
     // 호출한 쪽의 트랜잭션과 lifecycle이 같음
     @Transactional(propagation = Propagation.REQUIRED)
     public void reactivateToken(MemberToken token, String newRefreshToken,LocalDateTime newExpireDate) {
-        token.setRefreshToken(newRefreshToken);
-        token.setExpiresAt(newExpireDate);
-        token.setRevoked(false);
-        int result = memberTokenMapper.upsertMemberToken(token);
+        MemberToken reactiveToken = token.toBuilder()
+                .refreshToken(newRefreshToken)
+                .expiresAt(newExpireDate)
+                .isRevoked(false).build();
+        int result = memberTokenMapper.upsertMemberToken(reactiveToken);
 
         if(result < 1){
             throw new BaseException(500, "세션 재활성화에 실패했습니다.");

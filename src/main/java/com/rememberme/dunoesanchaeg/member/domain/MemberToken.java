@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Builder
-@Setter
+@Builder(toBuilder = true)
 public class MemberToken {
     private Long tokenId;
     private Long memberId;

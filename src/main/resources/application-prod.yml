@@ -1,6 +1,10 @@
 spring:
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2 # 필수: 파라미터 스토어 접근을 위한 '열쇠' 위치
   config:
-    import: "aws-parameterstore:/config/brainwalk/"
+    import: "aws-parameterstore:/config/brainwalk/" # 이미 경로를 잘 지정하셨습니다.
     activate:
       on-profile: prod
 

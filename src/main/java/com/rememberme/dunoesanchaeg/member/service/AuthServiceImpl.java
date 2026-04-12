@@ -196,8 +196,10 @@ public class AuthServiceImpl implements AuthService {
         String newRefreshToken = jwtProvider.createRefreshToken(member.getMemberId(), member.getRole());
 
         //토큰객체에 넣어야함
-        token.setRefreshToken(newRefreshToken);
-        token.setExpiresAt(jwtProvider.getRefreshTokenExpire());
+        token = token.toBuilder()
+                .refreshToken(newRefreshToken)
+                .expiresAt(jwtProvider.getRefreshTokenExpire()).
+                build();
 
         result = memberTokenMapper.upsertMemberToken(token);
         if (result < 1){

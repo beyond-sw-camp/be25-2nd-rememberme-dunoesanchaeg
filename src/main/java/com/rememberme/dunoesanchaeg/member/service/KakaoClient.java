@@ -84,7 +84,7 @@ public class KakaoClient {
                     url,
                     HttpMethod.GET,
                     request,
-                    new ParameterizedTypeReference<Map<String, Object>>() {}
+                    new ParameterizedTypeReference<>() {}
             );
 
             Map<String, Object> body = response.getBody();

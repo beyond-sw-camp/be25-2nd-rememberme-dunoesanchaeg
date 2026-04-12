@@ -37,8 +37,8 @@ public class AuthController {
     ){
         log.info("카카오 로그인 요청 수신 - 인가 코드 확인 완료");
 
-        // 1. [핵심] 컨트롤러에서 kakaoClient를 호출하지 않습니다.
-        // 서비스(authService)가 code를 받아 내부에서 모든 통신을 처리하도록 합니다.
+        // 1. 컨트롤러에서 kakaoClient를 호출하지 않음
+        // 서비스가 code를 받아 내부에서 모든 통신을 처리
         KakaoLoginResponse kakaoLoginResponse = authService
                 .kakaoAuth(kakaoLoginRequest.getCode(), userAgent);
 

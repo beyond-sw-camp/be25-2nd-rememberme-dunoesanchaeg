@@ -15,7 +15,7 @@ public interface SchedulerMapper {
     List<WithdrawalTargetDto> selectWithdrawnMember();
 
     // 카카오 탈퇴 상태 변경
-    int updateKakaoUnlinkedStatus(Long memberId);
+    void updateKakaoUnlinkedStatus(Long memberId);
 
     // 탈퇴 회원 영구삭제
     int removeMemberPermanently();
