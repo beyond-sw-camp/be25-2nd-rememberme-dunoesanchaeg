@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Mapper
 public interface CalendarSummaryMapper {
@@ -24,5 +25,11 @@ public interface CalendarSummaryMapper {
 	DailyRecordDetail findDailyRecord(
 			@Param("memberId") Long memberId,
 			@Param("targetDate") LocalDate targetDate
+	);
+
+	List<LocalDate> findCompletedRoutineDates(
+			@Param("memberId") Long memberId,
+			@Param("startDate") LocalDate startDate,
+			@Param("endDate") LocalDate endDate
 	);
 }

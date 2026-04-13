@@ -13,7 +13,7 @@ import java.time.format.DateTimeParseException;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CalendarSummaryRequest {
+public class CalendarMonthRequest {
 
 	@NotBlank(message = "필수 파라미터입니다. (YYYY-MM-DD 형식으로 입력해주세요.)")
 	@Pattern(

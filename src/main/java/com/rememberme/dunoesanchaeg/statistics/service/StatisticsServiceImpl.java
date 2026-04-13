@@ -1,8 +1,8 @@
 package com.rememberme.dunoesanchaeg.statistics.service;
 
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
-import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
+import com.rememberme.dunoesanchaeg.statistics.domain.RecentGameScore;
 import com.rememberme.dunoesanchaeg.statistics.domain.enums.GameType;
 import com.rememberme.dunoesanchaeg.statistics.dto.request.StatisticsRequest;
 import com.rememberme.dunoesanchaeg.statistics.dto.response.StatisticsItemResponse;
@@ -13,40 +13,28 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeParseException;
-import java.util.EnumMap;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class StatisticsServiceImpl implements StatisticsService {
 
-    private final StatisticsMapper StatisticsMapper;
+    private final StatisticsMapper statisticsMapper;
     private final MemberMapper memberMapper;
 
     @Override
     @Transactional(readOnly = true)
-    public StatisticsResponse getStatistics(Long memberId, StatisticsRequest request) {
+    public StatisticsResponse getWeeklyTypeStatistics(Long memberId, StatisticsRequest request) {
+        validateMemberExists(memberId);
 
-        validateMember(memberId);
-
-        LocalDate targetDate = parseTargetDate(request.getTargetDate());
-
-        validateNotFuture(targetDate);
-
-        List<StatisticsItemResponse> rawStats = StatisticsMapper.findStatistics(memberId, targetDate);
-
-        Map<GameType, StatisticsItemResponse> statMap = new EnumMap<>(GameType.class);
-
-        for (StatisticsItemResponse rawStat : rawStats) {
-            statMap.put(rawStat.getGameType(), rawStat);
-        }
+        LocalDate targetDate = LocalDate.parse(request.getTargetDate());
 
         List<StatisticsItemResponse> stats = List.of(
-                buildItem(GameType.WORD_MEMORY, statMap.get(GameType.WORD_MEMORY)),
-                buildItem(GameType.ARITHMETIC, statMap.get(GameType.ARITHMETIC)),
-                buildItem(GameType.DESCARTES_RPS, statMap.get(GameType.DESCARTES_RPS))
+                buildStatisticsItem(memberId, GameType.WORD_MEMORY, "기억력", targetDate),
+                buildStatisticsItem(memberId, GameType.ARITHMETIC, "계산력", targetDate),
+                buildStatisticsItem(memberId, GameType.DESCARTES_RPS, "판단력", targetDate)
         );
 
         return StatisticsResponse.builder()
@@ -55,58 +43,68 @@ public class StatisticsServiceImpl implements StatisticsService {
                 .build();
     }
 
-    private StatisticsItemResponse buildItem(GameType gameType, StatisticsItemResponse rawStat) {
-        if (rawStat == null) {
+    private StatisticsItemResponse buildStatisticsItem(
+            Long memberId,
+            GameType gameType,
+            String gameName,
+            LocalDate targetDate
+    ) {
+        List<RecentGameScore> recentGames =
+                statisticsMapper.findScoresByType(memberId, gameType, targetDate);
+
+        if (recentGames == null || recentGames.isEmpty()) {
             return StatisticsItemResponse.builder()
                     .gameType(gameType)
-                    .gameName(gameType.getDisplayName())
+                    .gameName(gameName)
                     .playCount(0)
                     .totalQuestions(0)
                     .totalCorrect(0)
                     .accuracy(null)
+                    .scores(Collections.emptyList())
                     .build();
+        }
+
+        // DB에서는 최신순으로 가져오므로, 오래된 순 -> 최신 순으로 뒤집기
+        Collections.reverse(recentGames);
+
+        int playCount = recentGames.size();
+        int totalQuestions = playCount * 3;
+        int totalCorrect = recentGames.stream()
+                .mapToInt(RecentGameScore::getCorrectCount)
+                .sum();
+
+        Integer accuracy = totalQuestions == 0
+                ? null
+                : (totalCorrect * 100) / totalQuestions;
+
+        List<Integer> scores = new ArrayList<>();
+        int cumulativeCorrect = 0;
+        int cumulativeQuestions = 0;
+
+        for (RecentGameScore game : recentGames) {
+            cumulativeCorrect += game.getCorrectCount();
+            cumulativeQuestions += 3;
+            scores.add((cumulativeCorrect * 100) / cumulativeQuestions);
         }
 
         return StatisticsItemResponse.builder()
                 .gameType(gameType)
-                .gameName(gameType.getDisplayName())
-                .playCount(defaultZero(rawStat.getPlayCount()))
-                .totalQuestions(defaultZero(rawStat.getTotalQuestions()))
-                .totalCorrect(defaultZero(rawStat.getTotalCorrect()))
-                .accuracy(rawStat.getAccuracy())
+                .gameName(gameName)
+                .playCount(playCount)
+                .totalQuestions(totalQuestions)
+                .totalCorrect(totalCorrect)
+                .accuracy(accuracy)
+                .scores(scores)
                 .build();
     }
 
-    private void validateMember(Long memberId) {
+    private void validateMemberExists(Long memberId) {
         if (memberId == null) {
             throw new BaseException(401, "로그인이 필요합니다.");
         }
 
-        Member member = memberMapper.findByMemberId(memberId);
-        if (member == null) {
-            throw new BaseException(404, "사용자 정보를 찾을 수 없습니다. 다시 로그인해 주세요.");
+        if (memberMapper.findByMemberId(memberId) == null) {
+            throw new BaseException(404, "사용자 정보를 찾을 수 없습니다.");
         }
-
-    }
-
-    private LocalDate parseTargetDate(String targetDate) {
-        try {
-            return LocalDate.parse(targetDate);
-        } catch (DateTimeParseException e) {
-            throw new BaseException(400, "잘못된 요청입니다. 입력값을 확인해주세요.");
-        }
-    }
-
-    private void validateNotFuture(LocalDate targetDate) {
-        LocalDate today = LocalDate.now();
-        if (targetDate.isAfter(today)) {
-            throw new BaseException(
-                    400, "미래의 날짜는 조회할 수 없습니다. 오늘 또는 과거의 날짜를 선택해주세요."
-            );
-        }
-    }
-
-    private int defaultZero(Integer value) {
-        return value == null ? 0 : value;
     }
 }

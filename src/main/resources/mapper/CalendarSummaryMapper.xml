@@ -66,4 +66,17 @@
             LIMIT 1
     </select>
 
+    <select id="findCompletedRoutineDates" resultType="java.time.LocalDate">
+        SELECT DISTINCT routine_date
+        FROM daily_routine_status
+        WHERE member_id = #{memberId}
+          AND routine_date BETWEEN #{startDate} AND #{endDate}
+          AND (
+            is_game_finished = 1
+            OR is_record_finished = 1
+            OR is_question_finished = 1
+            )
+        ORDER BY routine_date ASC;
+    </select>
+
 </mapper>

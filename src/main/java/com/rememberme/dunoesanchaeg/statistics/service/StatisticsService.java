@@ -5,5 +5,5 @@ import com.rememberme.dunoesanchaeg.statistics.dto.response.StatisticsResponse;
 
 public interface StatisticsService {
 
-    StatisticsResponse getStatistics(Long memberId, StatisticsRequest request);
+    StatisticsResponse getWeeklyTypeStatistics(Long memberId, StatisticsRequest request);
 }

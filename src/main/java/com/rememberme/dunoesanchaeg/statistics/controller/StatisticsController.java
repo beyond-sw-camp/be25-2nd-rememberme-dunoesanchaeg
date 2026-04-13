@@ -19,19 +19,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StatisticsController {
 
+    private final StatisticsService statisticsService;
 
-    private final StatisticsService StatisticsService;
-
-    @GetMapping("/games")
+    @GetMapping("/games/weekly-types")
     public ResponseEntity<ApiResponse<StatisticsResponse>> getWeeklyTypeStatistics(
-            @Valid @ModelAttribute StatisticsRequest request) {
-
+            @Valid @ModelAttribute StatisticsRequest request
+    ) {
         Long memberId = SecurityUtil.getCurrentMemberId();
 
-        StatisticsResponse response = StatisticsService.getStatistics(memberId, request);
+        StatisticsResponse response =
+                statisticsService.getWeeklyTypeStatistics(memberId, request);
 
         return ResponseEntity.ok(
-                ApiResponse.success(200, "종목별 최근 7회 플레이 종합 통계 조회를 성공했습니다.", response)
+                ApiResponse.success(200, "종목별 최근 7회 플레이 통계 조회를 성공했습니다.", response)
         );
     }
 }
