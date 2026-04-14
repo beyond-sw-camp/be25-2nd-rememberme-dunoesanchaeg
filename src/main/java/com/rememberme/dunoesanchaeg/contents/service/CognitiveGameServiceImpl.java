@@ -130,10 +130,6 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
             throw new BaseException(400, "정답 개수와 시간 초과 횟수의 합은 3이어야 합니다.");
         }
 
-        if (request.getTotalTryCount() != request.getCorrectCount() + request.getWrongCount()) {
-            throw new BaseException(400, "총 시도 횟수는 정답 개수와 오답 횟수의 합과 같아야 합니다.");
-        }
-
         if (request.getTotalPlayedTime() > TOTAL_ROUNDS * ROUND_TIME_LIMIT_SEC) {
             throw new BaseException(400, "총 플레이 시간은 45초를 초과할 수 없습니다.");
         }
