@@ -12,6 +12,8 @@ import lombok.Value;
 public class KakaoLoginResponse {
     Long memberId;
 
+    String name;
+
     @JsonProperty("isProfileCompleted")
     Boolean isProfileCompleted;
 

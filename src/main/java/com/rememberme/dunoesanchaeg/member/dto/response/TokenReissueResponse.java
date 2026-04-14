@@ -15,6 +15,8 @@ public class TokenReissueResponse {
     String refreshToken;
     UserStatus userStatus;
 
+    String name;
+
     @JsonProperty("isProfileCompleted")
     Boolean isProfileCompleted;
 }

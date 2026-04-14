@@ -127,6 +127,7 @@ public class AuthServiceImpl implements AuthService {
 
         return KakaoLoginResponse.builder()
                 .memberId(member.getMemberId())
+                .name(member.getName())
                 .isProfileCompleted(member.isProfileCompleted())
                 .userStatus(member.getUserStatus())
                 .fontSize(member.getFontSize())
@@ -211,6 +212,7 @@ public class AuthServiceImpl implements AuthService {
                 .builder()
                 .refreshToken(newRefreshToken)
                 .accessToken(newAccessToken)
+                .name(member.getName())
                 .userStatus(member.getUserStatus())
                 .isProfileCompleted(member.isProfileCompleted())
                 .build();
