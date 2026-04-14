@@ -17,7 +17,6 @@ public class TodayGameResponse {
     private AssignedGameType gameType;
     private int totalRounds;
     private int roundTimeLimitSec;
-    private int totalTryCount;
     private String passCondition;
     private Boolean isGameFinished;
 }
