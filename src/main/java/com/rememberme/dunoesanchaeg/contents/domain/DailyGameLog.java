@@ -18,9 +18,11 @@ public class DailyGameLog {
     private Long memberId;
     private LocalDate playedDate;
     private AssignedGameType gameType;
-    private Integer totalTryCount;
     private Integer correctCount;
-    private Integer playTimeSeconds;
+    private Integer wrongCount;
+    private Integer timeoutCount;
+    private Integer totalTryCount;
+    private Integer totalPlayedTime;
     private Boolean alertTriggered;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

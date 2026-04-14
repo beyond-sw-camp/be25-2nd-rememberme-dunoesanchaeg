@@ -10,12 +10,12 @@ import lombok.Getter;
 @Builder
 public class GameRecord {
 
-	@JsonProperty("is_played")
-	private Boolean isPlayed;
+    @JsonProperty("is_played")
+    private Boolean isPlayed;
 
-	@JsonProperty("play_time_seconds")
-	private Integer playTimeSeconds;
+    @JsonProperty("play_time_seconds")
+    private Integer totalPlayedTime;
 
-	@JsonProperty("correct_count")
-	private Integer correctCount;
+    @JsonProperty("correct_count")
+    private Integer correctCount;
 }

@@ -10,18 +10,22 @@
                 member_id,
                 played_date,
                 game_type,
-                total_try_count,
                 correct_count,
-                play_time_seconds,
+                wrong_count,
+                timeout_count,
+                total_try_count,
+                total_played_time,
                 is_valid
             )
             VALUES (
                 #{memberId},
                 #{playedDate},
                 #{gameType},
-                #{totalTryCount},
                 #{correctCount},
-                #{playTimeSeconds},
+                #{wrongCount},
+                #{timeoutCount},
+                #{totalTryCount},
+                #{totalPlayedTime},
                 #{isValid}
             )
         </insert>

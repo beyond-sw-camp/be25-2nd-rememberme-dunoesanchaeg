@@ -7,7 +7,7 @@
 
     <resultMap id="gameRecordResultMap" type="com.rememberme.dunoesanchaeg.calendar.dto.response.GameRecord">
         <result property="isPlayed" column="is_played"/>
-        <result property="playTimeSeconds" column="play_time_seconds"/>
+        <result property="totalPlayedTime" column="total_played_time"/>
         <result property="correctCount" column="correct_count"/>
     </resultMap>
 
@@ -26,7 +26,7 @@
     <select id="findGameRecord" resultMap="gameRecordResultMap">
         SELECT
             TRUE AS is_played,
-            play_time_seconds,
+            total_played_time AS total_played_time,
             correct_count
         FROM daily_game_log
         WHERE member_id = #{memberId}
