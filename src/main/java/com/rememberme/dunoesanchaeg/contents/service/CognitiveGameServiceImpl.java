@@ -1,5 +1,7 @@
 package com.rememberme.dunoesanchaeg.contents.service;
 
+import com.rememberme.dunoesanchaeg.analysis.domain.enums.MetricScope;
+import com.rememberme.dunoesanchaeg.analysis.domain.event.CognitiveEvent;
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
 import com.rememberme.dunoesanchaeg.contents.dto.request.AnswerSubmitRequest;
 import com.rememberme.dunoesanchaeg.contents.dto.request.GameResultInsertDto;
