@@ -73,7 +73,7 @@ public class SecurityConfig {
                                 "/api/v1/notices/**",        // 공지
                                 "/api/v1/calendar/**",       // 캘린더
                                 "/api/v1/statistics/**"     // 통계
-                        ).authenticated()
+                        ).hasRole("USER")
                         // ROLE_WITHDRAWN 만 복구 로직 접근 가능
                         .requestMatchers("/api/v1/members/me/recovery").hasRole("WITHDRAWN")
                         .anyRequest()
