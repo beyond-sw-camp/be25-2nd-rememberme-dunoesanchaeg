@@ -1,6 +1,7 @@
 package com.rememberme.dunoesanchaeg.routines.service;
 
 import com.rememberme.dunoesanchaeg.common.exception.BaseException;
+import com.rememberme.dunoesanchaeg.member.domain.Member;
 import com.rememberme.dunoesanchaeg.member.mapper.MemberMapper;
 import com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus;
 import com.rememberme.dunoesanchaeg.routines.domain.enums.AssignedGameType;
@@ -160,6 +161,9 @@ public class RoutineServiceImpl implements RoutineService {
             default -> "";
         };
 
+        Member member = memberMapper.findByMemberId(routine.getMemberId());
+        String name = (member != null) ? member.getName() : "회원";
+
         return RoutineResponse.builder()
                 .routineId(routine.getRoutineId())
                 .routineDate(routine.getRoutineDate())
@@ -172,6 +176,7 @@ public class RoutineServiceImpl implements RoutineService {
                 .progressRate(progressRate)
                 .feedbackMsg(feedbackMsg)
                 .createdAt(routine.getCreatedAt())
+                .username(name)
                 .build();
     }
 

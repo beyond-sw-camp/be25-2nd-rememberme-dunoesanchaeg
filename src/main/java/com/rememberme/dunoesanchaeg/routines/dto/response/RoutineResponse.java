@@ -16,6 +16,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class RoutineResponse {
 
+    private String username;
+
     private MissionTypes missionTypes; // GAME, RECORD, QUESTION
 
     private Long routineId;

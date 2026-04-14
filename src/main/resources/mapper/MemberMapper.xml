@@ -152,4 +152,9 @@
         SET total_routine_count = total_routine_count + 1
         WHERE member_id = #{memberId}
     </update>
+
+    <select id="findNameById" resultType="string">
+        SELECT name
+        FROM member  WHERE member_id = #{memberId}
+    </select>
 </mapper>

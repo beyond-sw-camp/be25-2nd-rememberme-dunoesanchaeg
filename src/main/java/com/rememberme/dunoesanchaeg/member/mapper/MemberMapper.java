@@ -41,4 +41,5 @@ public interface MemberMapper {
     // total_routine_count + 1 업데이트
     int incrementTotalRoutineCount(@Param("memberId") Long memberId );
 
+    Member findNameById(Long memberId);
 }
