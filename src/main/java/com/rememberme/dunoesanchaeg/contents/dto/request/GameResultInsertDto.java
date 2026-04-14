@@ -15,6 +15,7 @@ public class GameResultInsertDto {
     private int correctCount;
     private int wrongCount;
     private int timeoutCount;
+    private int totalTryCount;
     private int totalPlayedTime;
     private boolean isValid;
 }

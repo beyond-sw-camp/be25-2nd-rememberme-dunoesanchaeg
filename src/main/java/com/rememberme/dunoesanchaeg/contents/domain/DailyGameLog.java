@@ -21,6 +21,7 @@ public class DailyGameLog {
     private Integer correctCount;
     private Integer wrongCount;
     private Integer timeoutCount;
+    private Integer totalTryCount;
     private Integer totalPlayedTime;
     private Boolean alertTriggered;
     private LocalDateTime createdAt;

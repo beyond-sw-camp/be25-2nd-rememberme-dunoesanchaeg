@@ -14,7 +14,7 @@ public class GameFinishedResponse {
     private Integer wrongCount;
     private Integer timeoutCount;
     private Integer totalPlayedTime;
-
+    private Integer totalTryCount;
     private Integer totalRounds;
     private Boolean isGameFinished;
     private Boolean isValid;

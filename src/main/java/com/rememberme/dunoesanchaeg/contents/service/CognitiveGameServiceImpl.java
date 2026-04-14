@@ -81,6 +81,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
                 .gameType(request.getGameType())
                 .correctCount(request.getCorrectCount())
                 .wrongCount(request.getWrongCount())
+                .totalTryCount(request.getTotalTryCount())
                 .timeoutCount(request.getTimeoutCount())
                 .totalPlayedTime(request.getTotalPlayedTime())
                 .isValid(isValid)
@@ -103,6 +104,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
                 .correctCount(request.getCorrectCount())
                 .wrongCount(request.getWrongCount())
                 .timeoutCount(request.getTimeoutCount())
+                .totalTryCount(request.getTotalTryCount())
                 .totalPlayedTime(request.getTotalPlayedTime())
                 .totalRounds(TOTAL_ROUNDS)
                 .isGameFinished(true)
@@ -114,6 +116,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
         if (request.getCorrectCount() < 0 ||
                 request.getWrongCount() < 0 ||
                 request.getTimeoutCount() < 0 ||
+                request.getTotalTryCount() < 0 ||
                 request.getTotalPlayedTime() < 0) {
             throw new BaseException(400, "게임 결과 값은 0 이상이어야 합니다.");
         }
@@ -123,13 +126,16 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
             throw new BaseException(400, "정답 개수 또는 시간 초과 횟수가 총 판 수를 초과할 수 없습니다.");
         }
 
-        int completedRounds = request.getCorrectCount() + request.getTimeoutCount();
-        if (completedRounds != TOTAL_ROUNDS) {
+        if (request.getCorrectCount() + request.getTimeoutCount() != TOTAL_ROUNDS) {
             throw new BaseException(400, "정답 개수와 시간 초과 횟수의 합은 3이어야 합니다.");
         }
 
         if (request.getTotalPlayedTime() > TOTAL_ROUNDS * ROUND_TIME_LIMIT_SEC) {
             throw new BaseException(400, "총 플레이 시간은 45초를 초과할 수 없습니다.");
+        }
+
+        if (request.getTotalTryCount() != request.getCorrectCount() + request.getWrongCount()) {
+            throw new BaseException(400, "총 시도 횟수는 정답 개수와 오답 횟수의 합과 같아야 합니다.");
         }
     }
 }
