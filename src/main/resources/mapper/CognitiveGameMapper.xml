@@ -12,7 +12,9 @@
                 game_type,
                 total_try_count,
                 correct_count,
-                play_time_seconds,
+                wrong_count,
+                timeout_count,
+                total_played_time,
                 is_valid
             )
             VALUES (
@@ -21,7 +23,9 @@
                 #{gameType},
                 #{totalTryCount},
                 #{correctCount},
-                #{playTimeSeconds},
+                #{wrongCount},
+                #{timeoutCount},
+                #{totalPlayedTime},
                 #{isValid}
             )
         </insert>

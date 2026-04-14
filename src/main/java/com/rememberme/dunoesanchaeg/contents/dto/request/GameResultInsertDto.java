@@ -13,7 +13,8 @@ public class GameResultInsertDto {
     private LocalDate playedDate;
     private AssignedGameType gameType;
     private int correctCount;
-    private int totalTryCount;
-    private int playTimeSeconds;
+    private int wrongCount;
+    private int timeoutCount;
+    private int totalPlayedTime;
     private boolean isValid;
 }

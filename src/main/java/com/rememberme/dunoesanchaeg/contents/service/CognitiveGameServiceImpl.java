@@ -10,10 +10,8 @@ import com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus;
 import com.rememberme.dunoesanchaeg.routines.domain.enums.MissionTypes;
 import com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper;
 import com.rememberme.dunoesanchaeg.routines.service.RoutineService;
-import com.rememberme.dunoesanchaeg.analysis.domain.event.CognitiveEvent;
-import com.rememberme.dunoesanchaeg.analysis.domain.enums.MetricScope;
-import org.springframework.context.ApplicationEventPublisher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +29,7 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
 
     private static final int TOTAL_ROUNDS = 3;
     private static final int ROUND_TIME_LIMIT_SEC = 15;
-    private static final int MIN_VALID_PLAY_TIME = 10;
-    private static final String PASS_CONDITION = "AT_LEAST_ONE_CORRECT";
+    private static final String PASS_CONDITION = "ROUND_ENDS_ON_CORRECT_OR_TIMEOUT";
 
     @Override
     public TodayGameResponse getTodayGame(Long memberId) {
@@ -74,34 +71,37 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
 
         validateGameResult(request);
 
-        boolean isValid = request.getPlayTimeSeconds() >= MIN_VALID_PLAY_TIME
-                && request.getCorrectCount() <= request.getTotalTryCount();
+        boolean isValid = true;
 
         GameResultInsertDto dto = GameResultInsertDto.builder()
                 .memberId(memberId)
                 .playedDate(today)
                 .gameType(request.getGameType())
                 .correctCount(request.getCorrectCount())
-                .totalTryCount(request.getTotalTryCount())
-                .playTimeSeconds(request.getPlayTimeSeconds())
+                .wrongCount(request.getWrongCount())
+                .timeoutCount(request.getTimeoutCount())
+                .totalPlayedTime(request.getTotalPlayedTime())
                 .isValid(isValid)
                 .build();
 
         int inserted = cognitiveGameMapper.insertGameResult(dto);
 
-        if(inserted != 1){
+        if (inserted != 1) {
             throw new BaseException(500, "게임 결과 저장에 실패했습니다.");
         }
 
         routineMapper.updateGameComplete(routine.getRoutineId());
-
-        // 희주님 루틴 업데이트 구현되면 넣기
         routineService.completeRoutineItem(memberId, MissionTypes.GAME);
 
-        applicationEventPublisher.publishEvent(new CognitiveEvent(this, memberId, MetricScope.valueOf(request.getGameType().name())));
+        applicationEventPublisher.publishEvent(
+                new CognitiveEvent(this, memberId, MetricScope.valueOf(request.getGameType().name()))
+        );
 
         return GameFinishedResponse.builder()
                 .correctCount(request.getCorrectCount())
+                .wrongCount(request.getWrongCount())
+                .timeoutCount(request.getTimeoutCount())
+                .totalPlayedTime(request.getTotalPlayedTime())
                 .totalRounds(TOTAL_ROUNDS)
                 .isGameFinished(true)
                 .isValid(isValid)
@@ -109,9 +109,25 @@ public class CognitiveGameServiceImpl implements CognitiveGameService {
     }
 
     private void validateGameResult(AnswerSubmitRequest request) {
+        if (request.getCorrectCount() < 0 ||
+                request.getWrongCount() < 0 ||
+                request.getTimeoutCount() < 0 ||
+                request.getTotalPlayedTime() < 0) {
+            throw new BaseException(400, "게임 결과 값은 0 이상이어야 합니다.");
+        }
 
-        if (request.getCorrectCount() > request.getTotalTryCount()) {
-            throw new BaseException(400, "정답 개수는 총 시도 횟수를 초과할 수 없습니다. 홈 화면으로 이동해주세요.");
+        if (request.getCorrectCount() > TOTAL_ROUNDS ||
+                request.getTimeoutCount() > TOTAL_ROUNDS) {
+            throw new BaseException(400, "정답 개수 또는 시간 초과 횟수가 총 판 수를 초과할 수 없습니다.");
+        }
+
+        int completedRounds = request.getCorrectCount() + request.getTimeoutCount();
+        if (completedRounds != TOTAL_ROUNDS) {
+            throw new BaseException(400, "정답 개수와 시간 초과 횟수의 합은 3이어야 합니다.");
+        }
+
+        if (request.getTotalPlayedTime() > TOTAL_ROUNDS * ROUND_TIME_LIMIT_SEC) {
+            throw new BaseException(400, "총 플레이 시간은 45초를 초과할 수 없습니다.");
         }
     }
 }
