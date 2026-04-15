@@ -136,7 +136,7 @@
 <details>
 <summary>세부사항</summary>
 
-<img src="./images/systemArchitecture.png" width="1000" alt="ERD image" /></br>
+<img src="./images/SystemArchitecture.png" width="1000" alt="ERD image" /></br>
 
 </details>
 
