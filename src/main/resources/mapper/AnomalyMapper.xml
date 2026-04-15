@@ -8,8 +8,11 @@
             session_id AS id,
             member_id AS memberId,
             game_type AS logType,
-            correct_count AS correctCount,
             total_try_count AS totalTryCount,
+            correct_count AS correctCount,
+            wrong_count AS wrongCount,
+            timeout_count AS timeoutCount,
+            total_played_time AS totalPlayedTime,
             created_at AS createdAt
         FROM daily_game_log
         WHERE member_id = #{memberId}
@@ -93,6 +96,12 @@
         FROM member
         WHERE member_id = #{memberId}
           AND guardian_consent = true
+    </select>
+
+    <select id="findMemberName" resultType="String">
+        SELECT name
+        FROM member
+        WHERE member_id = #{memberId}
     </select>
 
 </mapper>

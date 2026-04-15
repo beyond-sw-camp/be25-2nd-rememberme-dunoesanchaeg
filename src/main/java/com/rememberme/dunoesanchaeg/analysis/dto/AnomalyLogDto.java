@@ -13,8 +13,11 @@ public class AnomalyLogDto {
     private MetricScope logType; // WORD_MEMORY, ARITHMETIC, DESCARTES_RPS || QUESTION
 
     // 게임인 경우 사용
-    private Integer correctCount;
     private Integer totalTryCount;
+    private Integer correctCount;
+    private Integer wrongCount;
+    private Integer timeoutCount;
+    private Integer totalPlayedTime;
 
     // 질문인 경우 사용
     private Integer responseSecond;
