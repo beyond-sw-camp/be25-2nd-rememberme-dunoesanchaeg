@@ -4,41 +4,47 @@
 
 ## 👥 팀원 소개
 
-<table style="width:100%;">
+<table style="width:100%; text-align:center;">
   <thead>
-    <tr align="center">
+    <tr>
       <th>양준석</th>
       <th>박재하</th>
       <th>모희주</th>
       <th>윤준상</th>
       <th>이슬이</th>
       <th>조하은</th>
-     </tr>
+    </tr>
   </thead>
-
-   <!-- 이미지 추가(필수) 및 깃허브 링크 삽입(선택) -->  
-   <!--
-   <tbody>
-    <tr align="center">
+  <tbody>
+    <tr>
       <td>
-       
+        <img src="DUNOESANCHAEG-Client\src\assets\profile\이미지1.jpg" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/YJunSuk">YSunSuk</a>
       </td>
       <td>
-       
+        <img src="DUNOESANCHAEG-Client\src\assets\profile\이미지2.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/horolo1234">horolo1234</a>
       </td>
       <td>
-       
+        <img src="DUNOESANCHAEG-Client\src\assets\profile\이미지3.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/heejudy">heejudy</a>
       </td>
       <td>
-       
+        <img src="DUNOESANCHAEG-Client\src\assets\profile\이미지4.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/wnstkd704">wnstkd704</a>
       </td>
       <td>
-       
+        <img src="DUNOESANCHAEG-Client\src\assets\profile\이미지5.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/0lthree">01three</a>
       </td>
-      </tr>
-    </tbody>
-    -->
+      <td>
+        <img src="DUNOESANCHAEG-Client\src\assets\profile\이미지6.jpg" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/haeuniiii">haeuniiii</a>
+      </td>
+    </tr>
+  </tbody>
 </table>
+
 <br>
 
 ## 📍 목차
