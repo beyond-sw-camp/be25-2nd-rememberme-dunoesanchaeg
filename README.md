@@ -201,7 +201,6 @@
 - 🗄️[테이블 정의서 (링크)](https://docs.google.com/spreadsheets/d/1W4umq2TJ3RlpNsyxd6Db3YlDfhOW4DBUH2VfQkSFBGc/edit?gid=0#gid=0)
 
 </details>
-
 <br>
 
 ## <a id="8-ERD"></a> 8. ERD
@@ -223,7 +222,6 @@
 - [📱 화면기능 설계서 (링크)](https://www.figma.com/design/gyX3NlACpQIADuk9ZCbxI5/두뇌산책?node-id=202-78&p=f&t=aJAPNPAJ4FySe4Zt-0)
 
 </details>
-
 <br>
 
 ## <a id="10-API-명세서"></a> 10. API 명세서
@@ -239,9 +237,9 @@
 ## <a id="11-테스트-보고서"></a> 11. 테스트 보고서(스프레드 시트)
 
 <details>
- <summary><b>🧾 기능 테스트 결과서 링크</b></summary>
+ <summary><b>🧾 백엔드 테스트</b></summary>
 
-- [🧾 기능 테스트 결과서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=211938515#gid=211938515)
+- [🧾 백엔드 테스트 결과서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=211938515#gid=211938515)
 
 </details>
 <br>
