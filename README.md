@@ -198,7 +198,7 @@
 <img src="./images/테이블명세서4.png" width="1000" alt="Table4 image" /></br>
 <img src="./images/테이블명세서5.png" width="1000" alt="Table5 image" /></br>
 <img src="./images/테이블명세서6.png" width="1000" alt="Table6 image" /></br>
-<img src="./images/테이블명세서7.png" width="1000" alt="Table7 image" /></br>
+<img src="./images/테이블명세서7-1.png" width="1000" alt="Table7 image" /></br>
   
 - [📂 테이블 정의서 (링크)](https://docs.google.com/spreadsheets/d/1W4umq2TJ3RlpNsyxd6Db3YlDfhOW4DBUH2VfQkSFBGc/edit?gid=0#gid=0)
 
