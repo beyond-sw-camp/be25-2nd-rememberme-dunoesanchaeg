@@ -18,27 +18,27 @@
   <tbody>
     <tr>
       <td>
-        <img src="images/이미지1.jpg"width="120" height="140" style="object-fit:cover;"><br>
+        <img src="images/이미지1.jpg" style="width:120px; height:140px; object-fit:contain;"><br>
         🔗 <a href="https://github.com/YJunSuk">YSunSuk</a>
       </td>
       <td>
-        <img src="images/이미지2.png"width="120" height="140" style="object-fit:cover;"><br>
+        <img src="images/이미지2.png" style="width:120px; height:140px; object-fit:contain;"><br>
         🔗 <a href="https://github.com/horolo1234">horolo1234</a>
       </td>
       <td>
-        <img src="images/이미지3.png"width="120" height="140" style="object-fit:cover;"><br>
+        <img src="images/이미지3.png" style="width:120px; height:140px; object-fit:contain;"><br>
         🔗 <a href="https://github.com/heejudy">heejudy</a>
       </td>
       <td>
-        <img src="images/이미지4.png"width="120" height="140" style="object-fit:cover;"><br>
+        <img src="images/이미지4.png" style="width:120px; height:140px; object-fit:contain;"><br>
         🔗 <a href="https://github.com/wnstkd704">wnstkd704</a>
       </td>
       <td>
-        <img src="images/이미지5.png"width="120" height="140" style="object-fit:cover;"><br>
-        🔗 <a href="https://github.com/0lthree">01three</a>
+        <img src="images/이미지5.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/0lthree">0lthree</a>
       </td>
       <td>
-        <img src="images/이미지6.jpg"width="120" height="140" style="object-fit:cover;"><br>
+        <img src="images/이미지6.jpg" style="width:120px; height:140px; object-fit:contain;"><br>
         🔗 <a href="https://github.com/haeuniiii">haeuniiii</a>
       </td>
     </tr>
@@ -192,6 +192,13 @@
 
 <details>
 <summary>세부사항</summary>
+<img src="./images/테이블명세서1.png" width="1000" alt="Table1 image" /></br>
+<img src="./images/테이블명세서2.png" width="1000" alt="Table2 image" /></br>
+<img src="./images/테이블명세서3.png" width="1000" alt="Table3 image" /></br>
+<img src="./images/테이블명세서4.png" width="1000" alt="Table4 image" /></br>
+<img src="./images/테이블명세서5.png" width="1000" alt="Table5 image" /></br>
+<img src="./images/테이블명세서6.png" width="1000" alt="Table6 image" /></br>
+<img src="./images/테이블명세서7-1.png" width="1000" alt="Table7 image" /></br>
   
 - [📂 테이블 정의서 (링크)](https://docs.google.com/spreadsheets/d/1W4umq2TJ3RlpNsyxd6Db3YlDfhOW4DBUH2VfQkSFBGc/edit?gid=0#gid=0)
 
@@ -203,7 +210,7 @@
 
 <details>
 <summary>세부사항</summary>
-<img src="./images/ERD.png" width="1000" alt="ERD image" /></br>
+<img src="./images/ERD_최종.png" width="1000" alt="ERD image" /></br>
   
 - [📌 ERD 구조도 (링크)](https://www.erdcloud.com/d/puoaE8Gz75mCg6pJt)
   
