@@ -35,7 +35,7 @@
       </td>
       <td>
         <img src="images/이미지5.png" style="width:120px; height:140px; object-fit:contain;"><br>
-        🔗 <a href="https://github.com/0lthree">01three</a>
+        🔗 <a href="https://github.com/0lthree">0lthree</a>
       </td>
       <td>
         <img src="images/이미지6.jpg" style="width:120px; height:140px; object-fit:contain;"><br>
