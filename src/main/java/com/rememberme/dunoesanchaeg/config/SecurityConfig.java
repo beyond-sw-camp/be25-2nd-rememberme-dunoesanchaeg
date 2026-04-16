@@ -56,9 +56,9 @@ public class SecurityConfig {
                                 "/",
                                 "/api/v1/auth/kakao-auth",  // 카카오 로그인 등 인증
                                 "/api/v1/auth/reissue",       // 토큰 재발급
-                                "/oauth2/**",                // OAuth2 리다이렉트 경로
-                                "/v3/api-docs/**",           // Swagger용
-                                "/swagger-ui/**"             // Swagger UI용
+                                "/oauth2/**"                // OAuth2 리다이렉트 경로
+                                //"/v3/api-docs/**",           // Swagger용
+                                //"/swagger-ui/**"             // Swagger UI용
                         ).permitAll()
                         // 인증 필요
                         .requestMatchers(
