@@ -105,9 +105,9 @@
 ## <a id="3-WBS"></a> 3. WBS
 
 <details>
-<summary>세부사항</summary>
+<summary><b>🗓️ WBS 링크 </b></summary>
 
-- 📂 [WBS (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=1086471579#gid=1086471579)
+- 🗓️ [WBS (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=1086471579#gid=1086471579)
 </details>
 <br>
 
@@ -168,7 +168,7 @@
 ## <a id="5-시스템-아키텍처"></a> 5. 시스템 아키텍처
 
 <details>
-<summary>세부사항</summary>
+<summary><b>🧱 시스템 아키텍처 펼쳐보기</b></summary>
 
 <img src="./images/SystemArchitecture.png" width="1000" alt="ERD image" /></br>
 
@@ -179,18 +179,17 @@
 ## <a id="6-요구사항-정의서"></a> 6. 요구사항 정의서
 
 <details>
-<summary>세부사항</summary>
+<summary><b>🗒️ 요구사항 정의서 링크</b></summary>
 
-- [📂 요구사항 정의서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=1415182395#gid=1415182395)
-
+- 🗒️[요구사항 정의서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=1415182395#gid=1415182395)
 </details>
-
 <br>
+
 
 ## <a id="7-테이블-정의서"></a> 7. 테이블 정의서
 
 <details>
-<summary>세부사항</summary>
+<summary><b>🗄️ 테이블 정의서</b></summary>
 <img src="./images/테이블명세서1.png" width="1000" alt="Table1 image" /></br>
 <img src="./images/테이블명세서2.png" width="1000" alt="Table2 image" /></br>
 <img src="./images/테이블명세서3.png" width="1000" alt="Table3 image" /></br>
@@ -199,7 +198,7 @@
 <img src="./images/테이블명세서6.png" width="1000" alt="Table6 image" /></br>
 <img src="./images/테이블명세서7-1.png" width="1000" alt="Table7 image" /></br>
   
-- [📂 테이블 정의서 (링크)](https://docs.google.com/spreadsheets/d/1W4umq2TJ3RlpNsyxd6Db3YlDfhOW4DBUH2VfQkSFBGc/edit?gid=0#gid=0)
+- 🗄️[테이블 정의서 (링크)](https://docs.google.com/spreadsheets/d/1W4umq2TJ3RlpNsyxd6Db3YlDfhOW4DBUH2VfQkSFBGc/edit?gid=0#gid=0)
 
 </details>
 
@@ -208,19 +207,18 @@
 ## <a id="8-ERD"></a> 8. ERD
 
 <details>
-<summary>세부사항</summary>
+<summary><b>📌 ERD 구조도</b></summary>
 <img src="./images/ERD_최종.png" width="1000" alt="ERD image" /></br>
   
 - [📌 ERD 구조도 (링크)](https://www.erdcloud.com/d/puoaE8Gz75mCg6pJt)
   
 </details>
-
 <br>
 
 ## <a id="9-화면-및-기능-설계서"></a> 9. 화면 및 기능 설계서
 
 <details>
-<summary>세부사항</summary>
+<summary><b>📱 화면기능 설계서 링크</b></summary>
   
 - [📱 화면기능 설계서 (링크)](https://www.figma.com/design/gyX3NlACpQIADuk9ZCbxI5/두뇌산책?node-id=202-78&p=f&t=aJAPNPAJ4FySe4Zt-0)
 
@@ -231,27 +229,21 @@
 ## <a id="10-API-명세서"></a> 10. API 명세서
 
 <details>
-<summary>세부사항</summary>
+<summary><b>📋 API 명세서 링크</b></summary>
   
-- [📌 API 명세서 (링크)](https://www.notion.so/API-308dd863c93280e2808fdca71cc4adde)
+- [📋 API 명세서 (링크)](https://www.notion.so/API-308dd863c93280e2808fdca71cc4adde)
 
 </details>
-
 <br>
 
-## <a id="11-테스트-계획서"></a> 11. 테스트 계획서
+## <a id="11-테스트-보고서"></a> 11. 테스트 보고서(스프레드 시트)
 
 <details>
-<summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+ <summary><b>🧾 기능 테스트 결과서 링크</b></summary>
+
+- [🧾 기능 테스트 결과서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=687771753#gid=687771753)
+
 </details>
-
-<br>
-
-## <a id="12-결과-보고서"></a> 12. 결과 보고서
-
 <br>
 
 ## <a id="13-회고"></a> 13. 회고
