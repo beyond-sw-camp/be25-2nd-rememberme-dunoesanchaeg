@@ -241,7 +241,7 @@
 <details>
  <summary><b>🧾 기능 테스트 결과서 링크</b></summary>
 
-- [🧾 기능 테스트 결과서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=687771753#gid=687771753)
+- [🧾 기능 테스트 결과서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=211938515#gid=211938515)
 
 </details>
 <br>
