@@ -106,9 +106,8 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+
+- 📂 [WBS (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=1086471579#gid=1086471579)
 </details>
 <br>
 
@@ -171,7 +170,7 @@
 <details>
 <summary>세부사항</summary>
 
-<img src="images/SystemArchitecture.png" width="1000" alt="시스템 아키텍처 이미지" /></br>
+<img src="./images/SystemArchitecture.png" width="1000" alt="ERD image" /></br>
 
 </details>
 
