@@ -99,7 +99,7 @@ public class KakaoClient {
                 email = (String) kakaoAccount.get("email");
             }
 
-            log.info("카카오 유저 정보 획득 성공 - kakaoId: {}", kakaoId);
+            log.info("카카오 유저 정보 획득 성공");
             return new KakaoUserInfo(kakaoId, email);
 
         } catch (HttpClientErrorException e) {
@@ -128,7 +128,7 @@ public class KakaoClient {
         }
     }
 
-    public void unlinkKakao(Long kakaoId) {
+    public void unlinkKakao(Long kakaoId, Long memberId) {
         // 1. 연동 해제 전용 URL
         String url = "https://kapi.kakao.com/v1/user/unlink";
 
@@ -149,17 +149,17 @@ public class KakaoClient {
             ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
             if (response.getStatusCode().is2xxSuccessful()) {
-                log.info("카카오 연동 해제 성공 - kakaoId: {}", kakaoId);
+                log.info("카카오 연동 해제 성공 memberId: {}", memberId);
             } else {
                 log.error("카카오 연동 해제 응답 에러: {}", response.getStatusCode());
             }
         } catch (org.springframework.web.client.HttpClientErrorException e) {
             // 에러 발생 시 상세 로그 (401 등 원인 파악용)
-            log.error("카카오 연동 해제 실패 - 상태 코드: {}", e.getStatusCode());
+            log.error("카카오 연동 해제 실패 - 상태 코드: {} memberId: {}", e.getStatusCode(), memberId);
             log.error("에러 바디: {}", e.getResponseBodyAsString());
             throw e; // 서비스 계층에서 알 수 있도록 예외처리
         } catch (Exception e) {
-            log.error("카카오 연동 해제 중 알 수 없는 에러: {}", e.getMessage());
+            log.error("카카오 연동 해제 중 알 수 없는 에러: {} memberId: {}", e.getMessage(), memberId);
             throw e;
         }
     }

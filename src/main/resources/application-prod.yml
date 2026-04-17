@@ -52,7 +52,12 @@ springdoc:
 logging:
   level:
     root: warn
-    com.rememberme.dunoesanchaeg: info # 우리 서비스의 주요 흐름만 기록
+    # 스프링 프레임워크 전체를 info로 덮어씌웁니다 (트랜잭션, JDBC 포함)
+    org.springframework: info
+    #  DB 연결 끊김 혹은 커넥션 풀이 꽉 차서 응답 안되는 등의 심각한 문제
+    com.zaxxer.hikari: warn
+    # 우리 서비스 로그 레벨
+    com.rememberme.dunoesanchaeg: info
 
 # 2. MyBatis SQL 로그 생성 자체를 차단 (이중 보안)
 mybatis:
