@@ -53,9 +53,3 @@ jwt:
   # 리프레시 토큰: 14일 (14 * 24 * 60 * 60 * 1000)
   refresh-token-expiration: 1209600000
 
-# 배포시 info 또는 warn으로 수정
-logging:
-  level:
-    org.springframework.jdbc: DEBUG
-    com.zaxxer.hikari: DEBUG
-    org.hibernate.SQL: DEBUG
