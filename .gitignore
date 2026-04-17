@@ -17,7 +17,7 @@ replay_pid*
 # ==========================================================================
 # Maven (Build artifacts)
 # ==========================================================================
-target/
+/target/
 pom.xml.tag
 pom.xml.releaseBackup
 pom.xml.versionsBackup

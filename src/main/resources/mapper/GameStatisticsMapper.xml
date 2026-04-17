@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.statistics.mapper.StatisticsMapper">
+
+    <resultMap id="recentGameScoreResultMap"
+               type="com.rememberme.dunoesanchaeg.statistics.domain.RecentGameScore">
+        <result property="correctCount" column="correct_count"/>
+    </resultMap>
+
+    <select id="findScoresByType" resultMap="recentGameScoreResultMap">
+        SELECT
+            correct_count
+        FROM daily_game_log
+        WHERE member_id = #{memberId}
+          AND game_type = #{gameType}
+          AND played_date &lt;= #{targetDate}
+          AND is_valid = 1
+        ORDER BY played_date DESC, created_at DESC, session_id DESC
+            LIMIT 7
+    </select>
+
+</mapper>

@@ -1,42 +1,50 @@
-# REMEMBER-ME
+# 두뇌산책
+
+<img width="1000" alt="두뇌산책_썸네일" src="images/썸네일마크제거.jpg" />
 
 ## 👥 팀원 소개
 
-<table style="width:100%;">
+<table style="width:100%; text-align:center;">
   <thead>
-    <tr align="center">
+    <tr>
       <th>양준석</th>
       <th>박재하</th>
       <th>모희주</th>
       <th>윤준상</th>
       <th>이슬이</th>
       <th>조하은</th>
-     </tr>
+    </tr>
   </thead>
-
-   <!-- 이미지 추가(필수) 및 깃허브 링크 삽입(선택) -->  
-   <!--
-   <tbody>
-    <tr align="center">
+  <tbody>
+    <tr>
       <td>
-       
+        <img src="images/이미지1.jpg" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/YJunSuk">YSunSuk</a>
       </td>
       <td>
-       
+        <img src="images/이미지2.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/horolo1234">horolo1234</a>
       </td>
       <td>
-       
+        <img src="images/이미지3.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/heejudy">heejudy</a>
       </td>
       <td>
-       
+        <img src="images/이미지4.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/wnstkd704">wnstkd704</a>
       </td>
       <td>
-       
+        <img src="images/이미지5.png" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/0lthree">0lthree</a>
       </td>
-      </tr>
-    </tbody>
-    -->
+      <td>
+        <img src="images/이미지6.jpg" style="width:120px; height:140px; object-fit:contain;"><br>
+        🔗 <a href="https://github.com/haeuniiii">haeuniiii</a>
+      </td>
+    </tr>
+  </tbody>
 </table>
+
 <br>
 
 ## 📍 목차
@@ -53,7 +61,7 @@
 10. [API 명세서](#10-API-명세서)  
 11. [테스트 계획서](#11-테스트-계획서)
 12. [결과 보고서](#12-결과-보고서)
-13. [회고](#15-회고)
+13. [회고](#13-회고)
 
 <br>
 
@@ -98,38 +106,73 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+
+- 📂 [WBS (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=1086471579#gid=1086471579)
 </details>
 <br>
 
 ## <a id="4-기술-스택"></a> 4. 기술 스택
 
-### BACKEND
-
-<img src="https://img.shields.io/badge/SpringBoot-10B146?style=for-the-badge&logo=SpringBoot&logoColor=white">
 
 ### FRONTEND
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![Vue.js](https://img.shields.io/badge/vuejs-%2335495e.svg?style=for-the-badge&logo=vuedotjs&logoColor=%234FC08D)
 
-<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black">
+### BACKEND
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring](https://img.shields.io/badge/spring-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+<img src="https://img.shields.io/badge/SpringBoot-10B146?style=for-the-badge&logo=SpringBoot&logoColor=white">
 
 ### DATABASE
-
 ![mariadb](https://github.com/user-attachments/assets/19a0ad09-804d-4303-80bd-32cafdae0e6f)
 
-### IDE
+### DEPLOYMENT
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 
-![intellij](https://github.com/user-attachments/assets/25d426ed-e30e-4619-9968-11375adba8b9)
+![Route53](https://img.shields.io/badge/Route%2053-7046E5?style=for-the-badge)
+![CloudFront](https://img.shields.io/badge/CloudFront-7046E5?style=for-the-badge)
+![S3](https://img.shields.io/badge/S3-FF9900?style=for-the-badge)
 
-### COMMUNICATION
+![ALB](https://img.shields.io/badge/Application%20Load%20Balancer-7046E5?style=for-the-badge)
+![EC2](https://img.shields.io/badge/EC2-FF9900?style=for-the-badge)
+![RDS](https://img.shields.io/badge/RDS-0073BB?style=for-the-badge)
 
-![Notion](https://img.shields.io/badge/Notion-000000?style=for-the-badge&logo=notion&logoColor=white)
-</details>
+
+![CloudWatch](https://img.shields.io/badge/AWS%20CloudWatch-C925D1?style=for-the-badge)
+
+
+
+
+
+### FRAMEWORKS, PLATFORMS, LIBRAIRES
+![Chart.js](https://img.shields.io/badge/chart.js-F5788D.svg?style=for-the-badge&logo=chart.js&logoColor=white)
+![axios](https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white)
+![pinia](https://img.shields.io/badge/pinia-7E0C1B?style=for-the-badge&logo=pinia&logoColor=white)
+![NPM](https://img.shields.io/badge/NPM-%23CB3837.svg?style=for-the-badge&logo=npm&logoColor=white)
+
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![TailwindCSS](https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white)
+
+![springsecurity](https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+![Maven](https://img.shields.io/badge/apachemaven-C71A36.svg?style=for-the-badge&logo=apachemaven&logoColor=white)
+
+### DOCUMENTATION
+![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)
 
 <br>
 
 ## <a id="5-시스템-아키텍처"></a> 5. 시스템 아키텍처
+
+<details>
+<summary>세부사항</summary>
+
+<img src="./images/SystemArchitecture.png" width="1000" alt="ERD image" /></br>
+
+</details>
 
 <br>
 
@@ -137,9 +180,9 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+
+- [📂 요구사항 정의서 (링크)](https://docs.google.com/spreadsheets/d/1cGxKolGeDWGtzUYxWShYSNCS0KK_gclYAco5hxDQDqI/edit?gid=1415182395#gid=1415182395)
+
 </details>
 
 <br>
@@ -148,9 +191,16 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+<img src="./images/테이블명세서1.png" width="1000" alt="Table1 image" /></br>
+<img src="./images/테이블명세서2.png" width="1000" alt="Table2 image" /></br>
+<img src="./images/테이블명세서3.png" width="1000" alt="Table3 image" /></br>
+<img src="./images/테이블명세서4.png" width="1000" alt="Table4 image" /></br>
+<img src="./images/테이블명세서5.png" width="1000" alt="Table5 image" /></br>
+<img src="./images/테이블명세서6.png" width="1000" alt="Table6 image" /></br>
+<img src="./images/테이블명세서7-1.png" width="1000" alt="Table7 image" /></br>
+  
+- [📂 테이블 정의서 (링크)](https://docs.google.com/spreadsheets/d/1W4umq2TJ3RlpNsyxd6Db3YlDfhOW4DBUH2VfQkSFBGc/edit?gid=0#gid=0)
+
 </details>
 
 <br>
@@ -159,9 +209,10 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+<img src="./images/ERD_최종.png" width="1000" alt="ERD image" /></br>
+  
+- [📌 ERD 구조도 (링크)](https://www.erdcloud.com/d/puoaE8Gz75mCg6pJt)
+  
 </details>
 
 <br>
@@ -170,9 +221,9 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+  
+- [📱 화면기능 설계서 (링크)](https://www.figma.com/design/gyX3NlACpQIADuk9ZCbxI5/두뇌산책?node-id=202-78&p=f&t=aJAPNPAJ4FySe4Zt-0)
+
 </details>
 
 <br>
@@ -181,9 +232,9 @@
 
 <details>
 <summary>세부사항</summary>
-<div markdown="1">
- 
-</div>
+  
+- [📌 API 명세서 (링크)](https://www.notion.so/API-308dd863c93280e2808fdca71cc4adde)
+
 </details>
 
 <br>
@@ -207,7 +258,7 @@
 
 |   이름   |     회고 내용     |
 |-----------|-----------------|
-|      양준석      |     준석님 작성     |
+|      양준석      |     준석님 작성1     |
 |      박재하      |     재하님 작성     |
 |      모희주      |     희주님 작성     |
 |      윤준상      |     준상님 작성     |

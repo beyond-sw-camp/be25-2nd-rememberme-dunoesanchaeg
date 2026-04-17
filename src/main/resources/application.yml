@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: brainwalk
+
+  profiles:
+    active: local # 실행 시 별도 설정 없으면 local을 기본으로 사용
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false # 날짜를 [2026,3,14]가 아닌 "2026-03-14"로 출력
+    default-property-inclusion: non_null # null인 필드는 JSON 응답에서 제외
+    time-zone: Asia/Seoul
+
+  mvc:
+    # 404를 포함한 모든 에러를 표준 규격(RFC 7807)으로 처리
+    problem-details:
+      enabled: true
+
+  # 데이터소스 구조만 정의 (값은 각 프로필에서 채움)
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10 # 서비스 규모에 따라 조절
+      minimum-idle: 5
+      idle-timeout: 300000 # 5분
+      max-lifetime: 1800000 # 30분 (DB의 wait_timeout보다 짧아야 함)
+      connection-timeout: 30000 # 30초 안에 연결 안 되면 에러
+
+
+mybatis:
+  # 패키지 경로는 프로젝트 구조에 맞춰 수정 가능
+  type-aliases-package: com.rememberme.dunoesanchaeg.*.model.vo
+  mapper-locations: classpath:mapper/**/*.xml
+  configuration:
+    jdbc-type-for-null: 'NULL'
+    map-underscore-to-camel-case: true
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+
+server:
+  port: 8080
+  error:
+    include-stacktrace: never # 에러 발생 시 상세 코드(Stacktrace) 노출 차단
+
+# application.yml (운영 서버용)
+jwt:
+  # 액세스 토큰: 30분 (30 * 60 * 1000)
+  access-token-expiration: 1800000
+  # 리프레시 토큰: 14일 (14 * 24 * 60 * 60 * 1000)
+  refresh-token-expiration: 1209600000
+
+# 배포시 info 또는 warn으로 수정
+logging:
+  level:
+    org.springframework.jdbc: DEBUG
+    com.zaxxer.hikari: DEBUG
+    org.hibernate.SQL: DEBUG

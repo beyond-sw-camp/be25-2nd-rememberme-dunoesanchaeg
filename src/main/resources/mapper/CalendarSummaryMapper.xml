@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.calendar.mapper.CalendarSummaryMapper">
+
+    <resultMap id="gameRecordResultMap" type="com.rememberme.dunoesanchaeg.calendar.dto.response.GameRecord">
+        <result property="isPlayed" column="is_played"/>
+        <result property="totalPlayedTime" column="total_played_time"/>
+        <result property="correctCount" column="correct_count"/>
+    </resultMap>
+
+    <resultMap id="questionRecordResultMap" type="com.rememberme.dunoesanchaeg.calendar.dto.response.QuestionRecord">
+        <result property="isAnswered" column="is_answered"/>
+        <result property="questionText" column="question_text"/>
+    </resultMap>
+
+    <resultMap id="dailyRecordDetailResultMap" type="com.rememberme.dunoesanchaeg.calendar.dto.response.DailyRecordDetail">
+        <result property="isWritten" column="is_written"/>
+        <result property="sleepLevel" column="sleep_level"/>
+        <result property="moodLevel" column="mood_level"/>
+        <result property="mealLevel" column="meal_level"/>
+    </resultMap>
+
+    <select id="findGameRecord" resultMap="gameRecordResultMap">
+        SELECT
+            TRUE AS is_played,
+            total_played_time AS total_played_time,
+            correct_count
+        FROM daily_game_log
+        WHERE member_id = #{memberId}
+          AND played_date = #{targetDate}
+          AND is_valid = TRUE
+            LIMIT 1
+    </select>
+
+    <select id="findQuestionRecord" resultMap="questionRecordResultMap">
+        SELECT
+            TRUE AS is_answered,
+            qb.question_text
+        FROM daily_question_log dq
+                 JOIN question_bank qb ON dq.question_id = qb.question_id
+        WHERE dq.member_id = #{memberId}
+          AND dq.record_date = #{targetDate}
+          AND dq.status = 'COMPLETED'
+            LIMIT 1
+    </select>
+
+    <select id="findDailyRecord" resultMap="dailyRecordDetailResultMap">
+        SELECT
+            TRUE AS is_written,
+            sleep_level,
+            sleep_memo,
+            mood_level,
+            mood_memo,
+            meal_level,
+            meal_memo,
+            exercise_level,
+            exercise_memo,
+            social_level,
+            social_memo
+        FROM daily_record
+        WHERE member_id = #{memberId}
+          AND record_date = #{targetDate}
+            LIMIT 1
+    </select>
+
+    <select id="findCompletedRoutineDates" resultType="java.time.LocalDate">
+        SELECT DISTINCT routine_date
+        FROM daily_routine_status
+        WHERE member_id = #{memberId}
+          AND routine_date BETWEEN #{startDate} AND #{endDate}
+          AND (
+            is_game_finished = 1
+            OR is_record_finished = 1
+            OR is_question_finished = 1
+            )
+        ORDER BY routine_date ASC;
+    </select>
+
+</mapper>

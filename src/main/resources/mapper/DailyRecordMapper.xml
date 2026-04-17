@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.memory.mapper.DailyRecordMapper">
+
+    <!-- 하루 기록 ID 조회 -->
+    <select id="findDailyRecordId" resultType="long">
+        SELECT daily_record_id
+        FROM daily_record
+        WHERE member_id = #{memberId}
+          AND record_date = #{recordDate}
+    </select>
+
+    <!-- 하루 기록 저장 -->
+    <insert id="insertDailyRecord">
+        INSERT INTO daily_record (
+            member_id,
+            record_date,
+            mood_level,
+            mood_memo,
+            sleep_level,
+            sleep_memo,
+            meal_level,
+            meal_memo,
+            exercise_level,
+            exercise_memo,
+            social_level,
+            social_memo
+        ) VALUES (
+                     #{memberId},
+                     #{recordDate},
+                     #{moodLevel, jdbcType=VARCHAR},
+                     #{moodMemo},
+                     #{sleepLevel,jdbcType=VARCHAR},
+                     #{sleepMemo},
+                     #{mealLevel,jdbcType=VARCHAR},
+                     #{mealMemo},
+                     #{exerciseLevel,jdbcType=VARCHAR},
+                     #{exerciseMemo},
+                     #{socialLevel,jdbcType=VARCHAR},
+                     #{socialMemo}
+                 )
+    </insert>
+
+    <!-- 하루 기록 수정 -->
+    <update id="updateDailyRecord">
+        UPDATE daily_record
+        SET
+            mood_level = #{moodLevel,jdbcType=VARCHAR},
+            mood_memo = #{moodMemo},
+            sleep_level = #{sleepLevel,jdbcType=VARCHAR},
+            sleep_memo = #{sleepMemo},
+            meal_level = #{mealLevel,jdbcType=VARCHAR},
+            meal_memo = #{mealMemo},
+            exercise_level = #{exerciseLevel,jdbcType=VARCHAR},
+            exercise_memo = #{exerciseMemo},
+            social_level = #{socialLevel,jdbcType=VARCHAR},
+            social_memo = #{socialMemo}
+        WHERE member_id = #{memberId}
+          AND record_date = #{recordDate}
+    </update>
+
+    <!-- 기록 완료 상태 업데이트 -->
+    <update id="updateRecordFinished">
+        UPDATE daily_routine_status
+        SET is_record_finished = TRUE
+        WHERE member_id = #{memberId}
+          AND routine_date = #{recordDate}
+    </update>
+
+    <!-- 오늘 하루 기록 조회 -->
+    <select id="selectDailyRecord"
+            resultType="com.rememberme.dunoesanchaeg.memory.domain.DailyRecord">
+        SELECT
+            daily_record_id AS dailyRecordId,
+            member_id AS memberId,
+            record_date AS recordDate,
+            mood_level AS moodLevel,
+            mood_memo AS moodMemo,
+            sleep_level AS sleepLevel,
+            sleep_memo AS sleepMemo,
+            meal_level AS mealLevel,
+            meal_memo AS mealMemo,
+            exercise_level AS exerciseLevel,
+            exercise_memo AS exerciseMemo,
+            social_level AS socialLevel,
+            social_memo AS socialMemo
+        FROM daily_record
+        WHERE member_id = #{memberId}
+          AND record_date = #{recordDate}
+    </select>
+
+</mapper>

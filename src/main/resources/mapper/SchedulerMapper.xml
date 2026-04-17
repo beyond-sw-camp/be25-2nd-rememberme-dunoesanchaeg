@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.rememberme.dunoesanchaeg.member.mapper.SchedulerMapper">
+    <delete id="deleteRevokedToken">
+        DELETE FROM member_token
+        WHERE is_revoked = true OR expires_at <![CDATA[ < ]]> NOW()
+    </delete>
+
+    <select id="selectWithdrawnMember" resultType="com.rememberme.dunoesanchaeg.member.dto.target.WithdrawalTargetDto">
+        SELECT
+            member_id,
+            kakao_id
+        FROM member
+        WHERE
+            user_status = 'WITHDRAWN'
+          AND
+            is_kakao_unlinked = false
+          AND
+            deleted_at <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 30 DAY)
+    </select>
+
+    <update id="updateKakaoUnlinkedStatus" parameterType="long">
+        UPDATE member
+        SET
+            is_kakao_unlinked = true,
+            role = 'WITHDRAWN'
+        WHERE user_status = 'WITHDRAWN' AND member_id = #{memberId}
+    </update>
+
+    <delete id="removeMemberPermanently">
+        DELETE
+        FROM member
+        WHERE is_kakao_unlinked = true
+          AND
+            user_status = 'WITHDRAWN'
+          AND
+            deleted_at <![CDATA[ <= ]]> DATE_SUB(NOW(), INTERVAL 30 DAY)
+    </delete>
+
+</mapper>
+

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.memory.mapper.DailyQuestionLogMapper">
+
+    <!-- 추가1 -->
+    <resultMap id="dailyQuestionLogResultMap" type="com.rememberme.dunoesanchaeg.memory.domain.DailyQuestionLog">
+        <id property="dailyQuestionLogId" column="daily_question_log_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="recordDate" column="record_date"/>
+        <result property="questionId" column="question_id"/>
+        <result property="responseSecond" column="response_second"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <select id="countTodayQuestionLog" resultType="int">
+        SELECT COUNT(*)
+        FROM daily_question_log
+        WHERE member_id = #{memberId}
+          AND record_date = #{recordDate}
+          AND status = #{status}
+    </select>
+
+    <!-- 추가2 -->
+    <select id="selectTodayQuestionLog" resultMap="dailyQuestionLogResultMap">
+        SELECT daily_question_log_id,
+               member_id,
+               record_date,
+               question_id,
+               response_second,
+               status,
+               created_at
+        FROM daily_question_log
+        WHERE member_id = #{memberId}
+          AND record_date = #{recordDate}
+        LIMIT 1
+    </select>
+
+    <insert id="insertTodayQuestionLog"
+            parameterType="com.rememberme.dunoesanchaeg.memory.domain.DailyQuestionLog"
+            useGeneratedKeys="true"
+            keyProperty="dailyQuestionLogId">
+        INSERT INTO daily_question_log (
+            member_id,
+            record_date,
+            question_id,
+            status,
+            created_at
+        ) VALUES (
+                     #{memberId},
+                     #{recordDate},
+                     #{questionId},
+                     #{status},
+                     #{createdAt}
+                 )
+    </insert>
+
+    <update id="deleteTodayQuestionLog">
+        UPDATE daily_question_log
+        SET status = 'EXITED'
+        WHERE daily_question_log_id = #{dailyQuestionLogId}
+          AND member_id = #{memberId}
+          AND status = 'STARTED'
+    </update>
+
+    <update id="updateTodayQuestionLog"
+            parameterType="com.rememberme.dunoesanchaeg.memory.domain.DailyQuestionLog">
+        UPDATE daily_question_log
+        SET response_second = #{responseSecond},
+            status = #{status}
+        WHERE daily_question_log_id = #{dailyQuestionLogId}
+          AND member_id = #{memberId}
+          AND status = 'STARTED'
+    </update>
+
+</mapper>

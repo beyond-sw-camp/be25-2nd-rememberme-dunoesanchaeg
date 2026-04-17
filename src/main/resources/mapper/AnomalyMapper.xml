@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.rememberme.dunoesanchaeg.analysis.mapper.AnomalyMapper">
+
+    <select id="findRecentGameLogs" resultType="com.rememberme.dunoesanchaeg.analysis.dto.AnomalyLogDto">
+        SELECT
+            session_id AS id,
+            member_id AS memberId,
+            game_type AS logType,
+            total_try_count AS totalTryCount,
+            correct_count AS correctCount,
+            wrong_count AS wrongCount,
+            timeout_count AS timeoutCount,
+            total_played_time AS totalPlayedTime,
+            created_at AS createdAt
+        FROM daily_game_log
+        WHERE member_id = #{memberId}
+          AND game_type = #{gameType}
+          AND is_valid = true
+        ORDER BY created_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <select id="findRecentQuestionLogs" resultType="com.rememberme.dunoesanchaeg.analysis.dto.AnomalyLogDto">
+        SELECT
+            daily_question_log_id AS id,
+            member_id AS memberId,
+            'QUESTION' AS logType,
+            response_second AS responseSecond,
+            created_at AS createdAt
+        FROM daily_question_log
+        WHERE member_id = #{memberId}
+          AND status = 'COMPLETED'
+          AND response_second &lt; 180 <!-- 3분 이하만 유효 통계로 활용 -->
+        ORDER BY created_at DESC
+        LIMIT #{limit}                 <!-- 정렬된 것 중 상위 N개만 가져옴 -->
+    </select>
+
+    <select id="findAlertState" resultType="com.rememberme.dunoesanchaeg.analysis.domain.AlertState">
+        SELECT
+            member_id AS memberId,
+            alert_type AS alertType,
+            metric_scope AS metricScope,
+            consecutive_count AS consecutiveCount,
+            last_sent_at AS lastSentAt,
+            last_activity_at AS lastActivityAt
+        FROM alert_state
+        WHERE member_id = #{memberId}
+          AND alert_type = #{alertType}
+          AND metric_scope = #{metricScope}
+    </select>
+
+    <insert id="upsertAlertState" parameterType="com.rememberme.dunoesanchaeg.analysis.domain.AlertState">
+        INSERT INTO alert_state (
+            member_id,
+            alert_type,
+            metric_scope,
+            consecutive_count,
+            last_sent_at,
+            last_activity_at
+        ) VALUES (
+            #{memberId},
+            #{alertType},
+            #{metricScope},
+            #{consecutiveCount},
+            #{lastSentAt},
+            #{lastActivityAt}
+        )
+        ON DUPLICATE KEY UPDATE
+            consecutive_count = VALUES(consecutive_count),
+            last_sent_at = VALUES(last_sent_at),
+            last_activity_at = VALUES(last_activity_at)
+    </insert>
+
+    <insert id="insertAlertHistory">
+        INSERT INTO alert_history (
+            member_id,
+            alert_type,
+            metric_scope,
+            status,
+            reason,
+            created_at
+        ) VALUES (
+            #{memberId},
+            #{alertType},
+            #{metricScope},
+            #{status},
+            #{reason},
+            NOW()
+        )
+    </insert>
+
+    <select id="findGuardianEmail" resultType="String">
+        SELECT guardian_email
+        FROM member
+        WHERE member_id = #{memberId}
+          AND guardian_consent = true
+    </select>
+
+    <select id="findMemberName" resultType="String">
+        SELECT name
+        FROM member
+        WHERE member_id = #{memberId}
+    </select>
+
+</mapper>

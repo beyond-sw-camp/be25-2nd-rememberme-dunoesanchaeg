@@ -1,0 +1,80 @@
+spring:
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2 # 필수: 파라미터 스토어 접근을 위한 '열쇠' 위치
+  config:
+    import: "aws-parameterstore:/config/brainwalk/" # 이미 경로를 잘 지정하셨습니다.
+    activate:
+      on-profile: prod
+
+  jpa:
+    hibernate:
+      ddl-auto: none # 운영 DB는 절대 건드리지 않음
+    show-sql: false   # 로그 폭탄 방지
+
+  datasource:
+    # 운영 환경에서는 기본값 없이 반드시 환경 변수로 받아야 안전함
+    url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${SYSTEM_EMAIL}   # (시스템 메일 발송 주체가 될 계정)
+    password: ${SYSTEM_EMAIL_PASSWORD}       # (발급받은 16자리 앱 비밀번호 기입)
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
+
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,text/html,text/xml,text/plain
+
+# 운영 환경에서는 보안을 위해 Swagger와 API 문서를 비활성화
+springdoc:
+  api-docs:
+    enabled: false
+  swagger-ui:
+    enabled: false
+
+# 1. 전체적인 로그 레벨 제어 (Spring, Library 등)
+logging:
+  level:
+    root: warn
+    com.rememberme.dunoesanchaeg: info # 우리 서비스의 주요 흐름만 기록
+
+# 2. MyBatis SQL 로그 생성 자체를 차단 (이중 보안)
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+    jdbc-type-for-null: 'NULL'
+
+jwt:
+  # 실제 운영 서버의 환경 변수(JWT_SECRET)에서 값을 가져옵니다.
+  secret: ${JWT_SECRET}
+
+kakao:
+  client-id: ${KAKAO_CLIENT_ID}
+  admin-key: ${KAKAO_ADMIN_KEY}
+  redirect-uri: ${KAKAO_REDIRECT_URI}
+  client-secret: ${KAKAO_CLIENT_SECRET}
+
+cookie:
+  domain: ${COOKIE_DOMAIN} # .dunoesanchaeg.com (서브도메인 간 공유용)
+  secure: true            # HTTPS에서만 쿠키 전송
+  same-site: None         # 프론트와 백엔드 도메인이 다를 경우 필수
+
+app:
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGIN}

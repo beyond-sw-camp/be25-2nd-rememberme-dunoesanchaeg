@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.rememberme.dunoesanchaeg.trophies.mapper.TrophyMapper">
+
+    <resultMap id="TrophyResultMap" type="com.rememberme.dunoesanchaeg.trophies.domain.Trophy">
+        <id property="trophyId" column="trophy_id"/>
+        <result property="trophyName" column="trophy_name"/>
+        <result property="acquiredAt" column="acquired_at"/>
+    </resultMap>
+
+    <select id="existsByMemberIdAndTrophyName" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1
+            FROM trophy
+            WHERE member_id = #{memberId}
+              AND trophy_name = #{trophyName}
+        )
+    </select>
+
+    <insert id="insertTrophy"
+            parameterType="com.rememberme.dunoesanchaeg.trophies.domain.Trophy"
+            useGeneratedKeys="true"
+            keyProperty="trophyId">
+        INSERT INTO trophy (
+            member_id,
+            trophy_name,
+            acquired_at
+        ) VALUES (
+                     #{memberId},
+                     #{trophyName},
+                     NOW()
+                 )
+    </insert>
+
+    <select id="findTrophiesByMemberId" resultMap="TrophyResultMap">
+        SELECT
+            trophy_id,
+            trophy_name,
+            acquired_at
+        FROM trophy
+        WHERE member_id = #{memberId}
+        ORDER BY acquired_at DESC, trophy_id DESC
+    </select>
+
+</mapper>

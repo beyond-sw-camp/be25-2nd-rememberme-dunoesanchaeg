@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.rememberme.dunoesanchaeg.routines.mapper.RoutineMapper">
+    <resultMap id="RoutineResultMap" type="com.rememberme.dunoesanchaeg.routines.domain.DailyRoutineStatus">
+        <id property="routineId" column="routine_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="routineDate" column="routine_date"/>
+        <result property="assignedGameType" column="assigned_game_type"/>
+        <result property="assignedQuestionId" column="assigned_question_id"/>
+        <result property="isGameFinished" column="is_game_finished"/>
+        <result property="isRecordFinished" column="is_record_finished"/>
+        <result property="isQuestionFinished" column="is_question_finished"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 멤버 아이디로 루틴 데이터 가져옴 -->
+    <select id="findByMemberIdAndDate" resultMap="RoutineResultMap">
+        SELECT *
+        FROM daily_routine_status
+        WHERE member_id = #{memberId}
+          AND routine_date = #{routineDate}
+    </select>
+
+    <!-- 루틴 생성 후 저장 -->
+    <insert id="insertTodayRoutine" useGeneratedKeys="true" keyProperty="routineId">
+        INSERT INTO daily_routine_status (
+            member_id,
+            routine_date,
+            assigned_game_type,
+            assigned_question_id,
+            is_game_finished,
+            is_record_finished,
+            is_question_finished,
+            created_at
+        ) VALUES (
+                     #{memberId},
+                     #{routineDate},
+                     #{assignedGameType},
+                     #{assignedQuestionId},
+                     false,
+                     false,
+                     false,
+                     #{createdAt}
+                 );
+    </insert>
+
+    <!--  루틴 아이디로 조회하기  -->
+    <select id="findByRoutineId" resultMap="RoutineResultMap">
+        SELECT *
+        FROM daily_routine_status
+        WHERE routine_id = #{routineId}
+    </select>
+
+    <!--  오늘의 루틴 게임 완료 업데이트  -->
+    <update id="updateGameComplete">
+        UPDATE daily_routine_status
+        SET is_game_finished = true
+        WHERE routine_id = #{routineId}
+        AND is_game_finished = false;
+    </update>
+
+    <!--  오늘의 루틴 기록 완료 업데이트  -->
+    <update id="updateRecordComplete">
+        UPDATE daily_routine_status
+        SET is_record_finished = true
+        WHERE routine_id = #{routineId}
+        AND is_record_finished = false;
+    </update>
+
+    <!--  오늘의 루틴 질문 완료 업데이트  -->
+    <update id="updateQuestionComplete">
+        UPDATE daily_routine_status
+        SET is_question_finished = true
+        WHERE routine_id = #{routineId}
+        AND is_question_finished = false;
+    </update>
+
+    <!-- 개방형질문 기능 구현에 필요한 코드 -->
+    <select id="selectAssignedQuestionId" resultType="long">
+        SELECT assigned_question_id
+        FROM daily_routine_status
+        WHERE member_id = #{memberId}
+          AND routine_date = #{routineDate}
+    </select>
+</mapper>

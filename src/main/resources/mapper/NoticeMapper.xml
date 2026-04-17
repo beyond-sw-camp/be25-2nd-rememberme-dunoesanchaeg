@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.rememberme.dunoesanchaeg.support.mapper.NoticeMapper">
+    <select id = "searchNotice" resultType="com.rememberme.dunoesanchaeg.support.dto.response.NoticeListResponse">
+        SELECT
+            notice_id,
+            title,
+            created_at
+        FROM notice
+        ORDER BY created_at DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <select id="searchNoticeDetail" resultType="com.rememberme.dunoesanchaeg.support.dto.response.NoticeDetailResponse">
+        SELECT
+            notice_id,
+            title,
+            content,
+            created_at
+        FROM notice
+        WHERE notice_id = #{noticeId}
+    </select>
+
+</mapper>

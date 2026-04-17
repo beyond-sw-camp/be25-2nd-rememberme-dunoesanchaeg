@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.rememberme.dunoesanchaeg.member.mapper.MemberTokenMapper">
+
+    <resultMap id="MemberTokenResultMap" type="com.rememberme.dunoesanchaeg.member.domain.MemberToken">
+        <id property="tokenId" column="token_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="refreshToken" column="refresh_token"/>
+        <result property="userAgent" column="user_agent"/>
+        <result property="issuedAt" column="issued_at"/>
+        <result property="expiresAt" column="expires_at"/>
+        <result property="lastUsedAt" column="last_used_at"/>
+        <result property="isRevoked" column="is_revoked"/>
+
+    </resultMap>
+
+    <sql id="selectMemberToken">
+        SELECT
+            token_id,
+            member_id,
+            refresh_token,
+            user_agent,
+            issued_at,
+            expires_at,
+            last_used_at,
+            is_revoked
+        FROM member_token
+    </sql>
+
+    <select id="findByMemberIdAndUserAgent" resultMap="MemberTokenResultMap">
+        <include refid="selectMemberToken"/>
+        WHERE member_id = #{memberId} and user_agent = #{userAgent}
+    </select>
+
+    <select id="findByRefreshToken" resultMap="MemberTokenResultMap">
+        <include refid="selectMemberToken"/>
+        WHERE refresh_token = #{refreshToken} AND is_revoked = false AND expires_at > NOW()
+    </select>
+
+    <update id="logoutMemberToken">
+        UPDATE member_token
+        set
+            is_revoked = true,
+            last_used_at = NOW(),
+            expires_at = NOW()
+        WHERE
+            member_id = #{memberId} AND user_agent = #{userAgent} AND is_revoked = false
+    </update>
+
+    <update id="logoutAllMemberToken" parameterType="long">
+        UPDATE member_token
+        set
+            is_revoked = true,
+            last_used_at = NOW(),
+            expires_at = NOW()
+        WHERE
+            member_id = #{memberId} AND is_revoked = false
+    </update>
+
+    <insert id="upsertMemberToken" parameterType="com.rememberme.dunoesanchaeg.member.domain.MemberToken">
+        INSERT INTO member_token (
+            member_id,
+            refresh_token,
+            user_agent,
+            issued_at,
+            expires_at,
+            last_used_at,
+            is_revoked
+        )
+        VALUES (
+             #{memberId},
+             #{refreshToken},
+             #{userAgent},
+             NOW(),
+             #{expiresAt},
+             NOW(),
+             #{isRevoked}
+        )
+        ON DUPLICATE KEY UPDATE
+             refresh_token = VALUES(refresh_token),
+             expires_at = VALUES(expires_at),
+             last_used_at = NOW(),
+             is_revoked = VALUES(is_revoked)
+    </insert>
+
+</mapper>

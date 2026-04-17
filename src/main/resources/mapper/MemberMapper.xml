@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="com.rememberme.dunoesanchaeg.member.mapper.MemberMapper">
+
+    <sql id="selectMemberSql">
+        SELECT member_id,
+               kakao_id,
+               email,
+               role,
+               name,
+               birth_date,
+               phone,
+               guardian_email,
+               guardian_phone,
+               guardian_consent,
+               is_profile_completed,
+               user_status,
+               is_high_contrast,
+               font_size,
+               total_routine_count,
+               last_login_at,
+               created_at,
+               updated_at,
+               deleted_at
+        FROM member
+    </sql>
+
+    <resultMap id="MemberResultMap" type="com.rememberme.dunoesanchaeg.member.domain.Member">
+        <id property="memberId" column="member_id"/>
+        <result property="kakaoId" column="kakao_id"/>
+        <result property="email" column="email"/>
+        <result property="role" column="role"/>
+        <result property="name" column="name"/>
+        <result property="birthDate" column="birth_date"/>
+        <result property="phone" column="phone"/>
+        <result property="guardianEmail" column="guardian_email"/>
+        <result property="guardianPhone" column="guardian_phone"/>
+        <result property="guardianConsent" column="guardian_consent"/>
+        <result property="isProfileCompleted" column="is_profile_completed"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="isHighContrast" column="is_high_contrast"/>
+        <result property="fontSize" column="font_size"/>
+        <result property="totalRoutineCount" column="total_routine_count"/>
+        <result property="lastLoginAt" column="last_login_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="deletedAt" column="deleted_at"/>
+    </resultMap>
+
+    <!-- 멤버 아이디로 멤버의 데이터를 가져옴 -->
+    <select id="findByMemberId" resultMap="MemberResultMap" parameterType="long">
+        <include refid="selectMemberSql"/>
+        WHERE member_id = #{memberId}
+    </select>
+
+
+    <!--  카카오 아이디와 일치하는 멤버의 데이터를 가져옴  -->
+    <select id="findByKakaoId" resultMap="MemberResultMap" parameterType="long">
+        <include refid="selectMemberSql"/>
+        WHERE kakao_id = #{kakaoId}
+    </select>
+
+    <!-- request부분으로 받아와서 저장-->
+    <insert id="insertMember" useGeneratedKeys="true" keyProperty="memberId">
+        INSERT INTO member (
+            kakao_id,
+            email,
+            is_high_contrast,
+            font_size,
+            is_profile_completed,
+            role,
+            user_status
+        ) VALUES (
+                     #{kakaoId},
+                     #{email},
+                     #{isHighContrast},
+                     #{fontSize},
+                     #{isProfileCompleted},
+                     #{role},
+                     #{userStatus}
+                 )
+    </insert>
+
+    <!-- updateLastLoginAt -->
+    <update id="updateLastLoginAt" parameterType="long">
+        UPDATE member
+        SET last_login_at = NOW()
+        WHERE member_id = #{memberId}
+    </update>
+
+    <!-- updateEmail -->
+    <update id="updateEmail">
+        UPDATE member
+        SET email = #{email},
+            updated_at = NOW()
+        WHERE member_id = #{memberId}
+    </update>
+
+    <!-- findByEmail -->
+    <select id="findByEmail" resultMap="MemberResultMap" parameterType="string">
+        <include refid="selectMemberSql"/>
+        WHERE email = #{email}
+    </select>
+
+    <!-- findExistMemberPhone -->
+    <!-- 자기 자신이 입력한 전화번호는 제외 -->
+    <select id="findExistMemberPhone" resultType="boolean">
+        SELECT
+            count(*)
+        FROM member
+        WHERE phone = #{phone} AND member_id != #{memberId}
+    </select>
+
+    <!-- updateProfile -->
+    <update id="updateProfile" parameterType="com.rememberme.dunoesanchaeg.member.domain.Member">
+        UPDATE member
+        SET name = #{name},
+            birth_date = #{birthDate},
+            phone = #{phone},
+            guardian_email = #{guardianEmail},
+            guardian_phone = #{guardianPhone},
+            guardian_consent = #{guardianConsent},
+            font_size = #{fontSize},
+            is_high_contrast = #{isHighContrast},
+            is_profile_completed = true,
+            updated_at = NOW()
+        WHERE member_id = #{memberId}
+    </update>
+
+    <!-- withdrawnMember -->
+    <update id="withdrawMember">
+        UPDATE member
+        SET user_status = 'WITHDRAWN',
+            role = 'WITHDRAWN',
+            deleted_at = NOW()
+        WHERE member_id = #{memberId}
+    </update>
+
+    <!-- recoveryMember -->
+    <update id="recoveryMember">
+        UPDATE member
+        SET user_status = 'ACTIVE',
+            role = 'USER',
+            deleted_at = null
+        WHERE member_id = #{memberId}
+    </update>
+
+    <!--  incrementTotalRoutineCount  -->
+    <update id="incrementTotalRoutineCount">
+        UPDATE member
+        SET total_routine_count = total_routine_count + 1
+        WHERE member_id = #{memberId}
+    </update>
+
+    <select id="findNameById" resultType="string">
+        SELECT name
+        FROM member  WHERE member_id = #{memberId}
+    </select>
+</mapper>
