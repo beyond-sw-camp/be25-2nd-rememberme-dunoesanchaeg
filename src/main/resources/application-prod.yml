@@ -53,6 +53,7 @@ logging:
   level:
     root: warn
     com.rememberme.dunoesanchaeg: info # 우리 서비스의 주요 흐름만 기록
+    com.zaxxer.hikari: info
 
 # 2. MyBatis SQL 로그 생성 자체를 차단 (이중 보안)
 mybatis:
