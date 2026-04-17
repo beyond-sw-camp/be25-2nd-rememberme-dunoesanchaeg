@@ -23,13 +23,13 @@ public class WithdrawalServiceImpl implements WithdrawalService {
         if(!withdrawalTList.isEmpty()){
             for (WithdrawalTargetDto target : withdrawalTList) {
                 try {
-                    kakaoClient.unlinkKakao(target.getKakaoId());
+                    kakaoClient.unlinkKakao(target.getKakaoId(), target.getMemberId());
                     // 정상 성공 시 업데이트
                     schedulerMapper.updateKakaoUnlinkedStatus(target.getMemberId());
                 } catch (Exception e) {
                     // 에러 메시지에 -101(NotRegisteredUserException)이 포함
                     if (e.getMessage().contains("-101")) {
-                        log.info("이미 카카오 연동이 해제된 유저입니다. DB 상태를 업데이트합니다. kakaoId: {}", target.getKakaoId());
+                        log.info("이미 카카오 연동이 해제된 유저입니다. DB 상태를 업데이트합니다. memberId: {}", target.getMemberId());
                         // 이미 끊긴 것이 확인되었으므로 DB를 1로 바꿈
                         schedulerMapper.updateKakaoUnlinkedStatus(target.getMemberId());
                     } else {
