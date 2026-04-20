@@ -102,7 +102,7 @@
 
 <br>
 
-## <a id="3-WBS"></a> 3. WBS
+## <a id="3-wbs"></a> 3. WBS
 
 <details>
 <summary><b>🗓️ WBS 링크 </b></summary>
